@@ -260,6 +260,7 @@ textarea::placeholder {
         font-size: 25px !important;
     }
 
+    /* ABAS */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
     }
@@ -276,11 +277,20 @@ textarea::placeholder {
         font-weight: 800 !important;
     }
 
+    /* COLUNAS */
     div[data-testid="stHorizontalBlock"] {
-        gap: 2px !important;
+        gap: 0px !important;
     }
 
+    div[data-testid="column"] {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    /* BOTÕES */
     .stButton > button {
+        width: 100% !important;
+        margin: 0px !important;
         min-height: 54px;
         font-size: 16px;
         border-radius: 14px;
@@ -288,6 +298,7 @@ textarea::placeholder {
         padding-right: 4px;
     }
 
+    /* BLOCOS EXPLICAÇÃO */
     .step-card {
         padding: 20px;
         border-radius: 20px;
@@ -302,17 +313,18 @@ textarea::placeholder {
         font-size: 19px;
     }
 
+    /* CAMPOS */
     div[data-testid="stTextInput"] input,
     textarea,
     .stNumberInput input {
         font-size: 22px !important;
     }
 
+    /* POST-ITS */
     .postit-texto {
         font-size: 25px;
     }
 }
-
 </style>
 """, unsafe_allow_html=True)
 
