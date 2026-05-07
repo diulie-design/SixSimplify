@@ -56,12 +56,65 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
 
 
 # FOCO FORA DAS ABAS
-st.subheader("Foco")
-
-foco = st.text_input(
-    " ",
-    placeholder="Digite aqui o título do foco"
+# FOCO FORA DAS ABAS
+st.markdown(
+    """
+    <style>
+    div[data-testid="stTextInput"] input {
+        font-size: 24px;
+        height: 60px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
 )
+
+if "foco_salvo" not in st.session_state:
+    st.session_state.foco_salvo = ""
+
+if "editando_foco" not in st.session_state:
+    st.session_state.editando_foco = True
+
+st.markdown("## Foco")
+
+if st.session_state.editando_foco:
+    foco_digitado = st.text_input(
+        " ",
+        value=st.session_state.foco_salvo,
+        placeholder="Digite aqui o título do foco",
+        key="campo_foco"
+    )
+
+    if st.button("Salvar foco"):
+        if foco_digitado.strip():
+            st.session_state.foco_salvo = foco_digitado.strip()
+            st.session_state.editando_foco = False
+            st.rerun()
+        else:
+            st.warning("Digite um foco antes de salvar.")
+
+else:
+    st.markdown(
+        f"""
+        <div style="
+            font-size: 32px;
+            font-weight: 700;
+            padding: 18px 20px;
+            border-radius: 10px;
+            background-color: #262730;
+            color: white;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        ">
+            {st.session_state.foco_salvo}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    if st.button("Editar foco"):
+        st.session_state.editando_foco = True
+        st.rerun()
 
 st.divider()
 
