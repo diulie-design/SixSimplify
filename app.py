@@ -23,8 +23,6 @@ def contar_palavras(texto):
 
 
 # FOCO FORA DAS ABAS
-
-
 st.subheader("Foco")
 
 foco = st.text_input(
@@ -40,36 +38,38 @@ aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 with aba1:
     st.title("Foco no Foco")
-    
+
     tempo_total = 60
 
-if "inicio_timer" not in st.session_state:
-    st.session_state.inicio_timer = None
-
-col1, col2 = st.columns(2)
-
-with col1:
-    if st.button("Iniciar cronômetro"):
-        st.session_state.inicio_timer = time.time()
-
-with col2:
-    if st.button("Encerrar cronômetro"):
+    if "inicio_timer" not in st.session_state:
         st.session_state.inicio_timer = None
-        st.warning("Cronômetro encerrado.")
 
-if st.session_state.inicio_timer:
-    tempo_passado = int(time.time() - st.session_state.inicio_timer)
-    tempo_restante = max(tempo_total - tempo_passado, 0)
+    col1, col2 = st.columns(2)
 
-    st.markdown(f"## ⏱️ {tempo_restante} segundos restantes")
-    st.progress(tempo_restante / tempo_total)
+    with col1:
+        if st.button("Iniciar cronômetro"):
+            st.session_state.inicio_timer = time.time()
 
-    if tempo_restante > 0:
-        time.sleep(1)
-        st.rerun()
-    else:
-        st.error("Tempo encerrado!")
-        st.session_state.inicio_timer = None
+    with col2:
+        if st.button("Encerrar cronômetro"):
+            st.session_state.inicio_timer = None
+            st.warning("Cronômetro encerrado.")
+
+    if st.session_state.inicio_timer:
+        tempo_passado = int(time.time() - st.session_state.inicio_timer)
+        tempo_restante = max(tempo_total - tempo_passado, 0)
+
+        st.markdown(f"## ⏱️ {tempo_restante} segundos restantes")
+        st.progress(tempo_restante / tempo_total)
+
+        if tempo_restante > 0:
+            time.sleep(1)
+            st.rerun()
+        else:
+            st.error("Tempo encerrado!")
+            st.session_state.inicio_timer = None
+
+    st.divider()
 
     st.subheader("Cadastro da Equipe")
 
@@ -83,9 +83,6 @@ if st.session_state.inicio_timer:
         placeholder="Digite o nome do líder"
     )
 
-    st.divider()
-
-        
     st.divider()
 
     st.subheader("Post-its das equipes")
