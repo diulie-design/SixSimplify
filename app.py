@@ -22,6 +22,39 @@ def contar_palavras(texto):
     return len(texto.strip().split())
 
 
+def mostrar_cronometro(nome_timer, tempo_total_segundos):
+    if nome_timer not in st.session_state:
+        st.session_state[nome_timer] = None
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button("Iniciar cronômetro", key=f"iniciar_{nome_timer}"):
+            st.session_state[nome_timer] = time.time()
+
+    with col2:
+        if st.button("Encerrar cronômetro", key=f"encerrar_{nome_timer}"):
+            st.session_state[nome_timer] = None
+            st.warning("Cronômetro encerrado.")
+
+    if st.session_state[nome_timer]:
+        tempo_passado = int(time.time() - st.session_state[nome_timer])
+        tempo_restante = max(tempo_total_segundos - tempo_passado, 0)
+
+        minutos = tempo_restante // 60
+        segundos = tempo_restante % 60
+
+        st.markdown(f"## ⏱️ {minutos:02d}:{segundos:02d}")
+        st.progress(tempo_restante / tempo_total_segundos)
+
+        if tempo_restante > 0:
+            time.sleep(1)
+            st.rerun()
+        else:
+            st.error("Tempo encerrado!")
+            st.session_state[nome_timer] = None
+
+
 # FOCO FORA DAS ABAS
 st.subheader("Foco")
 
@@ -32,49 +65,21 @@ foco = st.text_input(
 
 st.divider()
 
-# ABAS
 aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 
 with aba1:
-
     st.title("Foco no Foco")
 
-    # CRONÔMETRO
-    tempo_total = 60
+    st.subheader("Cronômetro inicial")
 
-    if "inicio_timer" not in st.session_state:
-        st.session_state.inicio_timer = None
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Iniciar cronômetro"):
-            st.session_state.inicio_timer = time.time()
-
-    with col2:
-        if st.button("Encerrar cronômetro"):
-            st.session_state.inicio_timer = None
-            st.warning("Cronômetro encerrado.")
-
-    if st.session_state.inicio_timer:
-        tempo_passado = int(time.time() - st.session_state.inicio_timer)
-        tempo_restante = max(tempo_total - tempo_passado, 0)
-
-        st.markdown(f"## ⏱️ {tempo_restante} segundos restantes")
-        st.progress(tempo_restante / tempo_total)
-
-        if tempo_restante > 0:
-            time.sleep(1)
-            st.rerun()
-
-        else:
-            st.error("Tempo encerrado!")
-            st.session_state.inicio_timer = None
+    mostrar_cronometro(
+        nome_timer="timer_cadastro",
+        tempo_total_segundos=60
+    )
 
     st.divider()
 
-    # CADASTRO
     st.subheader("Cadastro da Equipe")
 
     nome_equipe = st.text_input(
@@ -89,8 +94,22 @@ with aba1:
 
     st.divider()
 
-    # POST-ITS
     st.subheader("Post-its das equipes")
+
+    tempo_postit_minutos = st.number_input(
+        "Tempo para preencher os post-its em minutos",
+        min_value=1,
+        max_value=60,
+        value=5,
+        step=1
+    )
+
+    mostrar_cronometro(
+        nome_timer="timer_postit",
+        tempo_total_segundos=int(tempo_postit_minutos * 60)
+    )
+
+    st.divider()
 
     novo_postit = st.text_area(
         "Adicionar post-it",
@@ -108,7 +127,6 @@ with aba1:
         st.error("O post-it deve ter exatamente 6 palavras.")
 
     if st.button("Adicionar post-it"):
-
         if not nome_equipe.strip():
             st.warning("Preencha o nome da equipe antes de adicionar um post-it.")
 
@@ -132,27 +150,22 @@ with aba1:
 
     st.divider()
 
-    # MOSTRAR POST-ITS
     cursor.execute("SELECT equipe, texto FROM postits ORDER BY id DESC")
     postits = cursor.fetchall()
 
     if postits:
-
         colunas = st.columns(3)
 
         for i, (equipe, texto) in enumerate(postits):
-
             with colunas[i % 3]:
-
-st.markdown(
-    f"""
+                st.markdown(
+                    f"""
 <div style="background-color:#fff3a3; padding:20px; border-radius:8px; min-height:160px; box-shadow:2px 2px 8px rgba(0,0,0,0.2); margin-bottom:20px; color:#1f2937; font-family:Arial, sans-serif; overflow-wrap:break-word; word-break:break-word; white-space:normal;">
 <h4 style="margin-top:0; margin-bottom:12px; font-size:18px; line-height:1.2;">{equipe}</h4>
 <div style="font-size:18px; font-weight:600; line-height:1.35; overflow-wrap:break-word; word-break:break-word; white-space:normal;">{texto}</div>
 </div>
 """,
-    unsafe_allow_html=True
-)
+                    unsafe_allow_html=True
                 )
 
     else:
@@ -160,7 +173,6 @@ st.markdown(
 
 
 with aba2:
-
     st.title("Principais Obstáculos")
 
     st.info("Essa aba está reservada para a próxima etapa.")
