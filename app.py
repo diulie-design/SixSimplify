@@ -1,10 +1,90 @@
 import streamlit as st
 import time
 import sqlite3
+from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(page_title="Foco no Foco", layout="centered")
 
-# Banco de dados
+# ESTILO
+st.markdown("""
+<style>
+    .main {
+        background-color: #f7f9fc;
+    }
+
+    h1 {
+        color: #003b71;
+        font-weight: 800;
+    }
+
+    h2, h3 {
+        color: #003b71;
+        font-weight: 700;
+    }
+
+    div[data-testid="stTextInput"] input {
+        font-size: 20px;
+        height: 54px;
+        border-radius: 10px;
+    }
+
+    textarea {
+        font-size: 18px !important;
+        border-radius: 10px !important;
+    }
+
+    .bloco-azul {
+        background: linear-gradient(135deg, #003b71, #005a9c);
+        color: white;
+        padding: 20px;
+        border-radius: 16px;
+        margin: 12px 0 20px 0;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .foco-salvo {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.25;
+    }
+
+    .info-equipe {
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    .postit {
+        background-color: #fff4a8;
+        padding: 20px;
+        border-radius: 12px;
+        min-height: 160px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+        margin-bottom: 20px;
+        color: #1f2937;
+        font-family: Arial, sans-serif;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        white-space: normal;
+        border-left: 6px solid #003b71;
+    }
+
+    .postit h4 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        font-size: 17px;
+        color: #003b71;
+    }
+
+    .postit-texto {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 1.35;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+
+# BANCO DE DADOS
 conn = sqlite3.connect("postits.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -38,6 +118,8 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
             st.warning("Cronômetro encerrado.")
 
     if st.session_state[nome_timer]:
+        st_autorefresh(interval=1000, key=f"refresh_{nome_timer}")
+
         tempo_passado = int(time.time() - st.session_state[nome_timer])
         tempo_restante = max(tempo_total_segundos - tempo_passado, 0)
 
@@ -47,25 +129,10 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
         st.markdown(f"## ⏱️ {minutos:02d}:{segundos:02d}")
         st.progress(tempo_restante / tempo_total_segundos)
 
-        if tempo_restante > 0:
-            time.sleep(1)
-            st.rerun()
-        else:
+        if tempo_restante == 0:
             st.error("Tempo encerrado!")
             st.session_state[nome_timer] = None
 
-
-st.markdown(
-    """
-    <style>
-    div[data-testid="stTextInput"] input {
-        font-size: 24px;
-        height: 60px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
 
 # FOCO FORA DAS ABAS
 if "foco_salvo" not in st.session_state:
@@ -95,16 +162,7 @@ if st.session_state.editando_foco:
 else:
     st.markdown(
         f"""
-        <div style="
-            font-size: 32px;
-            font-weight: 700;
-            padding: 18px 20px;
-            border-radius: 10px;
-            background-color: #262730;
-            color: white;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        ">
+        <div class="bloco-azul foco-salvo">
             {st.session_state.foco_salvo}
         </div>
         """,
@@ -117,22 +175,14 @@ else:
 
 st.divider()
 
+
 aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 
 with aba1:
     st.title("Foco no Foco")
 
-    st.subheader("Cronômetro inicial")
-
-    mostrar_cronometro(
-        nome_timer="timer_cadastro",
-        tempo_total_segundos=60
-    )
-
-    st.divider()
-
-    st.subheader("Cadastro da Equipe")
+    st.subheader("Cadastro da equipe")
 
     if "nome_equipe_salvo" not in st.session_state:
         st.session_state.nome_equipe_salvo = ""
@@ -142,6 +192,19 @@ with aba1:
 
     if "editando_equipe" not in st.session_state:
         st.session_state.editando_equipe = True
+
+    tempo_cadastro_minutos = st.number_input(
+        "Tempo para cadastrar equipe e líder em minutos",
+        min_value=1,
+        max_value=60,
+        value=1,
+        step=1
+    )
+
+    mostrar_cronometro(
+        nome_timer="timer_cadastro",
+        tempo_total_segundos=int(tempo_cadastro_minutos * 60)
+    )
 
     if st.session_state.editando_equipe:
         nome_equipe_digitado = st.text_input(
@@ -172,16 +235,7 @@ with aba1:
     else:
         st.markdown(
             f"""
-            <div style="
-                padding: 18px 20px;
-                border-radius: 10px;
-                background-color: #262730;
-                color: white;
-                margin-top: 10px;
-                margin-bottom: 10px;
-                font-size: 18px;
-                line-height: 1.5;
-            ">
+            <div class="bloco-azul info-equipe">
                 <strong>Equipe:</strong> {st.session_state.nome_equipe_salvo}<br>
                 <strong>Líder:</strong> {st.session_state.lider_equipe_salvo}
             </div>
@@ -194,7 +248,6 @@ with aba1:
             st.rerun()
 
     nome_equipe = st.session_state.nome_equipe_salvo
-    lider_equipe = st.session_state.lider_equipe_salvo
 
     st.divider()
 
@@ -213,15 +266,12 @@ with aba1:
         tempo_total_segundos=int(tempo_postit_minutos * 60)
     )
 
-    st.divider()
-
     novo_postit = st.text_area(
         "Adicionar post-it",
         placeholder="Digite uma ideia com exatamente 6 palavras"
     )
 
     qtd_palavras = contar_palavras(novo_postit)
-
     st.caption(f"{qtd_palavras}/6 palavras")
 
     if qtd_palavras < 6 and qtd_palavras > 0:
@@ -232,24 +282,18 @@ with aba1:
 
     if st.button("Adicionar post-it"):
         if not nome_equipe.strip():
-            st.warning("Preencha o nome da equipe antes de adicionar um post-it.")
-
+            st.warning("Preencha e salve o nome da equipe antes de adicionar um post-it.")
         elif not novo_postit.strip():
             st.warning("Digite o conteúdo do post-it.")
-
         elif qtd_palavras != 6:
             st.error("O post-it precisa ter exatamente 6 palavras.")
-
         else:
             cursor.execute(
                 "INSERT INTO postits (equipe, texto) VALUES (?, ?)",
                 (nome_equipe, novo_postit)
             )
-
             conn.commit()
-
             st.success("Post-it adicionado!")
-
             st.rerun()
 
     st.divider()
@@ -264,19 +308,17 @@ with aba1:
             with colunas[i % 3]:
                 st.markdown(
                     f"""
-<div style="background-color:#fff3a3; padding:20px; border-radius:8px; min-height:160px; box-shadow:2px 2px 8px rgba(0,0,0,0.2); margin-bottom:20px; color:#1f2937; font-family:Arial, sans-serif; overflow-wrap:break-word; word-break:break-word; white-space:normal;">
-<h4 style="margin-top:0; margin-bottom:12px; font-size:18px; line-height:1.2;">{equipe}</h4>
-<div style="font-size:18px; font-weight:600; line-height:1.35; overflow-wrap:break-word; word-break:break-word; white-space:normal;">{texto}</div>
+<div class="postit">
+<h4>{equipe}</h4>
+<div class="postit-texto">{texto}</div>
 </div>
 """,
                     unsafe_allow_html=True
                 )
-
     else:
         st.info("Nenhum post-it adicionado ainda.")
 
 
 with aba2:
     st.title("Principais Obstáculos")
-
     st.info("Essa aba está reservada para a próxima etapa.")
