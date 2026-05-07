@@ -186,7 +186,7 @@ textarea::placeholder {
     font-weight: 800;
     font-size: 18px;
     padding-left: 8px;
-    padding-right: 20px;
+    padding-right: 8px;
 }
 
 .stButton > button:hover {
@@ -240,7 +240,7 @@ textarea::placeholder {
 }
 
 /* CELULAR */
-@media (max-width: 768px) {
+@media (max-width: 500px) {
 
     .main .block-container {
         padding-left: 0.75rem;
