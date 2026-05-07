@@ -186,7 +186,7 @@ textarea::placeholder {
     font-weight: 800;
     font-size: 18px;
     padding-left: 8px;
-    padding-right: 4px;
+    padding-right: 20px;
 }
 
 .stButton > button:hover {
