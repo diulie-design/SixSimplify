@@ -55,8 +55,6 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
             st.session_state[nome_timer] = None
 
 
-# FOCO FORA DAS ABAS
-# FOCO FORA DAS ABAS
 st.markdown(
     """
     <style>
@@ -69,6 +67,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+# FOCO FORA DAS ABAS
 if "foco_salvo" not in st.session_state:
     st.session_state.foco_salvo = ""
 
@@ -135,15 +134,67 @@ with aba1:
 
     st.subheader("Cadastro da Equipe")
 
-    nome_equipe = st.text_input(
-        "Nome da equipe",
-        placeholder="Digite o nome da equipe"
-    )
+    if "nome_equipe_salvo" not in st.session_state:
+        st.session_state.nome_equipe_salvo = ""
 
-    lider_equipe = st.text_input(
-        "Líder da equipe",
-        placeholder="Digite o nome do líder"
-    )
+    if "lider_equipe_salvo" not in st.session_state:
+        st.session_state.lider_equipe_salvo = ""
+
+    if "editando_equipe" not in st.session_state:
+        st.session_state.editando_equipe = True
+
+    if st.session_state.editando_equipe:
+        nome_equipe_digitado = st.text_input(
+            "Nome da equipe",
+            value=st.session_state.nome_equipe_salvo,
+            placeholder="Digite o nome da equipe",
+            key="campo_nome_equipe"
+        )
+
+        lider_equipe_digitado = st.text_input(
+            "Líder da equipe",
+            value=st.session_state.lider_equipe_salvo,
+            placeholder="Digite o nome do líder",
+            key="campo_lider_equipe"
+        )
+
+        if st.button("Salvar equipe"):
+            if not nome_equipe_digitado.strip():
+                st.warning("Digite o nome da equipe antes de salvar.")
+            elif not lider_equipe_digitado.strip():
+                st.warning("Digite o nome do líder antes de salvar.")
+            else:
+                st.session_state.nome_equipe_salvo = nome_equipe_digitado.strip()
+                st.session_state.lider_equipe_salvo = lider_equipe_digitado.strip()
+                st.session_state.editando_equipe = False
+                st.rerun()
+
+    else:
+        st.markdown(
+            f"""
+            <div style="
+                padding: 18px 20px;
+                border-radius: 10px;
+                background-color: #262730;
+                color: white;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-size: 18px;
+                line-height: 1.5;
+            ">
+                <strong>Equipe:</strong> {st.session_state.nome_equipe_salvo}<br>
+                <strong>Líder:</strong> {st.session_state.lider_equipe_salvo}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        if st.button("Editar equipe"):
+            st.session_state.editando_equipe = True
+            st.rerun()
+
+    nome_equipe = st.session_state.nome_equipe_salvo
+    lider_equipe = st.session_state.lider_equipe_salvo
 
     st.divider()
 
