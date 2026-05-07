@@ -359,16 +359,12 @@ else:
 # ABAS
 # =========================
 
-aba1, aba2 = st.tabs([
-    "Foco no Foco",
-    "Principais Obstáculos"
-])
+st.title("Foco no Foco")
 
 # =========================
 # ABA 1
 # =========================
 
-with aba1:
 
     st.title("Foco no Foco")
 
@@ -657,14 +653,3 @@ with aba1:
 
             st.rerun()
 
-# =========================
-# ABA 2
-# =========================
-
-with aba2:
-
-    st.title("Principais Obstáculos")
-
-    st.info(
-        "Essa aba está reservada para a próxima etapa."
-    )
