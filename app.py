@@ -2,14 +2,14 @@ import streamlit as st
 import time
 import sqlite3
 
+st.set_page_config(page_title="Foco no Foco", layout="centered")
+
 st.subheader("Foco")
 
 foco = st.text_input(
     "",
     placeholder="Digite aqui o título do foco"
 )
-st.set_page_config(page_title="Foco no Foco", layout="centered")
-
 
 # Banco de dados
 conn = sqlite3.connect("postits.db", check_same_thread=False)
