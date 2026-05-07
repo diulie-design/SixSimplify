@@ -13,8 +13,8 @@ st.markdown("""
 <style>
 
 .main .block-container {
-    max-width: 1180px;
-    padding-top: 2rem;
+    max-width: 1000px;
+    padding-top: 1.5rem;
     padding-bottom: 4rem;
 }
 
@@ -28,69 +28,89 @@ hr {
 
 h1 {
     color: #002f5f;
-    font-size: 42px !important;
-    font-weight: 800;
+    font-size: 40px !important;
+    font-weight: 850;
 }
 
 h2 {
     color: #002f5f;
     font-size: 30px !important;
-    font-weight: 750;
+    font-weight: 800;
 }
 
 h3 {
     color: #002f5f;
-    font-size: 24px !important;
-    font-weight: 700;
+    font-size: 26px !important;
+    font-weight: 800;
 }
 
 .stTabs [data-baseweb="tab-list"] {
-    gap: 16px;
-    background: transparent;
-    margin-bottom: 24px;
+    gap: 14px;
+    margin-bottom: 28px;
 }
 
 .stTabs [data-baseweb="tab"] {
-    min-height: 70px;
-    padding: 0 34px;
+    min-height: 76px;
+    padding: 0 30px;
     background: #ffffff;
     border-radius: 18px;
     color: #002f5f;
-    font-weight: 800;
+    font-weight: 850;
     font-size: 24px;
-    border: 1px solid #dbe4ef;
+    border: 2px solid #dbe4ef;
 }
 
 .stTabs [aria-selected="true"] {
     background: #002f5f;
     color: white;
-    border: 1px solid #002f5f;
+    border: 2px solid #002f5f;
 }
 
 .bloco-azul {
     background: #002f5f;
     color: white;
-    padding: 28px 32px;
+    padding: 28px;
     border-radius: 22px;
-    margin: 14px 0 24px 0;
+    margin: 14px 0 28px 0;
 }
 
 .foco-final {
     font-size: 34px;
     font-weight: 850;
-    line-height: 1.25;
+    line-height: 1.3;
 }
 
 .info-equipe {
-    font-size: 20px;
+    font-size: 22px;
     line-height: 1.7;
 }
 
+.step-card {
+    background: white;
+    padding: 30px;
+    border-radius: 24px;
+    border: 2px solid #e3eaf2;
+    margin-bottom: 28px;
+}
+
+.step-title {
+    color: #002f5f;
+    font-size: 28px;
+    font-weight: 850;
+    margin-bottom: 8px;
+}
+
+.step-help {
+    color: #475569;
+    font-size: 19px;
+    margin-bottom: 22px;
+}
+
 div[data-testid="stTextInput"] input {
-    font-size: 22px;
-    height: 62px;
-    border-radius: 16px;
-    border: 1px solid #cfd9e6;
+    font-size: 24px;
+    height: 66px;
+    border-radius: 18px;
+    border: 2px solid #cfd9e6;
     background-color: #ffffff;
     color: #111827 !important;
     -webkit-text-fill-color: #111827 !important;
@@ -101,9 +121,9 @@ div[data-testid="stTextInput"] input::placeholder {
 }
 
 textarea {
-    font-size: 20px !important;
-    border-radius: 16px !important;
-    border: 1px solid #cfd9e6 !important;
+    font-size: 22px !important;
+    border-radius: 18px !important;
+    border: 2px solid #cfd9e6 !important;
     color: #111827 !important;
     background-color: #ffffff !important;
 }
@@ -113,94 +133,126 @@ textarea::placeholder {
 }
 
 .stNumberInput input {
-    font-size: 20px;
-    height: 56px;
-    border-radius: 14px;
+    font-size: 22px;
+    height: 60px;
+    border-radius: 16px;
     color: #111827 !important;
     background-color: #ffffff !important;
 }
 
 .stButton > button {
     width: 100%;
-    min-height: 56px;
-    border-radius: 16px;
-    border: 1px solid #002f5f;
+    min-height: 64px;
+    border-radius: 18px;
+    border: 2px solid #002f5f;
     background: #002f5f;
     color: white;
-    font-weight: 750;
-    font-size: 18px;
+    font-weight: 850;
+    font-size: 21px;
 }
 
 .stButton > button:hover {
     background: #00447f;
     border-color: #00447f;
+    color: white;
 }
 
 .postit {
     background: #fff6b8;
-    padding: 24px;
-    border-radius: 20px;
-    min-height: 180px;
-    margin-bottom: 18px;
+    padding: 26px;
+    border-radius: 22px;
+    min-height: 190px;
+    margin-bottom: 20px;
     color: #1f2937;
-    border: 1px solid #f0dc7a;
+    border: 2px solid #f0dc7a;
 }
 
 .postit-votado {
     background: #d9fbe3;
-    padding: 24px;
-    border-radius: 20px;
-    min-height: 180px;
-    margin-bottom: 18px;
+    padding: 26px;
+    border-radius: 22px;
+    min-height: 190px;
+    margin-bottom: 20px;
     color: #1f2937;
-    border: 2px solid #16a34a;
+    border: 3px solid #16a34a;
 }
 
 .postit h4,
 .postit-votado h4 {
     color: #002f5f;
-    font-size: 20px;
+    font-size: 22px;
     margin-top: 0;
     margin-bottom: 14px;
-    font-weight: 800;
+    font-weight: 850;
 }
 
 .postit-texto {
     color: #111827;
-    font-size: 22px;
+    font-size: 25px;
     line-height: 1.45;
-    font-weight: 750;
+    font-weight: 800;
 }
 
 .votos {
     color: #002f5f;
-    font-size: 18px;
-    font-weight: 800;
-    margin-top: 16px;
+    font-size: 20px;
+    font-weight: 850;
+    margin-top: 18px;
 }
 
 @media (max-width: 768px) {
+
+    .main .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        padding-top: 1rem;
+    }
+
     h1 {
         font-size: 34px !important;
     }
 
     h2 {
-        font-size: 28px !important;
+        font-size: 29px !important;
+    }
+
+    h3 {
+        font-size: 25px !important;
     }
 
     .stTabs [data-baseweb="tab"] {
-        min-height: 76px;
-        font-size: 26px;
+        min-height: 82px;
+        font-size: 27px;
         padding: 0 24px;
     }
 
+    .step-card {
+        padding: 22px;
+        border-radius: 22px;
+    }
+
+    .step-title {
+        font-size: 27px;
+    }
+
+    .step-help {
+        font-size: 20px;
+    }
+
+    div[data-testid="stTextInput"] input,
+    textarea,
+    .stNumberInput input {
+        font-size: 23px !important;
+    }
+
     .postit-texto {
-        font-size: 24px;
+        font-size: 26px;
     }
 }
 
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================
 # BANCO
@@ -220,6 +272,7 @@ CREATE TABLE IF NOT EXISTS postits (
 """)
 conn.commit()
 
+
 # =========================
 # FUNÇÕES
 # =========================
@@ -236,13 +289,13 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
     col1, col2 = st.columns(2)
 
     with col1:
-        if st.button("Iniciar cronômetro", key=f"iniciar_{nome_timer}"):
+        if st.button("Iniciar", key=f"iniciar_{nome_timer}"):
             st.session_state[nome_timer] = time.time()
 
     with col2:
-        if st.button("Encerrar cronômetro", key=f"encerrar_{nome_timer}"):
+        if st.button("Parar", key=f"encerrar_{nome_timer}"):
             st.session_state[nome_timer] = None
-            st.warning("Cronômetro encerrado.")
+            st.warning("Cronômetro parado.")
 
     if st.session_state[nome_timer]:
 
@@ -316,7 +369,7 @@ if st.session_state.editando_foco:
     foco_digitado = st.text_input(
         label="campo_foco",
         value=st.session_state.foco_salvo,
-        placeholder="Digite aqui o título do foco",
+        placeholder="Digite o tema da reunião",
         key="campo_foco",
         label_visibility="collapsed"
     )
@@ -324,11 +377,9 @@ if st.session_state.editando_foco:
     if st.button("Salvar foco"):
 
         if foco_digitado.strip():
-
             st.session_state.foco_salvo = foco_digitado.strip()
             st.session_state.editando_foco = False
             st.rerun()
-
         else:
             st.warning("Digite um foco antes de salvar.")
 
@@ -344,13 +395,12 @@ else:
     )
 
     if st.button("Editar foco"):
-
         st.session_state.editando_foco = True
         st.rerun()
 
 
 # =========================
-# ABAS NO TOPO
+# ABAS
 # =========================
 
 aba1, aba2 = st.tabs([
@@ -367,11 +417,16 @@ with aba1:
 
     st.title("Foco no Foco")
 
-    # =====================
-    # CADASTRO EQUIPE
-    # =====================
-
-    st.subheader("Cadastro da equipe")
+    # PASSO 1
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">1. Informe sua equipe</div>
+<div class="step-help">Digite o nome da equipe e o líder. Depois clique em salvar.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     if "nome_equipe_salvo" not in st.session_state:
         st.session_state.nome_equipe_salvo = ""
@@ -383,7 +438,7 @@ with aba1:
         st.session_state.editando_equipe = True
 
     tempo_cadastro_minutos = st.number_input(
-        "Tempo para cadastrar equipe e líder",
+        "Tempo para essa etapa em minutos",
         min_value=1,
         max_value=60,
         value=1
@@ -399,13 +454,13 @@ with aba1:
         nome_equipe_digitado = st.text_input(
             "Nome da equipe",
             value=st.session_state.nome_equipe_salvo,
-            placeholder="Digite o nome da equipe"
+            placeholder="Exemplo: Time Azul"
         )
 
         lider_equipe_digitado = st.text_input(
             "Líder da equipe",
             value=st.session_state.lider_equipe_salvo,
-            placeholder="Digite o nome do líder"
+            placeholder="Exemplo: Ana"
         )
 
         if st.button("Salvar equipe"):
@@ -428,20 +483,24 @@ with aba1:
         )
 
         if st.button("Editar equipe"):
-
             st.session_state.editando_equipe = True
             st.rerun()
 
     nome_equipe = st.session_state.nome_equipe_salvo
 
-    # =====================
-    # POST-ITS
-    # =====================
-
-    st.subheader("Post-its das equipes")
+    # PASSO 2
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">2. Escreva seu post-it</div>
+<div class="step-help">Escreva uma frase com exatamente 6 palavras. Depois clique em adicionar.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     tempo_postit_minutos = st.number_input(
-        "Tempo para preencher os post-its",
+        "Tempo para escrever os post-its em minutos",
         min_value=1,
         max_value=60,
         value=5
@@ -454,7 +513,7 @@ with aba1:
 
     novo_postit = st.text_area(
         "Adicionar post-it",
-        placeholder="Digite exatamente 6 palavras"
+        placeholder="Exemplo: Melhorar comunicação entre áreas internas"
     )
 
     qtd_palavras = contar_palavras(novo_postit)
@@ -462,19 +521,16 @@ with aba1:
     st.caption(f"{qtd_palavras}/6 palavras")
 
     if qtd_palavras < 6 and qtd_palavras > 0:
-        st.warning("O post-it deve ter exatamente 6 palavras.")
+        st.warning("Faltam palavras. O post-it precisa ter exatamente 6.")
 
     if qtd_palavras > 6:
-        st.error("O post-it deve ter exatamente 6 palavras.")
+        st.error("Tem palavras demais. O post-it precisa ter exatamente 6.")
 
     if st.button("Adicionar post-it"):
 
         if qtd_palavras != 6:
-
             st.error("O post-it precisa ter exatamente 6 palavras.")
-
         else:
-
             cursor.execute("""
             INSERT INTO postits (equipe, texto, votos, ativo)
             VALUES (?, ?, 0, 1)
@@ -484,9 +540,16 @@ with aba1:
             st.success("Post-it adicionado!")
             st.rerun()
 
-    # =====================
-    # MURAL
-    # =====================
+    # PASSO 3
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">3. Vote nos post-its</div>
+<div class="step-help">Leia os post-its e clique em votar. Se errar, clique em desfazer voto.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     cursor.execute("""
     SELECT id, equipe, texto, votos
@@ -498,8 +561,6 @@ with aba1:
     postits = cursor.fetchall()
 
     if postits:
-
-        st.subheader("Post-its em votação")
 
         colunas = st.columns(3)
 
@@ -530,7 +591,6 @@ with aba1:
                         "Desfazer voto",
                         key=f"desfazer_{postit_id}"
                     ):
-
                         cursor.execute("""
                         UPDATE postits
                         SET votos = CASE
@@ -550,7 +610,6 @@ with aba1:
                         "Votar",
                         key=f"votar_{postit_id}"
                     ):
-
                         cursor.execute("""
                         UPDATE postits
                         SET votos = votos + 1
@@ -562,14 +621,18 @@ with aba1:
                         st.rerun()
 
     else:
+        st.info("Nenhum post-it disponível ainda.")
 
-        st.info("Nenhum post-it disponível.")
-
-    # =====================
-    # RESULTADO
-    # =====================
-
-    st.subheader("Resultado da votação")
+    # PASSO 4
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">4. Veja o resultado</div>
+<div class="step-help">O post-it mais votado aparece abaixo. Se empatar, faça uma nova votação apenas com os empatados.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     st.markdown("## Foco no Foco")
 
@@ -589,10 +652,10 @@ with aba1:
     elif tem_empate:
 
         st.warning(
-            "Houve empate entre os post-its mais votados. Faça uma nova votação apenas com os empatados."
+            "Houve empate. Faça uma nova votação apenas com os empatados."
         )
 
-        if st.button("Iniciar nova votação com os empatados"):
+        if st.button("Iniciar votação de desempate"):
 
             ids_empatados = [str(item[0]) for item in vencedores]
 
@@ -611,24 +674,19 @@ with aba1:
             st.rerun()
 
     else:
-
-        st.info("O Foco no Foco aparecerá aqui após a votação.")
+        st.info("O resultado aparecerá aqui após a votação.")
 
     col_reset1, col_reset2 = st.columns(2)
 
     with col_reset1:
-
         if st.button("Zerar votos"):
-
             cursor.execute("UPDATE postits SET votos = 0")
             conn.commit()
             st.session_state.postits_votados = set()
             st.rerun()
 
     with col_reset2:
-
-        if st.button("Mostrar todos novamente"):
-
+        if st.button("Mostrar todos"):
             cursor.execute("UPDATE postits SET ativo = 1")
             conn.commit()
             st.session_state.postits_votados = set()
