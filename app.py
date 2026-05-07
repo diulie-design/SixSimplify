@@ -44,26 +44,25 @@ h3 {
     font-weight: 800;
 }
 
-/* ABAS GRANDES */
+/* ABAS */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 14px;
-    margin-bottom: 28px;
+    gap: 10px;
+    margin-bottom: 24px;
 }
 
 .stTabs [data-baseweb="tab"] {
-    min-height: 90px;
-    padding: 0 36px;
+    min-height: 72px;
+    padding: 0 24px;
     background: #ffffff;
-    border-radius: 22px;
+    border-radius: 18px;
     color: #002f5f;
-    font-weight: 900;
+    font-weight: 850;
     border: 2px solid #dbe4ef;
 }
 
-/* ESSA PARTE AUMENTA O TEXTO REAL DA ABA */
 .stTabs [data-baseweb="tab"] p {
-    font-size: 34px !important;
-    font-weight: 900 !important;
+    font-size: 27px !important;
+    font-weight: 850 !important;
 }
 
 .stTabs [aria-selected="true"] {
@@ -109,11 +108,11 @@ div[data-testid="column"] {
 }
 
 .step-card {
-    background: white;
-    padding: 30px;
-    border-radius: 24px;
-    border: 2px solid #e3eaf2;
-    margin-bottom: 28px;
+    background: #eef4fb;
+    padding: 24px;
+    border-radius: 22px;
+    border: 2px solid #c7d8ea;
+    margin-bottom: 24px;
 }
 
 .step-title {
@@ -314,7 +313,23 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
     if nome_timer not in st.session_state:
         st.session_state[nome_timer] = None
 
-    col1, col2 = st.columns(2)
+    st.markdown(
+        """
+        <style>
+        .timer-buttons {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .timer-buttons > div {
+            flex: 1;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    col1, col2 = st.columns([1, 1], gap="small")
 
     with col1:
         if st.button("Iniciar", key=f"iniciar_{nome_timer}"):
@@ -341,7 +356,6 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
         if tempo_restante == 0:
             st.error("Tempo encerrado!")
             st.session_state[nome_timer] = None
-
 
 def buscar_mais_votados():
 
