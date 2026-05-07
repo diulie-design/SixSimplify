@@ -5,128 +5,193 @@ from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(page_title="Foco no Foco", layout="wide")
 
-# ESTILO
 st.markdown("""
 <style>
     .main .block-container {
-        max-width: 1200px;
+        max-width: 1180px;
         padding-top: 2rem;
+        padding-bottom: 4rem;
     }
 
     section.main > div {
-        background-color: #f4f7fb;
+        background: #f7f9fc;
     }
 
-    h1, h2, h3 {
-        color: #003b71;
+    h1 {
+        color: #002f5f;
+        font-size: 42px !important;
         font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    h2 {
+        color: #002f5f;
+        font-size: 30px !important;
+        font-weight: 750;
+    }
+
+    h3 {
+        color: #002f5f;
+        font-size: 24px !important;
+        font-weight: 700;
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        gap: 12px;
+        gap: 16px;
+        background: transparent;
+        margin-bottom: 24px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        height: 58px;
-        padding: 0px 28px;
-        background: white;
-        border-radius: 14px;
-        color: #003b71;
-        font-weight: 700;
-        font-size: 17px;
-        border: 1px solid #d9e2ec;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        min-height: 70px;
+        padding: 0 34px;
+        background: #ffffff;
+        border-radius: 18px;
+        color: #002f5f;
+        font-weight: 800;
+        font-size: 24px;
+        border: 1px solid #dbe4ef;
+        box-shadow: 0 4px 14px rgba(0, 47, 95, 0.08);
     }
 
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #003b71, #005a9c);
+        background: #002f5f;
         color: white;
+        border: 1px solid #002f5f;
     }
 
-    div[data-testid="stTextInput"] input {
-        font-size: 20px;
-        height: 56px;
-        border-radius: 12px;
-    }
-
-    textarea {
-        font-size: 18px !important;
-        border-radius: 12px !important;
+    .card-section {
+        background: #ffffff;
+        padding: 32px;
+        border-radius: 24px;
+        border: 1px solid #e3eaf2;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+        margin-bottom: 28px;
     }
 
     .bloco-azul {
-        background: linear-gradient(135deg, #003b71, #005a9c);
+        background: #002f5f;
         color: white;
-        padding: 24px;
-        border-radius: 18px;
-        margin: 12px 0 20px 0;
-        box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+        padding: 28px 32px;
+        border-radius: 22px;
+        margin: 14px 0 24px 0;
     }
 
     .foco-final {
         font-size: 34px;
-        font-weight: 900;
+        font-weight: 850;
         line-height: 1.25;
     }
 
     .info-equipe {
-        font-size: 18px;
-        line-height: 1.6;
-    }
-
-    .card-section {
-        background: white;
-        padding: 26px;
-        border-radius: 18px;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.07);
-        border: 1px solid #e6edf5;
-        margin-bottom: 24px;
-    }
-
-    .postit {
-        background: linear-gradient(180deg, #fff8c9 0%, #fff2a8 100%);
-        padding: 22px;
-        border-radius: 16px;
-        min-height: 180px;
-        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
-        margin-bottom: 10px;
-        color: #1f2937;
-        border-left: 8px solid #003b71;
-    }
-
-    .postit h4 {
-        color: #003b71;
-        font-size: 18px;
-        margin-bottom: 14px;
-    }
-
-    .postit-texto {
-        color: #1f2937;
         font-size: 20px;
-        line-height: 1.5;
-        font-weight: 700;
+        line-height: 1.7;
     }
 
-    .votos {
-        color: #003b71;
-        font-weight: 800;
-        margin-top: 12px;
+    div[data-testid="stTextInput"] input {
+        font-size: 22px;
+        height: 62px;
+        border-radius: 16px;
+        border: 1px solid #cfd9e6;
+        background-color: #ffffff;
+    }
+
+    textarea {
+        font-size: 20px !important;
+        border-radius: 16px !important;
+        border: 1px solid #cfd9e6 !important;
+    }
+
+    .stNumberInput input {
+        font-size: 20px;
+        height: 56px;
+        border-radius: 14px;
     }
 
     .stButton > button {
         width: 100%;
-        border-radius: 12px;
-        height: 48px;
-        border: none;
-        background: linear-gradient(135deg, #003b71, #005a9c);
+        min-height: 56px;
+        border-radius: 16px;
+        border: 1px solid #002f5f;
+        background: #002f5f;
         color: white;
-        font-weight: 700;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        font-weight: 750;
+        font-size: 18px;
+        transition: 0.15s ease;
+    }
+
+    .stButton > button:hover {
+        background: #00447f;
+        border-color: #00447f;
+        color: white;
+    }
+
+    .postit {
+        background: #fff6b8;
+        padding: 24px;
+        border-radius: 20px;
+        min-height: 180px;
+        margin-bottom: 18px;
+        color: #1f2937;
+        border: 1px solid #f0dc7a;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .postit h4 {
+        color: #002f5f;
+        font-size: 20px;
+        margin-top: 0;
+        margin-bottom: 14px;
+        font-weight: 800;
+    }
+
+    .postit-texto {
+        color: #111827;
+        font-size: 22px;
+        line-height: 1.45;
+        font-weight: 750;
+    }
+
+    .votos {
+        color: #002f5f;
+        font-size: 18px;
+        font-weight: 800;
+        margin-top: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        h1 {
+            font-size: 34px !important;
+        }
+
+        h2 {
+            font-size: 28px !important;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            min-height: 76px;
+            font-size: 26px;
+            padding: 0 24px;
+        }
+
+        .card-section {
+            padding: 22px;
+            border-radius: 20px;
+        }
+
+        .postit-texto {
+            font-size: 24px;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# BANCO
+
 conn = sqlite3.connect("postits.db", check_same_thread=False)
 cursor = conn.cursor()
 
@@ -209,13 +274,11 @@ def buscar_mais_votados():
         return [], 0, False
 
     empatados = [item for item in dados if item[3] == maior_voto]
-
     tem_empate = len(empatados) > 1
 
     return empatados, maior_voto, tem_empate
 
 
-# FOCO PRINCIPAL
 if "foco_salvo" not in st.session_state:
     st.session_state.foco_salvo = ""
 
@@ -237,6 +300,8 @@ if st.session_state.editando_foco:
             st.session_state.foco_salvo = foco_digitado.strip()
             st.session_state.editando_foco = False
             st.rerun()
+        else:
+            st.warning("Digite um foco antes de salvar.")
 
 else:
     st.markdown(
@@ -254,17 +319,15 @@ else:
 
 st.divider()
 
-# ABAS
 aba1, aba2 = st.tabs([
-    "🎯 Foco no Foco",
-    "🚧 Principais Obstáculos"
+    "Foco no Foco",
+    "Principais Obstáculos"
 ])
 
-with aba1:
 
+with aba1:
     st.title("Foco no Foco")
 
-    # CADASTRO
     st.markdown('<div class="card-section">', unsafe_allow_html=True)
 
     st.subheader("Cadastro da equipe")
@@ -285,13 +348,9 @@ with aba1:
         value=1
     )
 
-    mostrar_cronometro(
-        "timer_cadastro",
-        int(tempo_cadastro_minutos * 60)
-    )
+    mostrar_cronometro("timer_cadastro", int(tempo_cadastro_minutos * 60))
 
     if st.session_state.editando_equipe:
-
         nome_equipe_digitado = st.text_input(
             "Nome da equipe",
             value=st.session_state.nome_equipe_salvo
@@ -303,14 +362,12 @@ with aba1:
         )
 
         if st.button("Salvar equipe"):
-
             st.session_state.nome_equipe_salvo = nome_equipe_digitado
             st.session_state.lider_equipe_salvo = lider_equipe_digitado
             st.session_state.editando_equipe = False
             st.rerun()
 
     else:
-
         st.markdown(
             f"""
 <div class="bloco-azul info-equipe">
@@ -329,7 +386,6 @@ with aba1:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # POST-ITS
     st.markdown('<div class="card-section">', unsafe_allow_html=True)
 
     st.subheader("Post-its das equipes")
@@ -341,10 +397,7 @@ with aba1:
         value=5
     )
 
-    mostrar_cronometro(
-        "timer_postit",
-        int(tempo_postit_minutos * 60)
-    )
+    mostrar_cronometro("timer_postit", int(tempo_postit_minutos * 60))
 
     novo_postit = st.text_area(
         "Adicionar post-it",
@@ -362,25 +415,20 @@ with aba1:
         st.error("O post-it deve ter exatamente 6 palavras.")
 
     if st.button("Adicionar post-it"):
-
         if qtd_palavras != 6:
             st.error("O post-it precisa ter exatamente 6 palavras.")
-
         else:
-
             cursor.execute("""
             INSERT INTO postits (equipe, texto, votos, ativo)
             VALUES (?, ?, 0, 1)
             """, (nome_equipe, novo_postit))
 
             conn.commit()
-
             st.success("Post-it adicionado!")
             st.rerun()
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # FOCO NO FOCO RESULTADO
     st.subheader("Votação")
 
     st.markdown("## Foco no Foco")
@@ -388,7 +436,6 @@ with aba1:
     vencedores, maior_voto, tem_empate = buscar_mais_votados()
 
     if vencedores and not tem_empate:
-
         st.markdown(
             f"""
 <div class="bloco-azul foco-final">
@@ -399,13 +446,11 @@ with aba1:
         )
 
     elif tem_empate:
-
         st.warning(
             "Houve empate entre os post-its mais votados. Faça uma nova votação apenas com os empatados."
         )
 
         if st.button("Iniciar nova votação com os empatados"):
-
             ids_empatados = [str(item[0]) for item in vencedores]
 
             cursor.execute("UPDATE postits SET ativo = 0")
@@ -424,7 +469,6 @@ with aba1:
     else:
         st.info("O Foco no Foco aparecerá aqui após a votação.")
 
-    # CONTROLES
     col_reset1, col_reset2 = st.columns(2)
 
     with col_reset1:
@@ -439,7 +483,6 @@ with aba1:
             conn.commit()
             st.rerun()
 
-    # MURAL
     cursor.execute("""
     SELECT id, equipe, texto, votos
     FROM postits
@@ -450,13 +493,10 @@ with aba1:
     postits = cursor.fetchall()
 
     if postits:
-
         colunas = st.columns(3)
 
         for i, (postit_id, equipe, texto, votos) in enumerate(postits):
-
             with colunas[i % 3]:
-
                 st.markdown(
                     f"""
 <div class="postit">
@@ -468,11 +508,7 @@ with aba1:
                     unsafe_allow_html=True
                 )
 
-                if st.button(
-                    "Votar neste post-it",
-                    key=f"votar_{postit_id}"
-                ):
-
+                if st.button("Votar neste post-it", key=f"votar_{postit_id}"):
                     cursor.execute("""
                     UPDATE postits
                     SET votos = votos + 1
@@ -485,10 +521,18 @@ with aba1:
     else:
         st.info("Nenhum post-it disponível.")
 
-with aba2:
 
+with aba2:
     st.title("Principais Obstáculos")
 
-    st.info(
-        "Essa aba está reservada para a próxima etapa."
+    st.markdown(
+        """
+<div class="card-section">
+<h3>Etapa em construção</h3>
+<p style="font-size:20px; color:#475569;">
+Essa aba está reservada para a próxima etapa.
+</p>
+</div>
+""",
+        unsafe_allow_html=True
     )
