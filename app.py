@@ -3,18 +3,25 @@ import time
 import sqlite3
 from streamlit_autorefresh import st_autorefresh
 
-st.set_page_config(page_title="Foco no Foco", layout="centered")
+st.set_page_config(page_title="Foco no Foco", layout="wide")
 
-# ESTILO
+# ESTILO PROFISSIONAL
 st.markdown("""
 <style>
-    .main {
-        background-color: #f7f9fc;
+    .main .block-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+        max-width: 1200px;
+    }
+
+    section.main > div {
+        background-color: #f4f7fb;
     }
 
     h1 {
         color: #003b71;
         font-weight: 800;
+        letter-spacing: -0.5px;
     }
 
     h2, h3 {
@@ -22,28 +29,83 @@ st.markdown("""
         font-weight: 700;
     }
 
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 12px;
+        background-color: transparent;
+        padding-bottom: 14px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        height: 58px;
+        padding: 0px 28px;
+        background: white;
+        border-radius: 14px;
+        color: #003b71;
+        font-weight: 700;
+        font-size: 17px;
+        border: 1px solid #d9e2ec;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        transition: all 0.2s ease-in-out;
+    }
+
+    .stTabs [aria-selected="true"] {
+        background: linear-gradient(135deg, #003b71, #005a9c);
+        color: white;
+        border: none;
+        box-shadow: 0 6px 16px rgba(0, 59, 113, 0.25);
+    }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: #eef4fa;
+        transform: translateY(-1px);
+    }
+
+    .stButton > button {
+        width: 100%;
+        border-radius: 12px;
+        height: 50px;
+        border: none;
+        background: linear-gradient(135deg, #003b71, #005a9c);
+        color: white;
+        font-weight: 700;
+        font-size: 15px;
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
     div[data-testid="stTextInput"] input {
         font-size: 20px;
-        height: 54px;
-        border-radius: 10px;
+        height: 56px;
+        border-radius: 12px;
+        border: 1px solid #d0d7e2;
+        background-color: white;
+        padding-left: 14px;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.04);
     }
 
     textarea {
         font-size: 18px !important;
-        border-radius: 10px !important;
+        border-radius: 12px !important;
+        border: 1px solid #d0d7e2 !important;
+        box-shadow: 0 1px 6px rgba(0,0,0,0.04) !important;
     }
 
     .bloco-azul {
         background: linear-gradient(135deg, #003b71, #005a9c);
         color: white;
-        padding: 20px;
-        border-radius: 16px;
+        padding: 24px;
+        border-radius: 18px;
         margin: 12px 0 20px 0;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+        box-shadow: 0 10px 24px rgba(0,0,0,0.16);
     }
 
     .foco-salvo {
-        font-size: 30px;
+        font-size: 32px;
         font-weight: 800;
         line-height: 1.25;
     }
@@ -54,31 +116,56 @@ st.markdown("""
     }
 
     .postit {
-        background-color: #fff4a8;
-        padding: 20px;
-        border-radius: 12px;
-        min-height: 160px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.16);
-        margin-bottom: 20px;
+        background: linear-gradient(180deg, #fff8c9 0%, #fff2a8 100%);
+        padding: 22px;
+        border-radius: 16px;
+        min-height: 180px;
+        box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        margin-bottom: 22px;
         color: #1f2937;
         font-family: Arial, sans-serif;
         overflow-wrap: break-word;
         word-break: break-word;
         white-space: normal;
-        border-left: 6px solid #003b71;
+        border-left: 8px solid #003b71;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .postit:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.16);
     }
 
     .postit h4 {
         margin-top: 0;
-        margin-bottom: 12px;
-        font-size: 17px;
+        margin-bottom: 14px;
+        font-size: 18px;
         color: #003b71;
     }
 
     .postit-texto {
-        font-size: 18px;
+        color: #1f2937;
+        font-size: 20px;
+        line-height: 1.5;
         font-weight: 700;
-        line-height: 1.35;
+    }
+
+    .card-section {
+        background: white;
+        padding: 26px;
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.07);
+        border: 1px solid #e6edf5;
+        margin-bottom: 24px;
+    }
+
+    .timer-box {
+        background: white;
+        padding: 18px 22px;
+        border-radius: 16px;
+        border: 1px solid #e1e8f0;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        margin-bottom: 16px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -162,10 +249,10 @@ if st.session_state.editando_foco:
 else:
     st.markdown(
         f"""
-        <div class="bloco-azul foco-salvo">
-            {st.session_state.foco_salvo}
-        </div>
-        """,
+<div class="bloco-azul foco-salvo">
+{st.session_state.foco_salvo}
+</div>
+""",
         unsafe_allow_html=True
     )
 
@@ -176,11 +263,16 @@ else:
 st.divider()
 
 
-aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
+aba1, aba2 = st.tabs([
+    "🎯 Foco no Foco",
+    "🚧 Principais Obstáculos"
+])
 
 
 with aba1:
     st.title("Foco no Foco")
+
+    st.markdown('<div class="card-section">', unsafe_allow_html=True)
 
     st.subheader("Cadastro da equipe")
 
@@ -235,11 +327,11 @@ with aba1:
     else:
         st.markdown(
             f"""
-            <div class="bloco-azul info-equipe">
-                <strong>Equipe:</strong> {st.session_state.nome_equipe_salvo}<br>
-                <strong>Líder:</strong> {st.session_state.lider_equipe_salvo}
-            </div>
-            """,
+<div class="bloco-azul info-equipe">
+<strong>Equipe:</strong> {st.session_state.nome_equipe_salvo}<br>
+<strong>Líder:</strong> {st.session_state.lider_equipe_salvo}
+</div>
+""",
             unsafe_allow_html=True
         )
 
@@ -249,7 +341,9 @@ with aba1:
 
     nome_equipe = st.session_state.nome_equipe_salvo
 
-    st.divider()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="card-section">', unsafe_allow_html=True)
 
     st.subheader("Post-its das equipes")
 
@@ -272,6 +366,7 @@ with aba1:
     )
 
     qtd_palavras = contar_palavras(novo_postit)
+
     st.caption(f"{qtd_palavras}/6 palavras")
 
     if qtd_palavras < 6 and qtd_palavras > 0:
@@ -296,12 +391,14 @@ with aba1:
             st.success("Post-it adicionado!")
             st.rerun()
 
-    st.divider()
+    st.markdown('</div>', unsafe_allow_html=True)
 
     cursor.execute("SELECT equipe, texto FROM postits ORDER BY id DESC")
     postits = cursor.fetchall()
 
     if postits:
+        st.subheader("Mural de post-its")
+
         colunas = st.columns(3)
 
         for i, (equipe, texto) in enumerate(postits):
@@ -321,4 +418,15 @@ with aba1:
 
 with aba2:
     st.title("Principais Obstáculos")
-    st.info("Essa aba está reservada para a próxima etapa.")
+
+    st.markdown(
+        """
+<div class="card-section">
+<h3>Etapa em construção</h3>
+<p style="font-size:18px; color:#4b5563;">
+Essa aba está reservada para a próxima etapa da dinâmica.
+</p>
+</div>
+""",
+        unsafe_allow_html=True
+    )
