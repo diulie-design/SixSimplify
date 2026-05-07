@@ -17,11 +17,14 @@ st.markdown("""
         background: #f7f9fc;
     }
 
+    hr {
+        display: none;
+    }
+
     h1 {
         color: #002f5f;
         font-size: 42px !important;
         font-weight: 800;
-        letter-spacing: -1px;
     }
 
     h2 {
@@ -51,7 +54,6 @@ st.markdown("""
         font-weight: 800;
         font-size: 24px;
         border: 1px solid #dbe4ef;
-        box-shadow: 0 4px 14px rgba(0, 47, 95, 0.08);
     }
 
     .stTabs [aria-selected="true"] {
@@ -65,7 +67,6 @@ st.markdown("""
         padding: 32px;
         border-radius: 24px;
         border: 1px solid #e3eaf2;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
         margin-bottom: 28px;
     }
 
@@ -135,7 +136,6 @@ st.markdown("""
         color: white;
         font-weight: 750;
         font-size: 18px;
-        transition: 0.15s ease;
     }
 
     .stButton > button:hover {
@@ -152,10 +152,15 @@ st.markdown("""
         margin-bottom: 18px;
         color: #1f2937;
         border: 1px solid #f0dc7a;
-        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08);
     }
 
-    .postit h4 {
+    .postit-votado {
+        background: #d9fbe3;
+        border: 2px solid #16a34a;
+    }
+
+    .postit h4,
+    .postit-votado h4 {
         color: #002f5f;
         font-size: 20px;
         margin-top: 0;
@@ -178,11 +183,6 @@ st.markdown("""
     }
 
     @media (max-width: 768px) {
-        .main .block-container {
-            padding-left: 1rem;
-            padding-right: 1rem;
-        }
-
         h1 {
             font-size: 34px !important;
         }
@@ -204,14 +204,6 @@ st.markdown("""
 
         .postit-texto {
             font-size: 24px;
-        }
-
-        div[data-testid="stTextInput"] input,
-        textarea,
-        .stNumberInput input {
-            color: #111827 !important;
-            -webkit-text-fill-color: #111827 !important;
-            background-color: #ffffff !important;
         }
     }
 </style>
@@ -319,10 +311,11 @@ st.markdown("## Foco")
 
 if st.session_state.editando_foco:
     foco_digitado = st.text_input(
-        " ",
+        "Foco",
         value=st.session_state.foco_salvo,
         placeholder="Digite aqui o título do foco",
-        key="campo_foco"
+        key="campo_foco",
+        label_visibility="collapsed"
     )
 
     if st.button("Salvar foco"):
@@ -347,7 +340,6 @@ else:
         st.session_state.editando_foco = True
         st.rerun()
 
-st.divider()
 
 aba1, aba2 = st.tabs([
     "Foco no Foco",
@@ -383,12 +375,14 @@ with aba1:
     if st.session_state.editando_equipe:
         nome_equipe_digitado = st.text_input(
             "Nome da equipe",
-            value=st.session_state.nome_equipe_salvo
+            value=st.session_state.nome_equipe_salvo,
+            placeholder="Digite o nome da equipe"
         )
 
         lider_equipe_digitado = st.text_input(
             "Líder da equipe",
-            value=st.session_state.lider_equipe_salvo
+            value=st.session_state.lider_equipe_salvo,
+            placeholder="Digite o nome do líder"
         )
 
         if st.button("Salvar equipe"):
@@ -475,9 +469,12 @@ with aba1:
 
         for i, (postit_id, equipe, texto, votos) in enumerate(postits):
             with colunas[i % 3]:
+
+                classe_postit = "postit-votado" if postit_id in st.session_state.postits_votados else "postit"
+
                 st.markdown(
                     f"""
-<div class="postit">
+<div class="{classe_postit}">
 <h4>{equipe}</h4>
 <div class="postit-texto">{texto}</div>
 <div class="votos">Votos: {votos}</div>
@@ -515,8 +512,6 @@ with aba1:
 
     else:
         st.info("Nenhum post-it disponível.")
-
-    st.divider()
 
     st.subheader("Resultado da votação")
 
