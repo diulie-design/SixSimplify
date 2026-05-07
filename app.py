@@ -240,7 +240,7 @@ textarea::placeholder {
 }
 
 /* CELULAR */
-@media (max-width: 500px) {
+@media (max-width: 768px) {
 
     .main .block-container {
         padding-left: 0.75rem;
@@ -261,7 +261,7 @@ textarea::placeholder {
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        gap: 6px;
+        gap: 2px;
     }
 
     .stTabs [data-baseweb="tab"] {
