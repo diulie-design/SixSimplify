@@ -23,7 +23,7 @@ def contar_palavras(texto):
 
 
 # FOCO FORA DAS ABAS
-st.title("Foco no Foco")
+
 
 st.subheader("Foco")
 
@@ -39,6 +39,7 @@ aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 
 with aba1:
+    st.title("Foco no Foco")
     st.subheader("Cadastro da Equipe")
 
     nome_equipe = st.text_input(
