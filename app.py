@@ -738,7 +738,19 @@ with aba1:
     else:
         st.info("O resultado aparecerá aqui após a votação.")
 
-    col_reset1, col_reset2 = st.columns(2)
+    col_reset1, col_reset2 = st.columns(
+    [1,1],
+    gap="small"
+    )
+
+    st.markdown("""
+    <style>
+    div[data-testid="column"] {
+        padding-left: 0rem !important;
+        padding-right: 0rem !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
     with col_reset1:
         if st.button("Zerar votos"):
