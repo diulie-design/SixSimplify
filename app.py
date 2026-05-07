@@ -50,13 +50,13 @@ h3 {
 }
 
 .stTabs [data-baseweb="tab"] {
-    min-height: 76px;
-    padding: 0 30px;
+    min-height: 82px;
+    padding: 0 34px;
     background: #ffffff;
     border-radius: 18px;
     color: #002f5f;
     font-weight: 850;
-    font-size: 24px;
+    font-size: 30px;
     border: 2px solid #dbe4ef;
 }
 
@@ -220,10 +220,15 @@ textarea::placeholder {
         font-size: 25px !important;
     }
 
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 10px;
+    }
+
     .stTabs [data-baseweb="tab"] {
-        min-height: 82px;
-        font-size: 27px;
-        padding: 0 24px;
+        min-height: 90px;
+        font-size: 32px;
+        padding: 0 26px;
+        border-radius: 20px;
     }
 
     .step-card {
@@ -247,6 +252,12 @@ textarea::placeholder {
 
     .postit-texto {
         font-size: 26px;
+    }
+
+    div[data-testid="column"] {
+        width: calc(50% - 0.5rem) !important;
+        flex: 1 1 calc(50% - 0.5rem) !important;
+        min-width: calc(50% - 0.5rem) !important;
     }
 }
 
@@ -513,7 +524,7 @@ with aba1:
 
     novo_postit = st.text_area(
         "Adicionar post-it",
-        placeholder="Exemplo: Melhorar comunicação entre áreas internas"
+        placeholder="Exemplo: Melhorar comunicação entre áreas internas críticas"
     )
 
     qtd_palavras = contar_palavras(novo_postit)
