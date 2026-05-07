@@ -177,7 +177,7 @@ textarea::placeholder {
 
 /* BOTÕES */
 .stButton > button {
-    width: 100%;
+    width: 98%;
     min-height: 58px;
     border-radius: 16px;
     border: 2px solid #002f5f;
