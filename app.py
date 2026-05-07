@@ -46,7 +46,7 @@ h3 {
 
 /* ABAS */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 10px;
+    gap: 8px;
     margin-bottom: 24px;
 }
 
@@ -108,7 +108,7 @@ div[data-testid="column"] {
 }
 
 .step-card {
-    background: #eef4fb;
+    background: #89ABFF;
     padding: 24px;
     border-radius: 22px;
     border: 2px solid #c7d8ea;
