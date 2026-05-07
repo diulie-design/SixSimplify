@@ -81,7 +81,7 @@ div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    gap: 4px !important;
+    gap: 2px !important;
 }
 
 div[data-testid="column"] {
@@ -93,11 +93,15 @@ div[data-testid="column"] {
 
 /* BLOCOS */
 .bloco-azul {
-    background: #002f5f;
-    color: white;
+    background: linear-gradient(135deg, #eaf2fb 0%, #d7e7f5 100%);
+    color: #002f5f;
     padding: 28px;
     border-radius: 22px;
     margin: 14px 0 28px 0;
+    border-left: 8px solid #002f5f;
+    border-top: 1px solid #c9d9ea;
+    border-right: 1px solid #c9d9ea;
+    border-bottom: 1px solid #c9d9ea;
 }
 
 .foco-final {
@@ -273,7 +277,7 @@ textarea::placeholder {
     }
 
     div[data-testid="stHorizontalBlock"] {
-        gap: 4px !important;
+        gap: 2px !important;
     }
 
     .stButton > button {
@@ -421,7 +425,14 @@ if "editando_foco" not in st.session_state:
 # FOCO GERAL
 # =========================
 
-st.markdown("## Foco")
+st.markdown(
+    """
+    <h2 style="text-align:center; color:#002f5f;">
+        Foco
+    </h2>
+    """,
+    unsafe_allow_html=True
+)
 
 if st.session_state.editando_foco:
 
