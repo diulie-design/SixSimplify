@@ -62,8 +62,8 @@ h3 {
 
 /* ESSA PARTE AUMENTA O TEXTO REAL DA ABA */
 .stTabs [data-baseweb="tab"] p {
-    font-size: 34px !important;
-    font-weight: 900 !important;
+    font-size: 30px !important;
+    font-weight: 896 !important;
 }
 
 .stTabs [aria-selected="true"] {
@@ -81,7 +81,7 @@ div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    gap: 12px !important;
+    gap: 10px !important;
 }
 
 div[data-testid="column"] {
