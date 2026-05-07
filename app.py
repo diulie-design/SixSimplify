@@ -1,9 +1,7 @@
 import streamlit as st
 import time
 
-st.set_page_config(page_title="Foco no Foco", layout="centered")
 
-st.title("Foco no Foco")
 
 foco = st.text_input(
     "Foco",
@@ -55,3 +53,7 @@ if st.button("Confirmar dados"):
     st.write("**Foco:**", foco)
     st.write("**Equipe:**", nome_equipe)
     st.write("**Líder:**", lider_equipe)
+
+st.set_page_config(page_title="Foco no Foco", layout="centered")
+
+st.title("Foco no Foco")
