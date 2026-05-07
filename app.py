@@ -180,7 +180,6 @@ textarea::placeholder {
 }
 
 @media (max-width: 768px) {
-
     h1 {
         font-size: 34px !important;
     }
@@ -250,17 +249,12 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
         st_autorefresh(interval=1000, key=f"refresh_{nome_timer}")
 
         tempo_passado = int(time.time() - st.session_state[nome_timer])
-
-        tempo_restante = max(
-            tempo_total_segundos - tempo_passado,
-            0
-        )
+        tempo_restante = max(tempo_total_segundos - tempo_passado, 0)
 
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
         st.markdown(f"## ⏱️ {minutos:02d}:{segundos:02d}")
-
         st.progress(tempo_restante / tempo_total_segundos)
 
         if tempo_restante == 0:
@@ -296,6 +290,7 @@ def buscar_mais_votados():
 
     return empatados, maior_voto, tem_empate
 
+
 # =========================
 # SESSION STATE
 # =========================
@@ -309,8 +304,9 @@ if "foco_salvo" not in st.session_state:
 if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
 
+
 # =========================
-# FOCO
+# FOCO GERAL
 # =========================
 
 st.markdown("## Foco")
@@ -330,9 +326,7 @@ if st.session_state.editando_foco:
         if foco_digitado.strip():
 
             st.session_state.foco_salvo = foco_digitado.strip()
-
             st.session_state.editando_foco = False
-
             st.rerun()
 
         else:
@@ -352,292 +346,301 @@ else:
     if st.button("Editar foco"):
 
         st.session_state.editando_foco = True
-
         st.rerun()
 
+
 # =========================
-# PÁGINA PRINCIPAL
+# ABAS NO TOPO
 # =========================
 
-st.title("Foco no Foco")
+aba1, aba2 = st.tabs([
+    "Foco no Foco",
+    "Principais Obstáculos"
+])
 
-# =====================
-# CADASTRO EQUIPE
-# =====================
 
-st.subheader("Cadastro da equipe")
+# =========================
+# ABA 1
+# =========================
 
-if "nome_equipe_salvo" not in st.session_state:
-    st.session_state.nome_equipe_salvo = ""
+with aba1:
 
-if "lider_equipe_salvo" not in st.session_state:
-    st.session_state.lider_equipe_salvo = ""
+    st.title("Foco no Foco")
 
-if "editando_equipe" not in st.session_state:
-    st.session_state.editando_equipe = True
+    # =====================
+    # CADASTRO EQUIPE
+    # =====================
 
-tempo_cadastro_minutos = st.number_input(
-    "Tempo para cadastrar equipe e líder",
-    min_value=1,
-    max_value=60,
-    value=1
-)
+    st.subheader("Cadastro da equipe")
 
-mostrar_cronometro(
-    "timer_cadastro",
-    int(tempo_cadastro_minutos * 60)
-)
+    if "nome_equipe_salvo" not in st.session_state:
+        st.session_state.nome_equipe_salvo = ""
 
-if st.session_state.editando_equipe:
+    if "lider_equipe_salvo" not in st.session_state:
+        st.session_state.lider_equipe_salvo = ""
 
-    nome_equipe_digitado = st.text_input(
-        "Nome da equipe",
-        value=st.session_state.nome_equipe_salvo,
-        placeholder="Digite o nome da equipe"
+    if "editando_equipe" not in st.session_state:
+        st.session_state.editando_equipe = True
+
+    tempo_cadastro_minutos = st.number_input(
+        "Tempo para cadastrar equipe e líder",
+        min_value=1,
+        max_value=60,
+        value=1
     )
 
-    lider_equipe_digitado = st.text_input(
-        "Líder da equipe",
-        value=st.session_state.lider_equipe_salvo,
-        placeholder="Digite o nome do líder"
+    mostrar_cronometro(
+        "timer_cadastro",
+        int(tempo_cadastro_minutos * 60)
     )
 
-    if st.button("Salvar equipe"):
+    if st.session_state.editando_equipe:
 
-        st.session_state.nome_equipe_salvo = nome_equipe_digitado
-        st.session_state.lider_equipe_salvo = lider_equipe_digitado
-        st.session_state.editando_equipe = False
+        nome_equipe_digitado = st.text_input(
+            "Nome da equipe",
+            value=st.session_state.nome_equipe_salvo,
+            placeholder="Digite o nome da equipe"
+        )
 
-        st.rerun()
+        lider_equipe_digitado = st.text_input(
+            "Líder da equipe",
+            value=st.session_state.lider_equipe_salvo,
+            placeholder="Digite o nome do líder"
+        )
 
-else:
+        if st.button("Salvar equipe"):
 
-    st.markdown(
-        f"""
+            st.session_state.nome_equipe_salvo = nome_equipe_digitado
+            st.session_state.lider_equipe_salvo = lider_equipe_digitado
+            st.session_state.editando_equipe = False
+            st.rerun()
+
+    else:
+
+        st.markdown(
+            f"""
 <div class="bloco-azul info-equipe">
 <strong>Equipe:</strong> {st.session_state.nome_equipe_salvo}<br>
 <strong>Líder:</strong> {st.session_state.lider_equipe_salvo}
 </div>
 """,
-        unsafe_allow_html=True
+            unsafe_allow_html=True
+        )
+
+        if st.button("Editar equipe"):
+
+            st.session_state.editando_equipe = True
+            st.rerun()
+
+    nome_equipe = st.session_state.nome_equipe_salvo
+
+    # =====================
+    # POST-ITS
+    # =====================
+
+    st.subheader("Post-its das equipes")
+
+    tempo_postit_minutos = st.number_input(
+        "Tempo para preencher os post-its",
+        min_value=1,
+        max_value=60,
+        value=5
     )
 
-    if st.button("Editar equipe"):
+    mostrar_cronometro(
+        "timer_postit",
+        int(tempo_postit_minutos * 60)
+    )
 
-        st.session_state.editando_equipe = True
+    novo_postit = st.text_area(
+        "Adicionar post-it",
+        placeholder="Digite exatamente 6 palavras"
+    )
 
-        st.rerun()
+    qtd_palavras = contar_palavras(novo_postit)
 
-nome_equipe = st.session_state.nome_equipe_salvo
+    st.caption(f"{qtd_palavras}/6 palavras")
 
-# =====================
-# POST ITS
-# =====================
+    if qtd_palavras < 6 and qtd_palavras > 0:
+        st.warning("O post-it deve ter exatamente 6 palavras.")
 
-st.subheader("Post-its das equipes")
+    if qtd_palavras > 6:
+        st.error("O post-it deve ter exatamente 6 palavras.")
 
-tempo_postit_minutos = st.number_input(
-    "Tempo para preencher os post-its",
-    min_value=1,
-    max_value=60,
-    value=5
-)
+    if st.button("Adicionar post-it"):
 
-mostrar_cronometro(
-    "timer_postit",
-    int(tempo_postit_minutos * 60)
-)
+        if qtd_palavras != 6:
 
-novo_postit = st.text_area(
-    "Adicionar post-it",
-    placeholder="Digite exatamente 6 palavras"
-)
+            st.error("O post-it precisa ter exatamente 6 palavras.")
 
-qtd_palavras = contar_palavras(novo_postit)
+        else:
 
-st.caption(f"{qtd_palavras}/6 palavras")
+            cursor.execute("""
+            INSERT INTO postits (equipe, texto, votos, ativo)
+            VALUES (?, ?, 0, 1)
+            """, (nome_equipe, novo_postit))
 
-if qtd_palavras < 6 and qtd_palavras > 0:
-    st.warning("O post-it deve ter exatamente 6 palavras.")
+            conn.commit()
+            st.success("Post-it adicionado!")
+            st.rerun()
 
-if qtd_palavras > 6:
-    st.error("O post-it deve ter exatamente 6 palavras.")
+    # =====================
+    # MURAL
+    # =====================
 
-if st.button("Adicionar post-it"):
+    cursor.execute("""
+    SELECT id, equipe, texto, votos
+    FROM postits
+    WHERE ativo = 1
+    ORDER BY id DESC
+    """)
 
-    if qtd_palavras != 6:
-        st.error("O post-it precisa ter exatamente 6 palavras.")
+    postits = cursor.fetchall()
 
-    else:
-        cursor.execute("""
-        INSERT INTO postits (equipe, texto, votos, ativo)
-        VALUES (?, ?, 0, 1)
-        """, (nome_equipe, novo_postit))
+    if postits:
 
-        conn.commit()
+        st.subheader("Post-its em votação")
 
-        st.success("Post-it adicionado!")
+        colunas = st.columns(3)
 
-        st.rerun()
+        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
 
-# =====================
-# MURAL
-# =====================
+            with colunas[i % 3]:
 
-cursor.execute("""
-SELECT id, equipe, texto, votos
-FROM postits
-WHERE ativo = 1
-ORDER BY id DESC
-""")
+                classe_postit = (
+                    "postit-votado"
+                    if postit_id in st.session_state.postits_votados
+                    else "postit"
+                )
 
-postits = cursor.fetchall()
-
-if postits:
-
-    st.subheader("Post-its em votação")
-
-    colunas = st.columns(3)
-
-    for i, (postit_id, equipe, texto, votos) in enumerate(postits):
-
-        with colunas[i % 3]:
-
-            classe_postit = (
-                "postit-votado"
-                if postit_id in st.session_state.postits_votados
-                else "postit"
-            )
-
-            st.markdown(
-                f"""
+                st.markdown(
+                    f"""
 <div class="{classe_postit}">
 <h4>{equipe}</h4>
 <div class="postit-texto">{texto}</div>
 <div class="votos">Votos: {votos}</div>
 </div>
 """,
-                unsafe_allow_html=True
-            )
+                    unsafe_allow_html=True
+                )
 
-            if postit_id in st.session_state.postits_votados:
+                if postit_id in st.session_state.postits_votados:
 
-                if st.button(
-                    "Desfazer voto",
-                    key=f"desfazer_{postit_id}"
-                ):
+                    if st.button(
+                        "Desfazer voto",
+                        key=f"desfazer_{postit_id}"
+                    ):
 
-                    cursor.execute("""
-                    UPDATE postits
-                    SET votos = CASE
-                        WHEN votos > 0 THEN votos - 1
-                        ELSE 0
-                    END
-                    WHERE id = ?
-                    """, (postit_id,))
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = CASE
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ?
+                        """, (postit_id,))
 
-                    conn.commit()
+                        conn.commit()
+                        st.session_state.postits_votados.remove(postit_id)
+                        st.rerun()
 
-                    st.session_state.postits_votados.remove(postit_id)
+                else:
 
-                    st.rerun()
+                    if st.button(
+                        "Votar",
+                        key=f"votar_{postit_id}"
+                    ):
 
-            else:
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = votos + 1
+                        WHERE id = ?
+                        """, (postit_id,))
 
-                if st.button(
-                    "Votar",
-                    key=f"votar_{postit_id}"
-                ):
+                        conn.commit()
+                        st.session_state.postits_votados.add(postit_id)
+                        st.rerun()
 
-                    cursor.execute("""
-                    UPDATE postits
-                    SET votos = votos + 1
-                    WHERE id = ?
-                    """, (postit_id,))
+    else:
 
-                    conn.commit()
+        st.info("Nenhum post-it disponível.")
 
-                    st.session_state.postits_votados.add(postit_id)
+    # =====================
+    # RESULTADO
+    # =====================
 
-                    st.rerun()
+    st.subheader("Resultado da votação")
 
-else:
+    st.markdown("## Foco no Foco")
 
-    st.info("Nenhum post-it disponível.")
+    vencedores, maior_voto, tem_empate = buscar_mais_votados()
 
-# =====================
-# RESULTADO
-# =====================
+    if vencedores and not tem_empate:
 
-st.subheader("Resultado da votação")
-
-st.markdown("## Foco no Foco")
-
-vencedores, maior_voto, tem_empate = buscar_mais_votados()
-
-if vencedores and not tem_empate:
-
-    st.markdown(
-        f"""
+        st.markdown(
+            f"""
 <div class="bloco-azul foco-final">
 {vencedores[0][2]}
 </div>
 """,
-        unsafe_allow_html=True
-    )
-
-elif tem_empate:
-
-    st.warning(
-        "Houve empate entre os post-its mais votados. Faça uma nova votação apenas com os empatados."
-    )
-
-    if st.button("Iniciar nova votação com os empatados"):
-
-        ids_empatados = [str(item[0]) for item in vencedores]
-
-        cursor.execute("UPDATE postits SET ativo = 0")
-
-        cursor.execute(
-            f"""
-            UPDATE postits
-            SET ativo = 1, votos = 0
-            WHERE id IN ({",".join(ids_empatados)})
-            """
+            unsafe_allow_html=True
         )
 
-        conn.commit()
+    elif tem_empate:
 
-        st.session_state.postits_votados = set()
+        st.warning(
+            "Houve empate entre os post-its mais votados. Faça uma nova votação apenas com os empatados."
+        )
 
-        st.rerun()
+        if st.button("Iniciar nova votação com os empatados"):
 
-else:
+            ids_empatados = [str(item[0]) for item in vencedores]
 
-    st.info("O Foco no Foco aparecerá aqui após a votação.")
+            cursor.execute("UPDATE postits SET ativo = 0")
 
-col_reset1, col_reset2 = st.columns(2)
+            cursor.execute(
+                f"""
+                UPDATE postits
+                SET ativo = 1, votos = 0
+                WHERE id IN ({",".join(ids_empatados)})
+                """
+            )
 
-with col_reset1:
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
 
-    if st.button("Zerar votos"):
+    else:
 
-        cursor.execute("UPDATE postits SET votos = 0")
+        st.info("O Foco no Foco aparecerá aqui após a votação.")
 
-        conn.commit()
+    col_reset1, col_reset2 = st.columns(2)
 
-        st.session_state.postits_votados = set()
+    with col_reset1:
 
-        st.rerun()
+        if st.button("Zerar votos"):
 
-with col_reset2:
+            cursor.execute("UPDATE postits SET votos = 0")
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
 
-    if st.button("Mostrar todos novamente"):
+    with col_reset2:
 
-        cursor.execute("UPDATE postits SET ativo = 1")
+        if st.button("Mostrar todos novamente"):
 
-        conn.commit()
+            cursor.execute("UPDATE postits SET ativo = 1")
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
 
-        st.session_state.postits_votados = set()
 
-        st.rerun()
+# =========================
+# ABA 2
+# =========================
+
+with aba2:
+
+    st.title("Principais Obstáculos")
+
+    st.info("Essa aba está reservada para a próxima etapa.")
