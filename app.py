@@ -81,7 +81,7 @@ div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    gap: 6px !important;
+    gap: 4px !important;
 }
 
 div[data-testid="column"] {
