@@ -22,21 +22,23 @@ def contar_palavras(texto):
     return len(texto.strip().split())
 
 
+# FOCO FORA DAS ABAS
+st.title("Foco no Foco")
+
+st.subheader("Foco")
+
+foco = st.text_input(
+    " ",
+    placeholder="Digite aqui o título do foco"
+)
+
+st.divider()
+
+
 aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 
 with aba1:
-    st.title("Foco no Foco")
-
-    st.subheader("Foco")
-
-    foco = st.text_input(
-        "",
-        placeholder="Digite aqui o título do foco"
-    )
-
-    st.divider()
-
     st.subheader("Cadastro da Equipe")
 
     nome_equipe = st.text_input(
@@ -133,14 +135,31 @@ with aba1:
                         box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
                         margin-bottom: 20px;
                         color: #1f2937;
-                        font-family: Arial;
+                        font-family: Arial, sans-serif;
+                        overflow-wrap: break-word;
+                        word-break: normal;
+                        white-space: normal;
                     ">
-                        <h4 style="margin-top: 0;">{equipe}</h4>
+                        <h4 style="
+                            margin-top: 0;
+                            margin-bottom: 12px;
+                            font-size: 18px;
+                            line-height: 1.2;
+                            overflow-wrap: break-word;
+                            word-break: normal;
+                            white-space: normal;
+                        ">
+                            {equipe}
+                        </h4>
 
                         <p style="
-                            font-size: 20px;
+                            font-size: 18px;
                             font-weight: 600;
-                            word-wrap: break-word;
+                            line-height: 1.35;
+                            margin: 0;
+                            overflow-wrap: break-word;
+                            word-break: normal;
+                            white-space: normal;
                         ">
                             {texto}
                         </p>
@@ -154,6 +173,6 @@ with aba1:
 
 
 with aba2:
-    st.title("Principais Obstáculos")
+    st.subheader("Principais Obstáculos")
 
     st.info("Essa aba está reservada para a próxima etapa.")
