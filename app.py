@@ -2,6 +2,8 @@ import streamlit as st
 import time
 import sqlite3
 
+foco = st.text_input( "Foco", placeholder="Digite aqui o título do foco" )
+
 st.set_page_config(page_title="Foco no Foco", layout="centered")
 
 # Banco de dados
@@ -61,10 +63,6 @@ st.divider()
 
 st.title("Foco no Foco")
 
-foco = st.text_input(
-    "Foco",
-    placeholder="Digite aqui o título do foco"
-)
 
 st.divider()
 
