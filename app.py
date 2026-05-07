@@ -305,11 +305,15 @@ def buscar_mais_votados():
     return empatados, maior_voto, tem_empate
 
 
+if "postits_votados" not in st.session_state:
+    st.session_state.postits_votados = set()
+
 if "foco_salvo" not in st.session_state:
     st.session_state.foco_salvo = ""
 
 if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
+
 
 st.markdown("## Foco")
 
@@ -455,7 +459,66 @@ with aba1:
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    st.subheader("Votação")
+    cursor.execute("""
+    SELECT id, equipe, texto, votos
+    FROM postits
+    WHERE ativo = 1
+    ORDER BY id DESC
+    """)
+
+    postits = cursor.fetchall()
+
+    if postits:
+        st.subheader("Post-its em votação")
+
+        colunas = st.columns(3)
+
+        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
+            with colunas[i % 3]:
+                st.markdown(
+                    f"""
+<div class="postit">
+<h4>{equipe}</h4>
+<div class="postit-texto">{texto}</div>
+<div class="votos">Votos: {votos}</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+                if postit_id in st.session_state.postits_votados:
+                    if st.button("Desfazer voto", key=f"desfazer_{postit_id}"):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = CASE
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ?
+                        """, (postit_id,))
+
+                        conn.commit()
+                        st.session_state.postits_votados.remove(postit_id)
+                        st.rerun()
+
+                else:
+                    if st.button("Votar", key=f"votar_{postit_id}"):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = votos + 1
+                        WHERE id = ?
+                        """, (postit_id,))
+
+                        conn.commit()
+                        st.session_state.postits_votados.add(postit_id)
+                        st.rerun()
+
+    else:
+        st.info("Nenhum post-it disponível.")
+
+    st.divider()
+
+    st.subheader("Resultado da votação")
 
     st.markdown("## Foco no Foco")
 
@@ -490,6 +553,7 @@ with aba1:
             )
 
             conn.commit()
+            st.session_state.postits_votados = set()
             st.rerun()
 
     else:
@@ -501,68 +565,15 @@ with aba1:
         if st.button("Zerar votos"):
             cursor.execute("UPDATE postits SET votos = 0")
             conn.commit()
+            st.session_state.postits_votados = set()
             st.rerun()
 
     with col_reset2:
         if st.button("Mostrar todos novamente"):
             cursor.execute("UPDATE postits SET ativo = 1")
             conn.commit()
+            st.session_state.postits_votados = set()
             st.rerun()
-
-    cursor.execute("""
-    SELECT id, equipe, texto, votos
-    FROM postits
-    WHERE ativo = 1
-    ORDER BY id DESC
-    """)
-
-    postits = cursor.fetchall()
-
-    if postits:
-        colunas = st.columns(3)
-
-        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
-            with colunas[i % 3]:
-                st.markdown(
-                    f"""
-<div class="postit">
-<h4>{equipe}</h4>
-<div class="postit-texto">{texto}</div>
-<div class="votos">Votos: {votos}</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-                col_votar, col_desvotar = st.columns(2)
-
-                with col_votar:
-                    if st.button("Votar", key=f"votar_{postit_id}"):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = votos + 1
-                        WHERE id = ?
-                        """, (postit_id,))
-
-                        conn.commit()
-                        st.rerun()
-
-                with col_desvotar:
-                    if st.button("Desvotar", key=f"desvotar_{postit_id}"):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = CASE 
-                            WHEN votos > 0 THEN votos - 1
-                            ELSE 0
-                        END
-                        WHERE id = ?
-                        """, (postit_id,))
-
-                        conn.commit()
-                        st.rerun()
-
-    else:
-        st.info("Nenhum post-it disponível.")
 
 
 with aba2:
