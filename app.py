@@ -361,12 +361,6 @@ else:
 
 st.title("Foco no Foco")
 
-# =========================
-# ABA 1
-# =========================
-
-
-    st.title("Foco no Foco")
 
     # =====================
     # CADASTRO EQUIPE
