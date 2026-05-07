@@ -177,7 +177,7 @@ textarea::placeholder {
 
 /* BOTÕES */
 .stButton > button {
-    width: 98%;
+    width: 100%;
     min-height: 58px;
     border-radius: 16px;
     border: 2px solid #002f5f;
@@ -186,7 +186,7 @@ textarea::placeholder {
     font-weight: 800;
     font-size: 18px;
     padding-left: 8px;
-    padding-right: 8px;
+    padding-right: 6px;
 }
 
 .stButton > button:hover {
