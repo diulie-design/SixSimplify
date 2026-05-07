@@ -2,9 +2,14 @@ import streamlit as st
 import time
 import sqlite3
 
-foco = st.text_input( "Foco", placeholder="Digite aqui o título do foco" )
+st.subheader("Foco")
 
+foco = st.text_input(
+    "",
+    placeholder="Digite aqui o título do foco"
+)
 st.set_page_config(page_title="Foco no Foco", layout="centered")
+
 
 # Banco de dados
 conn = sqlite3.connect("postits.db", check_same_thread=False)
@@ -63,37 +68,45 @@ st.divider()
 
 st.title("Foco no Foco")
 
-
 st.divider()
 
 st.subheader("Post-its das equipes")
 
 novo_postit = st.text_area(
     "Adicionar post-it",
-    placeholder="Digite uma ideia com no máximo 6 palavras"
+    placeholder="Digite uma ideia com exatamente 6 palavras"
 )
 
 qtd_palavras = contar_palavras(novo_postit)
 
 st.caption(f"{qtd_palavras}/6 palavras")
 
+if qtd_palavras < 6 and qtd_palavras > 0:
+    st.warning("O post-it deve ter exatamente 6 palavras.")
+
 if qtd_palavras > 6:
-    st.error("O post-it pode ter no máximo 6 palavras.")
+    st.error("O post-it deve ter exatamente 6 palavras.")
 
 if st.button("Adicionar post-it"):
     if not nome_equipe.strip():
         st.warning("Preencha o nome da equipe antes de adicionar um post-it.")
+
     elif not novo_postit.strip():
         st.warning("Digite o conteúdo do post-it.")
-    elif qtd_palavras > 6:
-        st.error("Reduza o texto para no máximo 6 palavras.")
+
+    elif qtd_palavras != 6:
+        st.error("O post-it precisa ter exatamente 6 palavras.")
+
     else:
         cursor.execute(
             "INSERT INTO postits (equipe, texto) VALUES (?, ?)",
             (nome_equipe, novo_postit)
         )
+
         conn.commit()
+
         st.success("Post-it adicionado!")
+
         st.rerun()
 
 st.divider()
@@ -105,7 +118,9 @@ if postits:
     colunas = st.columns(3)
 
     for i, (equipe, texto) in enumerate(postits):
+
         with colunas[i % 3]:
+
             st.markdown(
                 f"""
                 <div style="
@@ -119,10 +134,18 @@ if postits:
                     font-family: Arial;
                 ">
                     <h4 style="margin-top: 0;">{equipe}</h4>
-                    <p style="font-size: 20px; font-weight: 600;">{texto}</p>
+
+                    <p style="
+                        font-size: 20px;
+                        font-weight: 600;
+                        word-wrap: break-word;
+                    ">
+                        {texto}
+                    </p>
                 </div>
                 """,
                 unsafe_allow_html=True
             )
+
 else:
     st.info("Nenhum post-it adicionado ainda.")
