@@ -44,26 +44,49 @@ h3 {
     font-weight: 800;
 }
 
+/* ABAS GRANDES */
 .stTabs [data-baseweb="tab-list"] {
     gap: 14px;
     margin-bottom: 28px;
 }
 
 .stTabs [data-baseweb="tab"] {
-    min-height: 82px;
-    padding: 0 34px;
+    min-height: 90px;
+    padding: 0 36px;
     background: #ffffff;
-    border-radius: 18px;
+    border-radius: 22px;
     color: #002f5f;
-    font-weight: 850;
-    font-size: 30px;
+    font-weight: 900;
     border: 2px solid #dbe4ef;
+}
+
+/* ESSA PARTE AUMENTA O TEXTO REAL DA ABA */
+.stTabs [data-baseweb="tab"] p {
+    font-size: 34px !important;
+    font-weight: 900 !important;
 }
 
 .stTabs [aria-selected="true"] {
     background: #002f5f;
     color: white;
     border: 2px solid #002f5f;
+}
+
+.stTabs [aria-selected="true"] p {
+    color: white !important;
+}
+
+/* FORÇA COLUNAS LADO A LADO NO CELULAR */
+div[data-testid="stHorizontalBlock"] {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 12px !important;
+}
+
+div[data-testid="column"] {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
 }
 
 .bloco-azul {
@@ -220,15 +243,15 @@ textarea::placeholder {
         font-size: 25px !important;
     }
 
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 10px;
+    .stTabs [data-baseweb="tab"] {
+        min-height: 96px;
+        padding: 0 22px;
+        border-radius: 22px;
     }
 
-    .stTabs [data-baseweb="tab"] {
-        min-height: 90px;
-        font-size: 32px;
-        padding: 0 26px;
-        border-radius: 20px;
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 34px !important;
+        line-height: 1.1 !important;
     }
 
     .step-card {
@@ -252,12 +275,6 @@ textarea::placeholder {
 
     .postit-texto {
         font-size: 26px;
-    }
-
-    div[data-testid="column"] {
-        width: calc(50% - 0.5rem) !important;
-        flex: 1 1 calc(50% - 0.5rem) !important;
-        min-width: calc(50% - 0.5rem) !important;
     }
 }
 
@@ -428,7 +445,6 @@ with aba1:
 
     st.title("Foco no Foco")
 
-    # PASSO 1
     st.markdown(
         """
 <div class="step-card">
@@ -499,7 +515,6 @@ with aba1:
 
     nome_equipe = st.session_state.nome_equipe_salvo
 
-    # PASSO 2
     st.markdown(
         """
 <div class="step-card">
@@ -551,7 +566,6 @@ with aba1:
             st.success("Post-it adicionado!")
             st.rerun()
 
-    # PASSO 3
     st.markdown(
         """
 <div class="step-card">
@@ -573,68 +587,63 @@ with aba1:
 
     if postits:
 
-        colunas = st.columns(3)
+        for postit_id, equipe, texto, votos in postits:
 
-        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
+            classe_postit = (
+                "postit-votado"
+                if postit_id in st.session_state.postits_votados
+                else "postit"
+            )
 
-            with colunas[i % 3]:
-
-                classe_postit = (
-                    "postit-votado"
-                    if postit_id in st.session_state.postits_votados
-                    else "postit"
-                )
-
-                st.markdown(
-                    f"""
+            st.markdown(
+                f"""
 <div class="{classe_postit}">
 <h4>{equipe}</h4>
 <div class="postit-texto">{texto}</div>
 <div class="votos">Votos: {votos}</div>
 </div>
 """,
-                    unsafe_allow_html=True
-                )
+                unsafe_allow_html=True
+            )
 
-                if postit_id in st.session_state.postits_votados:
+            if postit_id in st.session_state.postits_votados:
 
-                    if st.button(
-                        "Desfazer voto",
-                        key=f"desfazer_{postit_id}"
-                    ):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = CASE
-                            WHEN votos > 0 THEN votos - 1
-                            ELSE 0
-                        END
-                        WHERE id = ?
-                        """, (postit_id,))
+                if st.button(
+                    "Desfazer voto",
+                    key=f"desfazer_{postit_id}"
+                ):
+                    cursor.execute("""
+                    UPDATE postits
+                    SET votos = CASE
+                        WHEN votos > 0 THEN votos - 1
+                        ELSE 0
+                    END
+                    WHERE id = ?
+                    """, (postit_id,))
 
-                        conn.commit()
-                        st.session_state.postits_votados.remove(postit_id)
-                        st.rerun()
+                    conn.commit()
+                    st.session_state.postits_votados.remove(postit_id)
+                    st.rerun()
 
-                else:
+            else:
 
-                    if st.button(
-                        "Votar",
-                        key=f"votar_{postit_id}"
-                    ):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = votos + 1
-                        WHERE id = ?
-                        """, (postit_id,))
+                if st.button(
+                    "Votar",
+                    key=f"votar_{postit_id}"
+                ):
+                    cursor.execute("""
+                    UPDATE postits
+                    SET votos = votos + 1
+                    WHERE id = ?
+                    """, (postit_id,))
 
-                        conn.commit()
-                        st.session_state.postits_votados.add(postit_id)
-                        st.rerun()
+                    conn.commit()
+                    st.session_state.postits_votados.add(postit_id)
+                    st.rerun()
 
     else:
         st.info("Nenhum post-it disponível ainda.")
 
-    # PASSO 4
     st.markdown(
         """
 <div class="step-card">
