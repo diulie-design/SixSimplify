@@ -44,26 +44,26 @@ h3 {
     font-weight: 800;
 }
 
-/* ABAS GRANDES */
+/* ABAS */
 .stTabs [data-baseweb="tab-list"] {
-    gap: 14px;
-    margin-bottom: 28px;
+    gap: 8px;
+    margin-bottom: 24px;
 }
 
 .stTabs [data-baseweb="tab"] {
-    min-height: 90px;
-    padding: 0 36px;
+    min-height: 68px;
+    padding: 0 18px;
     background: #ffffff;
-    border-radius: 22px;
+    border-radius: 18px;
     color: #002f5f;
-    font-weight: 900;
+    font-weight: 800;
     border: 2px solid #dbe4ef;
 }
 
-/* ESSA PARTE AUMENTA O TEXTO REAL DA ABA */
 .stTabs [data-baseweb="tab"] p {
-    font-size: 27px !important;
-    font-weight: 850 !important;
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
 }
 
 .stTabs [aria-selected="true"] {
@@ -76,19 +76,22 @@ h3 {
     color: white !important;
 }
 
-/* FORÇA COLUNAS LADO A LADO NO CELULAR */
+/* COLUNAS MAIS JUSTAS */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    gap: 10px !important;
+    gap: 6px !important;
 }
 
 div[data-testid="column"] {
     flex: 1 1 0 !important;
     min-width: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
+/* BLOCOS */
 .bloco-azul {
     background: #002f5f;
     color: white;
@@ -108,17 +111,21 @@ div[data-testid="column"] {
     line-height: 1.7;
 }
 
+/* EXPLICAÇÕES */
 .step-card {
-    background: white;
-    padding: 30px;
-    border-radius: 24px;
-    border: 2px solid #e3eaf2;
-    margin-bottom: 28px;
+    background: linear-gradient(135deg, #eaf2fb 0%, #d7e7f5 100%);
+    padding: 24px;
+    border-radius: 22px;
+    border-left: 8px solid #002f5f;
+    border-top: 1px solid #c9d9ea;
+    border-right: 1px solid #c9d9ea;
+    border-bottom: 1px solid #c9d9ea;
+    margin-bottom: 24px;
 }
 
 .step-title {
     color: #002f5f;
-    font-size: 28px;
+    font-size: 27px;
     font-weight: 850;
     margin-bottom: 8px;
 }
@@ -126,9 +133,10 @@ div[data-testid="column"] {
 .step-help {
     color: #24476b;
     font-size: 19px;
-    margin-bottom: 22px;
+    margin-bottom: 0;
 }
 
+/* CAMPOS */
 div[data-testid="stTextInput"] input {
     font-size: 24px;
     height: 66px;
@@ -163,15 +171,18 @@ textarea::placeholder {
     background-color: #ffffff !important;
 }
 
+/* BOTÕES */
 .stButton > button {
     width: 100%;
-    min-height: 64px;
-    border-radius: 18px;
+    min-height: 58px;
+    border-radius: 16px;
     border: 2px solid #002f5f;
     background: #002f5f;
     color: white;
-    font-weight: 850;
-    font-size: 21px;
+    font-weight: 800;
+    font-size: 18px;
+    padding-left: 8px;
+    padding-right: 8px;
 }
 
 .stButton > button:hover {
@@ -180,6 +191,7 @@ textarea::placeholder {
     color: white;
 }
 
+/* POST-ITS */
 .postit {
     background: #fff6b8;
     padding: 26px;
@@ -223,11 +235,12 @@ textarea::placeholder {
     margin-top: 18px;
 }
 
+/* CELULAR */
 @media (max-width: 768px) {
 
     .main .block-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
         padding-top: 1rem;
     }
 
@@ -243,39 +256,56 @@ textarea::placeholder {
         font-size: 25px !important;
     }
 
-    .stTabs [data-baseweb="tab"] {
-        min-height: 96px;
-        padding: 0 22px;
-        border-radius: 22px;
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 6px;
     }
 
-.stTabs [data-baseweb="tab"] p {
-    font-size: 26px !important;
-    line-height: 1.1 !important;
-    font-weight: 850 !important;
-}
+    .stTabs [data-baseweb="tab"] {
+        min-height: 70px;
+        padding: 0 12px;
+        border-radius: 18px;
+    }
+
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 20px !important;
+        line-height: 1.05 !important;
+        font-weight: 800 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] {
+        gap: 4px !important;
+    }
+
+    .stButton > button {
+        min-height: 54px;
+        font-size: 16px;
+        border-radius: 14px;
+        padding-left: 4px;
+        padding-right: 4px;
+    }
 
     .step-card {
-        padding: 22px;
-        border-radius: 22px;
+        padding: 20px;
+        border-radius: 20px;
+        border-left: 7px solid #002f5f;
     }
 
     .step-title {
-        font-size: 27px;
+        font-size: 25px;
     }
 
     .step-help {
-        font-size: 20px;
+        font-size: 19px;
     }
 
     div[data-testid="stTextInput"] input,
     textarea,
     .stNumberInput input {
-        font-size: 23px !important;
+        font-size: 22px !important;
     }
 
     .postit-texto {
-        font-size: 26px;
+        font-size: 25px;
     }
 }
 
