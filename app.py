@@ -94,18 +94,36 @@ st.markdown("""
         border-radius: 16px;
         border: 1px solid #cfd9e6;
         background-color: #ffffff;
+        color: #111827 !important;
+        -webkit-text-fill-color: #111827 !important;
+    }
+
+    div[data-testid="stTextInput"] input::placeholder {
+        color: #6b7280 !important;
+        -webkit-text-fill-color: #6b7280 !important;
     }
 
     textarea {
         font-size: 20px !important;
         border-radius: 16px !important;
         border: 1px solid #cfd9e6 !important;
+        color: #111827 !important;
+        background-color: #ffffff !important;
+        -webkit-text-fill-color: #111827 !important;
+    }
+
+    textarea::placeholder {
+        color: #6b7280 !important;
+        -webkit-text-fill-color: #6b7280 !important;
     }
 
     .stNumberInput input {
         font-size: 20px;
         height: 56px;
         border-radius: 14px;
+        color: #111827 !important;
+        -webkit-text-fill-color: #111827 !important;
+        background-color: #ffffff !important;
     }
 
     .stButton > button {
@@ -186,6 +204,14 @@ st.markdown("""
 
         .postit-texto {
             font-size: 24px;
+        }
+
+        div[data-testid="stTextInput"] input,
+        textarea,
+        .stNumberInput input {
+            color: #111827 !important;
+            -webkit-text-fill-color: #111827 !important;
+            background-color: #ffffff !important;
         }
     }
 </style>
@@ -508,15 +534,32 @@ with aba1:
                     unsafe_allow_html=True
                 )
 
-                if st.button("Votar neste post-it", key=f"votar_{postit_id}"):
-                    cursor.execute("""
-                    UPDATE postits
-                    SET votos = votos + 1
-                    WHERE id = ?
-                    """, (postit_id,))
+                col_votar, col_desvotar = st.columns(2)
 
-                    conn.commit()
-                    st.rerun()
+                with col_votar:
+                    if st.button("Votar", key=f"votar_{postit_id}"):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = votos + 1
+                        WHERE id = ?
+                        """, (postit_id,))
+
+                        conn.commit()
+                        st.rerun()
+
+                with col_desvotar:
+                    if st.button("Desvotar", key=f"desvotar_{postit_id}"):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = CASE 
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ?
+                        """, (postit_id,))
+
+                        conn.commit()
+                        st.rerun()
 
     else:
         st.info("Nenhum post-it disponível.")
