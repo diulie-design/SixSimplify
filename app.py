@@ -62,8 +62,8 @@ h3 {
 
 /* ESSA PARTE AUMENTA O TEXTO REAL DA ABA */
 .stTabs [data-baseweb="tab"] p {
-    font-size: 30px !important;
-    font-weight: 896 !important;
+    font-size: 27px !important;
+    font-weight: 850 !important;
 }
 
 .stTabs [aria-selected="true"] {
@@ -124,7 +124,7 @@ div[data-testid="column"] {
 }
 
 .step-help {
-    color: #475569;
+    color: #24476b;
     font-size: 19px;
     margin-bottom: 22px;
 }
@@ -249,10 +249,11 @@ textarea::placeholder {
         border-radius: 22px;
     }
 
-    .stTabs [data-baseweb="tab"] p {
-        font-size: 34px !important;
-        line-height: 1.1 !important;
-    }
+.stTabs [data-baseweb="tab"] p {
+    font-size: 26px !important;
+    line-height: 1.1 !important;
+    font-weight: 850 !important;
+}
 
     .step-card {
         padding: 22px;
