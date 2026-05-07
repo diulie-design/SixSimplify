@@ -40,20 +40,7 @@ aba1, aba2 = st.tabs(["Foco no Foco", "Principais Obstáculos"])
 
 with aba1:
     st.title("Foco no Foco")
-    st.subheader("Cadastro da Equipe")
-
-    nome_equipe = st.text_input(
-        "Nome da equipe",
-        placeholder="Digite o nome da equipe"
-    )
-
-    lider_equipe = st.text_input(
-        "Líder da equipe",
-        placeholder="Digite o nome do líder"
-    )
-
-    st.divider()
-
+    
     tempo_total = 60
 
 if "inicio_timer" not in st.session_state:
@@ -83,6 +70,21 @@ if st.session_state.inicio_timer:
     else:
         st.error("Tempo encerrado!")
         st.session_state.inicio_timer = None
+
+    st.subheader("Cadastro da Equipe")
+
+    nome_equipe = st.text_input(
+        "Nome da equipe",
+        placeholder="Digite o nome da equipe"
+    )
+
+    lider_equipe = st.text_input(
+        "Líder da equipe",
+        placeholder="Digite o nome do líder"
+    )
+
+    st.divider()
+
         
     st.divider()
 
