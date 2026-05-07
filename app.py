@@ -144,45 +144,15 @@ with aba1:
 
             with colunas[i % 3]:
 
-                st.markdown(
-                    f"""
-                    <div style="
-                        background-color: #fff3a3;
-                        padding: 20px;
-                        border-radius: 8px;
-                        min-height: 160px;
-                        box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
-                        margin-bottom: 20px;
-                        color: #1f2937;
-                        font-family: Arial, sans-serif;
-                        overflow-wrap: break-word;
-                        word-break: break-word;
-                        white-space: normal;
-                    ">
-
-                        <h4 style="
-                            margin-top: 0;
-                            margin-bottom: 12px;
-                            font-size: 18px;
-                            line-height: 1.2;
-                        ">
-                            {equipe}
-                        </h4>
-
-                        <div style="
-                            font-size: 18px;
-                            font-weight: 600;
-                            line-height: 1.35;
-                            overflow-wrap: break-word;
-                            word-break: break-word;
-                            white-space: normal;
-                        ">
-                            {texto}
-                        </div>
-
-                    </div>
-                    """,
-                    unsafe_allow_html=True
+st.markdown(
+    f"""
+<div style="background-color:#fff3a3; padding:20px; border-radius:8px; min-height:160px; box-shadow:2px 2px 8px rgba(0,0,0,0.2); margin-bottom:20px; color:#1f2937; font-family:Arial, sans-serif; overflow-wrap:break-word; word-break:break-word; white-space:normal;">
+<h4 style="margin-top:0; margin-bottom:12px; font-size:18px; line-height:1.2;">{equipe}</h4>
+<div style="font-size:18px; font-weight:600; line-height:1.35; overflow-wrap:break-word; word-break:break-word; white-space:normal;">{texto}</div>
+</div>
+""",
+    unsafe_allow_html=True
+)
                 )
 
     else:
