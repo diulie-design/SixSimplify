@@ -56,25 +56,34 @@ with aba1:
 
     tempo_total = 60
 
-    if "inicio_timer" not in st.session_state:
-        st.session_state.inicio_timer = None
+if "inicio_timer" not in st.session_state:
+    st.session_state.inicio_timer = None
 
-    if st.button("Iniciar cronômetro de 1 minuto"):
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("Iniciar cronômetro"):
         st.session_state.inicio_timer = time.time()
 
-    if st.session_state.inicio_timer:
-        tempo_passado = int(time.time() - st.session_state.inicio_timer)
-        tempo_restante = max(tempo_total - tempo_passado, 0)
+with col2:
+    if st.button("Encerrar cronômetro"):
+        st.session_state.inicio_timer = None
+        st.warning("Cronômetro encerrado.")
 
-        st.markdown(f"## ⏱️ {tempo_restante} segundos restantes")
-        st.progress(tempo_restante / tempo_total)
+if st.session_state.inicio_timer:
+    tempo_passado = int(time.time() - st.session_state.inicio_timer)
+    tempo_restante = max(tempo_total - tempo_passado, 0)
 
-        if tempo_restante > 0:
-            time.sleep(1)
-            st.rerun()
-        else:
-            st.error("Tempo encerrado!")
+    st.markdown(f"## ⏱️ {tempo_restante} segundos restantes")
+    st.progress(tempo_restante / tempo_total)
 
+    if tempo_restante > 0:
+        time.sleep(1)
+        st.rerun()
+    else:
+        st.error("Tempo encerrado!")
+        st.session_state.inicio_timer = None
+        
     st.divider()
 
     st.subheader("Post-its das equipes")
