@@ -963,6 +963,9 @@ with aba1:
         st.session_state.postits_votados = set()
         st.rerun()
 
+# =========================
+# ABA 2
+# =========================
 
 with aba2:
 
@@ -995,5 +998,99 @@ with aba2:
 
     novo_entrave = st.text_area(
         "Novo post-it de entrave",
-        placeholder="Digite aqui o principal entrave identificado pela equipe"
+        placeholder="Digite aqui o principal entrave identificado pela equipe",
+        key="campo_entrave"
     )
+
+    if st.button("Adicionar entrave", key="botao_adicionar_entrave"):
+
+        if not equipe_entrave.strip():
+            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
+
+        elif not novo_entrave.strip():
+            st.warning("Digite o texto do entrave antes de adicionar.")
+
+        else:
+            cursor.execute("""
+            INSERT INTO entraves (sala, equipe, texto)
+            VALUES (?, ?, ?)
+            """, (sala_atual, equipe_entrave, novo_entrave.strip()))
+
+            conn.commit()
+            st.success("Entrave adicionado!")
+            st.rerun()
+
+    st.markdown("## Mural de entraves por equipe")
+
+    cursor.execute("""
+    SELECT equipe, texto
+    FROM entraves
+    WHERE sala = ?
+    ORDER BY equipe, id
+    """, (sala_atual,))
+
+    entraves = cursor.fetchall()
+
+    cores_times = [
+        "#fff6b8",  # amarelo
+        "#ffd6a5",  # laranja
+        "#caffbf",  # verde claro
+        "#bde0fe",  # azul claro
+        "#ffc8dd",  # rosa
+        "#d0bfff",  # lilás
+        "#fdffb6",  # amarelo limão
+        "#a0c4ff",  # azul médio
+        "#e2ece9",  # verde acinzentado
+        "#f1c0e8",  # rosa/lilás
+    ]
+
+    if entraves:
+
+        equipes = {}
+
+        for equipe, texto in entraves:
+            if equipe not in equipes:
+                equipes[equipe] = []
+            equipes[equipe].append(texto)
+
+        for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
+
+            cor_time = cores_times[indice % len(cores_times)]
+
+            st.markdown(
+                f"""
+<div class="step-card">
+<div class="step-title">{equipe}</div>
+<div class="step-help">Entraves adicionados por esta equipe</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            for entrave in lista_entraves:
+                st.markdown(
+                    f"""
+<div style="
+    background: {cor_time};
+    padding: 26px;
+    border-radius: 22px;
+    min-height: 140px;
+    margin-bottom: 18px;
+    color: #111827;
+    border: 2px solid rgba(0,47,95,0.18);
+">
+    <div style="
+        color: #111827;
+        font-size: 24px;
+        line-height: 1.45;
+        font-weight: 800;
+    ">
+        {entrave}
+    </div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+    else:
+        st.info("Nenhum entrave adicionado ainda nesta sala.")
