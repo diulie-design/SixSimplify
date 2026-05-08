@@ -1268,7 +1268,7 @@ Votos: {votos}
 
                             st.rerun()
 
-        st.markdown("## Entraves mais votados")
+        st.markdown("## Ranking dos entraves mais votados")
 
         cursor.execute("""
         SELECT equipe, texto, votos
@@ -1282,44 +1282,73 @@ Votos: {votos}
 
         if entraves_mais_votados:
 
-            maior_voto_entrave = entraves_mais_votados[0][2]
+            rankings = []
+            votos_ja_usados = []
 
-            entraves_top = [
-                item for item in entraves_mais_votados
-                if item[2] == maior_voto_entrave
-            ]
+            for item in entraves_mais_votados:
+                votos_item = item[2]
+
+                if votos_item not in votos_ja_usados:
+                    votos_ja_usados.append(votos_item)
+
+                posicao = votos_ja_usados.index(votos_item) + 1
+
+                if posicao <= 3:
+                    rankings.append((posicao, item))
 
             st.markdown(
-                f"""
+                """
 <div class="resultado-final-header">
-<div class="resultado-label">ENTRAVES MAIS VOTADOS</div>
-<div class="resultado-texto">{maior_voto_entrave} voto(s)</div>
+<div class="resultado-label">RANKING DOS ENTRAVES</div>
+<div class="resultado-texto">Top 3 mais votados</div>
 </div>
 """,
                 unsafe_allow_html=True
             )
 
-            for equipe_top, texto_top, votos_top in entraves_top:
+            for posicao, (equipe_top, texto_top, votos_top) in rankings:
+
+                if posicao == 1:
+                    titulo_ranking = "1º lugar"
+                    cor_ranking = "#fbcfe8"
+                    borda_ranking = "#ec4899"
+                elif posicao == 2:
+                    titulo_ranking = "2º lugar"
+                    cor_ranking = "#dbeafe"
+                    borda_ranking = "#2563eb"
+                else:
+                    titulo_ranking = "3º lugar"
+                    cor_ranking = "#dcfce7"
+                    borda_ranking = "#16a34a"
 
                 st.markdown(
                     f"""
 <div style="
-    background:#fbcfe8;
+    background:{cor_ranking};
     padding:26px;
     border-radius:22px;
     min-height:130px;
     margin-bottom:16px;
     color:#111827;
-    border:3px solid #ec4899;
+    border:3px solid {borda_ranking};
     box-shadow:0 6px 16px rgba(15,23,42,0.08);
 ">
 <div style="
     color:#002f5f;
-    font-size:18px;
+    font-size:20px;
     font-weight:900;
+    margin-bottom:8px;
+">
+{titulo_ranking} • {votos_top} voto(s)
+</div>
+
+<div style="
+    color:#002f5f;
+    font-size:17px;
+    font-weight:800;
     margin-bottom:10px;
 ">
-{equipe_top}
+Equipe: {equipe_top}
 </div>
 
 <div style="
@@ -1330,15 +1359,6 @@ Votos: {votos}
 ">
 {texto_top}
 </div>
-
-<div style="
-    margin-top:16px;
-    color:#002f5f;
-    font-size:18px;
-    font-weight:800;
-">
-Votos: {votos_top}
-</div>
 </div>
 """,
                     unsafe_allow_html=True
@@ -1347,7 +1367,7 @@ Votos: {votos_top}
         else:
 
             st.info(
-                "Os entraves mais votados aparecerão aqui após a votação."
+                "O ranking dos entraves aparecerá aqui após a votação."
             )
 
     else:
