@@ -964,10 +964,6 @@ with aba1:
         st.rerun()
 
 
-# =========================
-# ABA 2
-# =========================
-
 with aba2:
 
     st.title("Principais Entraves")
@@ -1000,4 +996,4 @@ with aba2:
     novo_entrave = st.text_area(
         "Novo post-it de entrave",
         placeholder="Digite aqui o principal entrave identificado pela equipe"
-    )ve adicionado ainda nesta sala.")
+    )
