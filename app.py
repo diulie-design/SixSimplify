@@ -1384,65 +1384,63 @@ Equipe: {equipe_top}
         st.info(
             "Nenhum entrave adicionado ainda nesta sala."
         )
-        st.markdown("## Categorizar entraves do Top 3")
+st.markdown("## Categorizar entraves do Top 3")
 
-        st.markdown(
-            """
-<div class="step-card">
-<div class="step-title">Criar categoria</div>
-<div class="step-help">Crie quantas categorias quiser e associe somente os entraves que apareceram no Top 3.</div>
-</div>
-""",
-            unsafe_allow_html=True
-        )
+nova_categoria = st.text_input(
+    "Nome da categoria",
+    placeholder="Exemplo: Tecnologia",
+    key="nova_categoria_entraves"
+)
 
-        nova_categoria = st.text_input(
-            "Nome da categoria",
-            placeholder="Exemplo: Tecnologia, Processo, Pessoas, Comunicação...",
-            key="nova_categoria_entraves"
-        )
+opcoes_top3 = {
+    f"{posicao}º lugar | {item[0]} | {item[1]}": item
+    for posicao, item in rankings
+}
 
-        opcoes_top3 = {
-            f"{posicao}º lugar | {item[0]} | {item[1]}": item
-            for posicao, item in rankings
-        }
+entraves_escolhidos = st.multiselect(
+    "Escolha os entraves",
+    options=list(opcoes_top3.keys()),
+    key="entraves_para_categoria"
+)
 
-        entraves_escolhidos = st.multiselect(
-            "Escolha os entraves do Top 3 para essa categoria",
-            options=list(opcoes_top3.keys()),
-            key="entraves_para_categoria"
-        )
+if st.button("Salvar categoria"):
 
-        if st.button("Salvar categoria", key="salvar_categoria_entraves"):
+    if not nova_categoria.strip():
 
-            if not nova_categoria.strip():
+        st.warning("Digite o nome da categoria.")
 
-                st.warning("Digite o nome da categoria.")
+    elif not entraves_escolhidos:
 
-            elif not entraves_escolhidos:
+        st.warning("Escolha pelo menos um entrave.")
 
-                st.warning("Escolha pelo menos um entrave do Top 3.")
+    else:
 
-            else:
+        for item_escolhido in entraves_escolhidos:
 
-                for item_escolhido in entraves_escolhidos:
+            dados_entrave = opcoes_top3[item_escolhido]
 
-                    posicao, dados_entrave = opcoes_top3[item_escolhido]
+            equipe_top = dados_entrave[0]
+            texto_top = dados_entrave[1]
+            votos_top = dados_entrave[2]
+            entrave_id_top = dados_entrave[3]
 
-                    equipe_top, texto_top, votos_top, entrave_id_top = dados_entrave
+            cursor.execute("""
+            INSERT INTO categorias_entraves (
+                sala,
+                categoria,
+                entrave_id
+            )
+            VALUES (?, ?, ?)
+            """, (
+                sala_atual,
+                nova_categoria.strip(),
+                entrave_id_top
+            ))
 
-                    cursor.execute("""
-                    INSERT INTO categorias_entraves (sala, categoria, entrave_id)
-                    VALUES (?, ?, ?)
-                    """, (
-                        sala_atual,
-                        nova_categoria.strip(),
-                        entrave_id_top
-                    ))
+        conn.commit()
 
-                conn.commit()
-                st.success("Categoria salva!")
-                st.rerun()
+        st.success("Categoria criada!")
+        st.rerun()
 
 st.markdown("## Categorias criadas")
 
