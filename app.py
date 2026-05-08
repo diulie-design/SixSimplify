@@ -873,6 +873,6 @@ elif tem_empate:
 
 with aba2:
 
-    st.title("Principais Obstáculos")
+    st.title("Principais Entraves")
 
     st.info("Essa aba está reservada para a próxima etapa.")
