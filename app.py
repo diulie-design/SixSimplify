@@ -1151,7 +1151,7 @@ Mural de entraves da equipe
                 unsafe_allow_html=True
             )
 
-            colunas_mural = st.columns(2)
+            colunas_mural = st.columns(1)
 
             for i, (
                 entrave_id,
@@ -1159,7 +1159,7 @@ Mural de entraves da equipe
                 votos
             ) in enumerate(lista_entraves):
 
-                with colunas_mural[i % 2]:
+                with colunas_mural[0]:
 
                     foi_votado = (
                         entrave_id
@@ -1183,7 +1183,7 @@ Mural de entraves da equipe
     background:{cor_postit};
     padding:24px;
     border-radius:22px;
-    min-height:150px;
+    min-height:130px;
     margin-bottom:14px;
     color:#111827;
     border:{borda};
@@ -1267,6 +1267,88 @@ Votos: {votos}
                             )
 
                             st.rerun()
+
+        st.markdown("## Entraves mais votados")
+
+        cursor.execute("""
+        SELECT equipe, texto, votos
+        FROM entraves
+        WHERE sala = ?
+        AND votos > 0
+        ORDER BY votos DESC, id ASC
+        """, (sala_atual,))
+
+        entraves_mais_votados = cursor.fetchall()
+
+        if entraves_mais_votados:
+
+            maior_voto_entrave = entraves_mais_votados[0][2]
+
+            entraves_top = [
+                item for item in entraves_mais_votados
+                if item[2] == maior_voto_entrave
+            ]
+
+            st.markdown(
+                f"""
+<div class="resultado-final-header">
+<div class="resultado-label">ENTRAVES MAIS VOTADOS</div>
+<div class="resultado-texto">{maior_voto_entrave} voto(s)</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            for equipe_top, texto_top, votos_top in entraves_top:
+
+                st.markdown(
+                    f"""
+<div style="
+    background:#fbcfe8;
+    padding:26px;
+    border-radius:22px;
+    min-height:130px;
+    margin-bottom:16px;
+    color:#111827;
+    border:3px solid #ec4899;
+    box-shadow:0 6px 16px rgba(15,23,42,0.08);
+">
+<div style="
+    color:#002f5f;
+    font-size:18px;
+    font-weight:900;
+    margin-bottom:10px;
+">
+{equipe_top}
+</div>
+
+<div style="
+    color:#111827;
+    font-size:24px;
+    line-height:1.45;
+    font-weight:850;
+">
+{texto_top}
+</div>
+
+<div style="
+    margin-top:16px;
+    color:#002f5f;
+    font-size:18px;
+    font-weight:800;
+">
+Votos: {votos_top}
+</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+        else:
+
+            st.info(
+                "Os entraves mais votados aparecerão aqui após a votação."
+            )
 
     else:
 
