@@ -447,6 +447,15 @@ CREATE TABLE IF NOT EXISTS salas (
 """)
 conn.commit()
 
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS entraves (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sala TEXT,
+    equipe TEXT,
+    texto TEXT
+)
+""")
+conn.commit()
 # =========================
 # FUNÇÕES
 # =========================
@@ -963,4 +972,84 @@ with aba2:
 
     st.title("Principais Entraves")
 
-    st.info("Essa aba está reservada para a próxima etapa.")
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">Adicionar entrave</div>
+<div class="step-help">Cada equipe pode adicionar quantos post-its quiser. Todos os participantes da mesma sala conseguirão visualizar o mural completo.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    equipe_entrave = st.session_state.nome_equipe_salvo
+
+    novo_entrave = st.text_area(
+        "Novo post-it de entrave",
+        placeholder="Digite aqui o principal entrave identificado pela equipe"
+    )
+
+    if st.button("Adicionar entrave"):
+
+        if not equipe_entrave.strip():
+            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
+
+        elif not novo_entrave.strip():
+            st.warning("Digite o texto do entrave antes de adicionar.")
+
+        else:
+            cursor.execute("""
+            INSERT INTO entraves (sala, equipe, texto)
+            VALUES (?, ?, ?)
+            """, (sala_atual, equipe_entrave, novo_entrave.strip()))
+
+            conn.commit()
+            st.success("Entrave adicionado!")
+            st.rerun()
+
+    st.markdown("---")
+
+    st.markdown("## Mural de entraves por equipe")
+
+    cursor.execute("""
+    SELECT equipe, texto
+    FROM entraves
+    WHERE sala = ?
+    ORDER BY equipe, id
+    """, (sala_atual,))
+
+    entraves = cursor.fetchall()
+
+    if entraves:
+
+        equipes = {}
+
+        for equipe, texto in entraves:
+            if equipe not in equipes:
+                equipes[equipe] = []
+            equipes[equipe].append(texto)
+
+        for equipe, lista_entraves in equipes.items():
+
+            st.markdown(
+                f"""
+<div class="step-card">
+<div class="step-title">{equipe}</div>
+<div class="step-help">Entraves adicionados por esta equipe</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            for entrave in lista_entraves:
+                st.markdown(
+                    f"""
+<div class="postit">
+<div class="postit-texto">{entrave}</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+    else:
+        st.info("Nenhum entrave adicionado ainda nesta sala.")
