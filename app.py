@@ -1310,16 +1310,16 @@ Votos: {votos}
 
                 if posicao == 1:
                     titulo_ranking = "1º lugar"
-                    cor_ranking = "#fbcfe8"
-                    borda_ranking = "#ec4899"
+                    cor_ranking = "#e79eff"
+                    borda_ranking = "#8f7193"
                 elif posicao == 2:
                     titulo_ranking = "2º lugar"
                     cor_ranking = "#dbeafe"
                     borda_ranking = "#2563eb"
                 else:
                     titulo_ranking = "3º lugar"
-                    cor_ranking = "#dcfce7"
-                    borda_ranking = "#16a34a"
+                    cor_ranking = "#c7f7f7"
+                    borda_ranking = "#96c4c4"
 
                 st.markdown(
                     f"""
