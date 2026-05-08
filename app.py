@@ -87,6 +87,30 @@ h3 {
     text-align: center;
 }
 
+.resultado-final-header {
+    background: linear-gradient(135deg, #0b3b6e 0%, #14508f 100%);
+    padding: 34px 28px;
+    border-radius: 28px;
+    margin-top: 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 10px 30px rgba(0,47,95,0.18);
+    text-align: center;
+}
+
+.resultado-label {
+    color: rgba(255,255,255,0.75);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+}
+
+.resultado-texto {
+    color: white;
+    font-size: 38px;
+    font-weight: 850;
+    line-height: 1.25;
+}
 /* ABAS */
 .stTabs [data-baseweb="tab-list"] {
     gap: 8px;
@@ -794,13 +818,21 @@ with aba1:
     if vencedores and not tem_empate:
 
         st.markdown(
-            f"""
-<div class="bloco-azul foco-final">
-{vencedores[0][2]}
+    f"""
+<div class="resultado-final-header">
+
+    <div class="resultado-label">
+        FOCO NO FOCO
+    </div>
+
+    <div class="resultado-texto">
+        {vencedores[0][2]}
+    </div>
+
 </div>
 """,
-            unsafe_allow_html=True
-        )
+    unsafe_allow_html=True
+)
 
     elif tem_empate:
 
