@@ -294,10 +294,10 @@ textarea::placeholder {
     .stButton > button {
         width: 100% !important;
         margin: 0px !important;
-        min-height: 20px;
+        min-height: 54px;
         font-size: 16px;
         border-radius: 14px;
-        padding-left: 4px;
+        padding-left: 50px;
         padding-right: 4px;
     }
 
