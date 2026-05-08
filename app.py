@@ -53,15 +53,7 @@ h3 {
     box-shadow: 0 10px 30px rgba(0,47,95,0.15);
 }
 
-.header-label {
-    text-align: center;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    opacity: 0.8;
-    margin-bottom: 10px;
-}
+
 
 .header-title {
     text-align: center;
@@ -529,11 +521,21 @@ if "editando_foco" not in st.session_state:
 # =========================
 
 st.markdown(
-    """
+    f"""
 <div class="header-foco">
-    <div class="header-label">WORKSHOP</div>
-    <div class="header-title">Foco</div>
-    <div class="header-subtitle">Defina o tema principal da reunião</div>
+
+    <div class="header-title">
+        Foco
+    </div>
+
+    <div class="header-subtitle">
+        {
+            st.session_state.foco_salvo
+            if st.session_state.foco_salvo
+            else "Defina o tema principal da reunião"
+        }
+    </div>
+
 </div>
 """,
     unsafe_allow_html=True
