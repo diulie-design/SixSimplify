@@ -1055,31 +1055,84 @@ with aba2:
     if "entraves_votados" not in st.session_state:
         st.session_state.entraves_votados = set()
 
-    if entraves:
+if entraves:
 
-        equipes = {}
+    equipes = {}
 
-        for entrave_id, equipe, texto, votos in entraves:
-            if equipe not in equipes:
-                equipes[equipe] = []
+    for entrave_id, equipe, texto, votos in entraves:
+        if equipe not in equipes:
+            equipes[equipe] = []
 
-            equipes[equipe].append((entrave_id, texto, votos))
+        equipes[equipe].append((entrave_id, texto, votos))
 
-        for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
+    for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
 
-            cor_time = cores_times[indice % len(cores_times)]
+        cor_time = cores_times[indice % len(cores_times)]
 
-            st.markdown(
-                f"""
-<div class="step-card">
-<div class="step-title">{equipe}</div>
-<div class="step-help">Entraves adicionados por esta equipe</div>
+        st.markdown(
+            f"""
+<div style="
+    background: #ffffff;
+    border: 2px solid #d7e7f5;
+    border-left: 10px solid #002f5f;
+    border-radius: 28px;
+    padding: 28px;
+    margin: 32px 0;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+">
+
+    <div style="
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 22px;
+        border-bottom: 2px solid #e5eef7;
+        padding-bottom: 18px;
+    ">
+        <div>
+            <div style="
+                color: #002f5f;
+                font-size: 30px;
+                font-weight: 900;
+                line-height: 1.1;
+            ">
+                {equipe}
+            </div>
+
+            <div style="
+                color: #55708f;
+                font-size: 17px;
+                font-weight: 600;
+                margin-top: 6px;
+            ">
+                Mural de entraves da equipe
+            </div>
+        </div>
+
+        <div style="
+            background: {cor_time};
+            color: #002f5f;
+            border: 2px solid rgba(0,47,95,0.15);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 800;
+            white-space: nowrap;
+        ">
+            {len(lista_entraves)} post-it(s)
+        </div>
+    </div>
 </div>
 """,
-                unsafe_allow_html=True
-            )
+            unsafe_allow_html=True
+        )
 
-            for entrave_id, texto, votos in lista_entraves:
+        colunas_mural = st.columns(2)
+
+        for i, (entrave_id, texto, votos) in enumerate(lista_entraves):
+
+            with colunas_mural[i % 2]:
 
                 foi_votado = entrave_id in st.session_state.entraves_votados
 
@@ -1087,9 +1140,9 @@ with aba2:
                 borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
 
                 html_postit = f"""
-<div style="background:{cor_postit}; padding:26px; border-radius:22px; min-height:140px; margin-bottom:14px; color:#111827; border:{borda};">
-<div style="color:#111827; font-size:24px; line-height:1.45; font-weight:800;">{texto}</div>
-<div style="margin-top:14px; color:#002f5f; font-size:18px; font-weight:800;">Votos: {votos}</div>
+<div style="background:{cor_postit}; padding:24px; border-radius:22px; min-height:150px; margin-bottom:14px; color:#111827; border:{borda}; box-shadow:0 6px 16px rgba(15,23,42,0.08);">
+<div style="color:#111827; font-size:23px; line-height:1.45; font-weight:800;">{texto}</div>
+<div style="margin-top:16px; color:#002f5f; font-size:18px; font-weight:800;">Votos: {votos}</div>
 </div>
 """
 
@@ -1131,6 +1184,5 @@ with aba2:
                         conn.commit()
                         st.session_state.entraves_votados.add(entrave_id)
                         st.rerun()
-
     else:
         st.info("Nenhum entrave adicionado ainda nesta sala.")
