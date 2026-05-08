@@ -815,25 +815,18 @@ with aba1:
 
     vencedores, maior_voto, tem_empate = buscar_mais_votados()
 
-    if vencedores and not tem_empate:
+ if vencedores and not tem_empate:
 
-        st.markdown(
-    f"""
+    st.markdown(
+f"""
 <div class="resultado-final-header">
-
-    <div class="resultado-label">
-        FOCO NO FOCO
-    </div>
-
-    <div class="resultado-texto">
-        {vencedores[0][2]}
-    </div>
-
+<div class="resultado-label">FOCO NO FOCO</div>
+<div class="resultado-texto">{vencedores[0][2]}</div>
 </div>
 """,
-    unsafe_allow_html=True
-)
-
+        unsafe_allow_html=True
+    )
+    
     elif tem_empate:
 
         st.warning(
