@@ -1386,16 +1386,24 @@ Equipe: {equipe_top}
         )
 st.markdown("## Categorizar entraves do Top 3")
 
-nova_categoria = st.text_input(
-    "Nome da categoria",
-    placeholder="Exemplo: Tecnologia",
-    key="nova_categoria_entraves"
-)
+if "limpar_categoria" not in st.session_state:
+    st.session_state["limpar_categoria"] = False
+
+if st.session_state["limpar_categoria"]:
+    st.session_state["nova_categoria_entraves"] = ""
+    st.session_state["entraves_para_categoria"] = []
+    st.session_state["limpar_categoria"] = False
 
 opcoes_top3 = {
     f"{posicao}º lugar | {item[0]} | {item[1]}": item
     for posicao, item in rankings
 }
+
+nova_categoria = st.text_input(
+    "Nome da categoria",
+    placeholder="Exemplo: Tecnologia",
+    key="nova_categoria_entraves"
+)
 
 entraves_escolhidos = st.multiselect(
     "Escolha os entraves",
@@ -1439,9 +1447,8 @@ if st.button("Salvar categoria"):
 
         conn.commit()
 
-        st.session_state["entraves_para_categoria"] = []
-        st.session_state["nova_categoria_entraves"] = ""
-        
+        st.session_state["limpar_categoria"] = True
+
         st.success("Categoria criada!")
         st.rerun()
 
