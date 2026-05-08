@@ -822,9 +822,9 @@ f"""
 <div class="resultado-final-header">
 <div class="resultado-label">FOCO NO FOCO</div>
 <div class="resultado-texto">{vencedores[0][2]}</div>
-</div>
-""",
-        unsafe_allow_html=True
+</div>  
+""",     
+       unsafe_allow_html=True
     )
     
     elif tem_empate:
