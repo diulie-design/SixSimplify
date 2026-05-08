@@ -815,7 +815,7 @@ with aba1:
 
     vencedores, maior_voto, tem_empate = buscar_mais_votados()
 
- if vencedores and not tem_empate:
+if vencedores and not tem_empate:
 
     st.markdown(
 f"""
