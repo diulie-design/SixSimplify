@@ -452,10 +452,18 @@ CREATE TABLE IF NOT EXISTS entraves (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     sala TEXT,
     equipe TEXT,
-    texto TEXT
+    texto TEXT,
+    votos INTEGER DEFAULT 0
 )
 """)
 conn.commit()
+
+try:
+    cursor.execute("ALTER TABLE entraves ADD COLUMN votos INTEGER DEFAULT 0")
+    conn.commit()
+except:
+    pass
+    
 # =========================
 # FUNÇÕES
 # =========================
