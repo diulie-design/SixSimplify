@@ -463,7 +463,16 @@ try:
     conn.commit()
 except:
     pass
-    
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS categorias_entraves (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sala TEXT,
+    categoria TEXT,
+    entrave_id INTEGER
+)
+""")
+conn.commit()
 # =========================
 # FUNÇÕES
 # =========================
@@ -1271,7 +1280,7 @@ Votos: {votos}
         st.markdown("## Ranking dos entraves mais votados")
 
         cursor.execute("""
-        SELECT equipe, texto, votos
+        SELECT equipe, texto, votos, id
         FROM entraves
         WHERE sala = ?
         AND votos > 0
@@ -1306,7 +1315,7 @@ Votos: {votos}
                 unsafe_allow_html=True
             )
 
-            for posicao, (equipe_top, texto_top, votos_top) in rankings:
+            for posicao, (equipe_top, texto_top, votos_top, entrave_id_top) in rankings:
 
                 if posicao == 1:
                     titulo_ranking = "1º lugar"
@@ -1375,3 +1384,141 @@ Equipe: {equipe_top}
         st.info(
             "Nenhum entrave adicionado ainda nesta sala."
         )
+        st.markdown("## Categorizar entraves do Top 3")
+
+        st.markdown(
+            """
+<div class="step-card">
+<div class="step-title">Criar categoria</div>
+<div class="step-help">Crie quantas categorias quiser e associe somente os entraves que apareceram no Top 3.</div>
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+        nova_categoria = st.text_input(
+            "Nome da categoria",
+            placeholder="Exemplo: Tecnologia, Processo, Pessoas, Comunicação...",
+            key="nova_categoria_entraves"
+        )
+
+        opcoes_top3 = {
+            f"{posicao}º lugar | {item[0]} | {item[1]}": item
+            for posicao, item in rankings
+        }
+
+        entraves_escolhidos = st.multiselect(
+            "Escolha os entraves do Top 3 para essa categoria",
+            options=list(opcoes_top3.keys()),
+            key="entraves_para_categoria"
+        )
+
+        if st.button("Salvar categoria", key="salvar_categoria_entraves"):
+
+            if not nova_categoria.strip():
+
+                st.warning("Digite o nome da categoria.")
+
+            elif not entraves_escolhidos:
+
+                st.warning("Escolha pelo menos um entrave do Top 3.")
+
+            else:
+
+                for item_escolhido in entraves_escolhidos:
+
+                    posicao, dados_entrave = opcoes_top3[item_escolhido]
+
+                    equipe_top, texto_top, votos_top, entrave_id_top = dados_entrave
+
+                    cursor.execute("""
+                    INSERT INTO categorias_entraves (sala, categoria, entrave_id)
+                    VALUES (?, ?, ?)
+                    """, (
+                        sala_atual,
+                        nova_categoria.strip(),
+                        entrave_id_top
+                    ))
+
+                conn.commit()
+                st.success("Categoria salva!")
+                st.rerun()
+
+st.markdown("## Categorias criadas")
+
+cursor.execute("""
+SELECT 
+    c.categoria,
+    e.equipe,
+    e.texto,
+    e.votos
+FROM categorias_entraves c
+JOIN entraves e ON c.entrave_id = e.id
+WHERE c.sala = ?
+ORDER BY c.categoria, e.votos DESC
+""", (sala_atual,))
+
+categorias_salvas = cursor.fetchall()
+
+if categorias_salvas:
+
+    categorias_dict = {}
+
+    for categoria, equipe_cat, texto_cat, votos_cat in categorias_salvas:
+
+        if categoria not in categorias_dict:
+            categorias_dict[categoria] = []
+
+        categorias_dict[categoria].append(
+            (equipe_cat, texto_cat, votos_cat)
+        )
+
+    for categoria, itens_categoria in categorias_dict.items():
+
+        st.markdown(
+            f"""
+<div class="resultado-final-header">
+<div class="resultado-label">CATEGORIA</div>
+<div class="resultado-texto">{categoria}</div>
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+        for equipe_cat, texto_cat, votos_cat in itens_categoria:
+
+            st.markdown(
+                f"""
+<div style="
+    background:#eaf2fb;
+    padding:24px;
+    border-radius:22px;
+    margin-bottom:14px;
+    border:2px solid #c9d9ea;
+    border-left:8px solid #002f5f;
+">
+<div style="
+    color:#002f5f;
+    font-size:17px;
+    font-weight:900;
+    margin-bottom:8px;
+">
+Equipe: {equipe_cat} • {votos_cat} voto(s)
+</div>
+
+<div style="
+    color:#111827;
+    font-size:22px;
+    line-height:1.45;
+    font-weight:800;
+">
+{texto_cat}
+</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+else:
+
+    st.info("Nenhuma categoria criada ainda.")
