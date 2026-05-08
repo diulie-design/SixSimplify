@@ -284,20 +284,22 @@ textarea::placeholder {
     div[data-testid="stHorizontalBlock"] {
         gap: 0px !important;
     }
-
+    
     div[data-testid="column"] {
         padding-left: 0px !important;
         padding-right: 0px !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
     }
 
     /* BOTÕES */
     .stButton > button {
-        width: 100% !important;
+        width: 96% !important;
         margin: 0px !important;
         min-height: 54px;
         font-size: 16px;
         border-radius: 14px;
-        padding-left: 50px;
+        padding-left: 4px;
         padding-right: 4px;
     }
 
