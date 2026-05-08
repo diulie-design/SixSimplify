@@ -1456,6 +1456,7 @@ st.markdown("## Categorias criadas")
 
 cursor.execute("""
 SELECT 
+    c.id,
     c.categoria,
     e.equipe,
     e.texto,
@@ -1472,13 +1473,18 @@ if categorias_salvas:
 
     categorias_dict = {}
 
-    for categoria, equipe_cat, texto_cat, votos_cat in categorias_salvas:
+    for row_id, categoria, equipe_cat, texto_cat, votos_cat in categorias_salvas:
 
         if categoria not in categorias_dict:
             categorias_dict[categoria] = []
 
         categorias_dict[categoria].append(
-            (equipe_cat, texto_cat, votos_cat)
+            (
+                row_id,
+                equipe_cat,
+                texto_cat,
+                votos_cat
+            )
         )
 
     for categoria, itens_categoria in categorias_dict.items():
@@ -1493,10 +1499,19 @@ if categorias_salvas:
             unsafe_allow_html=True
         )
 
-        for equipe_cat, texto_cat, votos_cat in itens_categoria:
+        for item_categoria in itens_categoria:
 
-            st.markdown(
-                f"""
+            categoria_id = item_categoria[0]
+            equipe_cat = item_categoria[1]
+            texto_cat = item_categoria[2]
+            votos_cat = item_categoria[3]
+
+            col_categoria1, col_categoria2 = st.columns([9,1])
+
+            with col_categoria1:
+
+                st.markdown(
+                    f"""
 <div style="
     background:#eaf2fb;
     padding:24px;
@@ -1524,8 +1539,24 @@ Equipe: {equipe_cat} • {votos_cat} voto(s)
 </div>
 </div>
 """,
-                unsafe_allow_html=True
-            )
+                    unsafe_allow_html=True
+                )
+
+            with col_categoria2:
+
+                if st.button(
+                    "✕",
+                    key=f"remover_categoria_{categoria_id}"
+                ):
+
+                    cursor.execute("""
+                    DELETE FROM categorias_entraves
+                    WHERE id = ?
+                    """, (categoria_id,))
+
+                    conn.commit()
+
+                    st.rerun()
 
 else:
 
