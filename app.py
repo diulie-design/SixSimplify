@@ -471,52 +471,78 @@ if "editando_foco" not in st.session_state:
 # FOCO GERAL
 # =========================
 
-# =========================
-# FOCO GERAL
-# =========================
+st.markdown("""
+<style>
+
+.header-foco {
+    background: linear-gradient(135deg, #002f5f 0%, #0a4d8c 100%);
+    padding: 36px 28px;
+    border-radius: 28px;
+    margin-bottom: 22px;
+    box-shadow: 0 10px 30px rgba(0,47,95,0.15);
+}
+
+.header-label {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    opacity: 0.8;
+    margin-bottom: 10px;
+}
+
+.header-title {
+    text-align: center;
+    color: white;
+    font-size: 42px;
+    font-weight: 850;
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+
+.header-subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.foco-salvo-card {
+    background: linear-gradient(135deg, #eaf2fb 0%, #d7e7f5 100%);
+    color: #002f5f;
+    padding: 28px;
+    border-radius: 22px;
+    margin: 14px 0 28px 0;
+    border-left: 8px solid #002f5f;
+    border-top: 1px solid #c9d9ea;
+    border-right: 1px solid #c9d9ea;
+    border-bottom: 1px solid #c9d9ea;
+    font-size: 34px;
+    font-weight: 850;
+    line-height: 1.3;
+    text-align: center;
+}
+
+</style>
+""", unsafe_allow_html=True)
 
 st.markdown(
     """
-    <div style="
-        background: linear-gradient(135deg, #002f5f 0%, #0a4d8c 100%);
-        padding: 36px 28px;
-        border-radius: 28px;
-        margin-bottom: 22px;
-        box-shadow: 0 10px 30px rgba(0,47,95,0.15);
-        border: 1px solid rgba(255,255,255,0.08);
-    ">
-        <div style="
-            text-align:center;
-            color:white;
-            font-size:16px;
-            font-weight:600;
-            letter-spacing:2px;
-            text-transform:uppercase;
-            opacity:0.8;
-            margin-bottom:10px;
-        ">
-            Workshop
+    <div class="header-foco">
+
+        <div class="header-label">
+            WORKSHOP
         </div>
 
-        <div style="
-            text-align:center;
-            color:white;
-            font-size:42px;
-            font-weight:850;
-            line-height:1.1;
-            margin-bottom:8px;
-        ">
+        <div class="header-title">
             Foco
         </div>
 
-        <div style="
-            text-align:center;
-            color:rgba(255,255,255,0.75);
-            font-size:18px;
-            font-weight:500;
-        ">
+        <div class="header-subtitle">
             Defina o tema principal da reunião
         </div>
+
     </div>
     """,
     unsafe_allow_html=True
@@ -535,9 +561,11 @@ if st.session_state.editando_foco:
     if st.button("Salvar foco"):
 
         if foco_digitado.strip():
+
             st.session_state.foco_salvo = foco_digitado.strip()
             st.session_state.editando_foco = False
             st.rerun()
+
         else:
             st.warning("Digite um foco antes de salvar.")
 
@@ -545,17 +573,17 @@ else:
 
     st.markdown(
         f"""
-<div class="bloco-azul foco-final">
-{st.session_state.foco_salvo}
-</div>
-""",
+        <div class="foco-salvo-card">
+            {st.session_state.foco_salvo}
+        </div>
+        """,
         unsafe_allow_html=True
     )
 
     if st.button("Editar foco"):
+
         st.session_state.editando_foco = True
         st.rerun()
-
 # =========================
 # ABAS
 # =========================
