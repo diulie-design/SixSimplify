@@ -424,9 +424,6 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
             st.session_state[nome_timer] = None
 
 
-```python
-# CONTINUAÇÃO DO CÓDIGO
-
 def buscar_mais_votados():
 
     cursor.execute("""
