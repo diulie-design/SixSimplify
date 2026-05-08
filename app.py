@@ -1040,16 +1040,16 @@ with aba2:
     entraves = cursor.fetchall()
 
     cores_times = [
-        "#fff6b8",  # amarelo
-        "#ffd6a5",  # laranja
-        "#caffbf",  # verde claro
-        "#bde0fe",  # azul claro
-        "#ffc8dd",  # rosa
-        "#d0bfff",  # lilás
-        "#fdffb6",  # amarelo limão
-        "#a0c4ff",  # azul médio
-        "#e2ece9",  # verde acinzentado
-        "#f1c0e8",  # rosa/lilás
+        "#fff6b8",
+        "#ffd6a5",
+        "#caffbf",
+        "#bde0fe",
+        "#ffc8dd",
+        "#d0bfff",
+        "#fdffb6",
+        "#a0c4ff",
+        "#e2ece9",
+        "#f1c0e8",
     ]
 
     if "entraves_votados" not in st.session_state:
@@ -1060,13 +1060,10 @@ with aba2:
         equipes = {}
 
         for entrave_id, equipe, texto, votos in entraves:
-
             if equipe not in equipes:
                 equipes[equipe] = []
 
-            equipes[equipe].append(
-                (entrave_id, texto, votos)
-            )
+            equipes[equipe].append((entrave_id, texto, votos))
 
         for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
 
@@ -1084,35 +1081,19 @@ with aba2:
 
             for entrave_id, texto, votos in lista_entraves:
 
-                foi_votado = (
-                    entrave_id in st.session_state.entraves_votados
-                )
+                foi_votado = entrave_id in st.session_state.entraves_votados
 
-                cor_postit = (
-                    "#fbcfe8"
-                    if foi_votado
-                    else cor_time
-                )
+                cor_postit = "#fbcfe8" if foi_votado else cor_time
+                borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
 
-                borda = (
-                    "3px solid #ec4899"
-                    if foi_votado
-                    else "2px solid rgba(0,47,95,0.18)"
-                )
-
-st.markdown(
-    f"""
+                html_postit = f"""
 <div style="background:{cor_postit}; padding:26px; border-radius:22px; min-height:140px; margin-bottom:14px; color:#111827; border:{borda};">
-<div style="color:#111827; font-size:24px; line-height:1.45; font-weight:800;">
-{texto}
+<div style="color:#111827; font-size:24px; line-height:1.45; font-weight:800;">{texto}</div>
+<div style="margin-top:14px; color:#002f5f; font-size:18px; font-weight:800;">Votos: {votos}</div>
 </div>
-<div style="margin-top:14px; color:#002f5f; font-size:18px; font-weight:800;">
-Votos: {votos}
-</div>
-</div>
-""",
-    unsafe_allow_html=True
-)
+"""
+
+                st.markdown(html_postit, unsafe_allow_html=True)
 
                 if foi_votado:
 
@@ -1131,11 +1112,7 @@ Votos: {votos}
                         """, (entrave_id, sala_atual))
 
                         conn.commit()
-
-                        st.session_state.entraves_votados.remove(
-                            entrave_id
-                        )
-
+                        st.session_state.entraves_votados.remove(entrave_id)
                         st.rerun()
 
                 else:
@@ -1152,11 +1129,7 @@ Votos: {votos}
                         """, (entrave_id, sala_atual))
 
                         conn.commit()
-
-                        st.session_state.entraves_votados.add(
-                            entrave_id
-                        )
-
+                        st.session_state.entraves_votados.add(entrave_id)
                         st.rerun()
 
     else:
