@@ -1439,6 +1439,9 @@ if st.button("Salvar categoria"):
 
         conn.commit()
 
+        st.session_state["entraves_para_categoria"] = []
+        st.session_state["nova_categoria_entraves"] = ""
+        
         st.success("Categoria criada!")
         st.rerun()
 
