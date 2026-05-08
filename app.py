@@ -1100,38 +1100,19 @@ with aba2:
                     else "2px solid rgba(0,47,95,0.18)"
                 )
 
-                st.markdown(
-                    f"""
-<div style="
-    background: {cor_postit};
-    padding: 26px;
-    border-radius: 22px;
-    min-height: 140px;
-    margin-bottom: 14px;
-    color: #111827;
-    border: {borda};
-">
-    <div style="
-        color: #111827;
-        font-size: 24px;
-        line-height: 1.45;
-        font-weight: 800;
-    ">
-        {texto}
-    </div>
-
-    <div style="
-        margin-top: 14px;
-        color: #002f5f;
-        font-size: 18px;
-        font-weight: 800;
-    ">
-        Votos: {votos}
-    </div>
+st.markdown(
+    f"""
+<div style="background:{cor_postit}; padding:26px; border-radius:22px; min-height:140px; margin-bottom:14px; color:#111827; border:{borda};">
+<div style="color:#111827; font-size:24px; line-height:1.45; font-weight:800;">
+{texto}
+</div>
+<div style="margin-top:14px; color:#002f5f; font-size:18px; font-weight:800;">
+Votos: {votos}
+</div>
 </div>
 """,
-                    unsafe_allow_html=True
-                )
+    unsafe_allow_html=True
+)
 
                 if foi_votado:
 
