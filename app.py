@@ -790,17 +790,17 @@ with aba1:
     else:
         st.info("O resultado aparecerá aqui após a votação.")
 
-  if st.button("Mostrar todos"):
-    cursor.execute("UPDATE postits SET ativo = 1")
-    conn.commit()
-    st.session_state.postits_votados = set()
-    st.rerun()
-
-if st.button("Zerar votos"):
-    cursor.execute("UPDATE postits SET votos = 0")
-    conn.commit()
-    st.session_state.postits_votados = set()
-    st.rerun()
+        if st.button("Mostrar todos"):
+            cursor.execute("UPDATE postits SET ativo = 1")
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
+        
+        if st.button("Zerar votos"):
+            cursor.execute("UPDATE postits SET votos = 0")
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
 
 # =========================
 # ABA 2
