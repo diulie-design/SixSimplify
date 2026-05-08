@@ -67,7 +67,7 @@ h3 {
 .header-subtitle {
     text-align: center;
     color: rgba(255,255,255,0.75);
-    font-size: 18px;
+    font-size: 34px;
     font-weight: 500;
 }
 
