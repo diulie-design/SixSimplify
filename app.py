@@ -975,7 +975,7 @@ with aba2:
         """
 <div class="step-card">
 <div class="step-title">Adicionar entrave</div>
-<div class="step-help">Cada equipe pode adicionar quantos post-its quiser. Todos os participantes da mesma sala conseguirão visualizar o mural completo.</div>
+<div class="step-help">Cada equipe pode adicionar quantos post-its quiser. Todos os participantes da mesma sala conseguirão visualizar e votar no mural completo.</div>
 </div>
 """,
         unsafe_allow_html=True
@@ -1012,8 +1012,8 @@ with aba2:
 
         else:
             cursor.execute("""
-            INSERT INTO entraves (sala, equipe, texto)
-            VALUES (?, ?, ?)
+            INSERT INTO entraves (sala, equipe, texto, votos)
+            VALUES (?, ?, ?, 0)
             """, (sala_atual, equipe_entrave, novo_entrave.strip()))
 
             conn.commit()
@@ -1023,7 +1023,7 @@ with aba2:
     st.markdown("## Mural de entraves por equipe")
 
     cursor.execute("""
-    SELECT equipe, texto
+    SELECT id, equipe, texto, votos
     FROM entraves
     WHERE sala = ?
     ORDER BY equipe, id
@@ -1044,14 +1044,21 @@ with aba2:
         "#f1c0e8",  # rosa/lilás
     ]
 
+    if "entraves_votados" not in st.session_state:
+        st.session_state.entraves_votados = set()
+
     if entraves:
 
         equipes = {}
 
-        for equipe, texto in entraves:
+        for entrave_id, equipe, texto, votos in entraves:
+
             if equipe not in equipes:
                 equipes[equipe] = []
-            equipes[equipe].append(texto)
+
+            equipes[equipe].append(
+                (entrave_id, texto, votos)
+            )
 
         for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
 
@@ -1067,17 +1074,34 @@ with aba2:
                 unsafe_allow_html=True
             )
 
-            for entrave in lista_entraves:
+            for entrave_id, texto, votos in lista_entraves:
+
+                foi_votado = (
+                    entrave_id in st.session_state.entraves_votados
+                )
+
+                cor_postit = (
+                    "#fbcfe8"
+                    if foi_votado
+                    else cor_time
+                )
+
+                borda = (
+                    "3px solid #ec4899"
+                    if foi_votado
+                    else "2px solid rgba(0,47,95,0.18)"
+                )
+
                 st.markdown(
                     f"""
 <div style="
-    background: {cor_time};
+    background: {cor_postit};
     padding: 26px;
     border-radius: 22px;
     min-height: 140px;
-    margin-bottom: 18px;
+    margin-bottom: 14px;
     color: #111827;
-    border: 2px solid rgba(0,47,95,0.18);
+    border: {borda};
 ">
     <div style="
         color: #111827;
@@ -1085,12 +1109,66 @@ with aba2:
         line-height: 1.45;
         font-weight: 800;
     ">
-        {entrave}
+        {texto}
+    </div>
+
+    <div style="
+        margin-top: 14px;
+        color: #002f5f;
+        font-size: 18px;
+        font-weight: 800;
+    ">
+        Votos: {votos}
     </div>
 </div>
 """,
                     unsafe_allow_html=True
                 )
+
+                if foi_votado:
+
+                    if st.button(
+                        "Desfazer voto",
+                        key=f"desfazer_entrave_{entrave_id}"
+                    ):
+
+                        cursor.execute("""
+                        UPDATE entraves
+                        SET votos = CASE
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ? AND sala = ?
+                        """, (entrave_id, sala_atual))
+
+                        conn.commit()
+
+                        st.session_state.entraves_votados.remove(
+                            entrave_id
+                        )
+
+                        st.rerun()
+
+                else:
+
+                    if st.button(
+                        "Votar",
+                        key=f"votar_entrave_{entrave_id}"
+                    ):
+
+                        cursor.execute("""
+                        UPDATE entraves
+                        SET votos = votos + 1
+                        WHERE id = ? AND sala = ?
+                        """, (entrave_id, sala_atual))
+
+                        conn.commit()
+
+                        st.session_state.entraves_votados.add(
+                            entrave_id
+                        )
+
+                        st.rerun()
 
     else:
         st.info("Nenhum entrave adicionado ainda nesta sala.")
