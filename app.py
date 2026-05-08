@@ -294,7 +294,7 @@ textarea::placeholder {
 
     /* BOTÕES */
     .stButton > button {
-        width: 96% !important;
+        width: 100% !important;
         margin: 0px !important;
         min-height: 54px;
         font-size: 16px;
