@@ -76,12 +76,12 @@ h3 {
     color: white !important;
 }
 
-/* COLUNAS MAIS JUSTAS */
+/* COLUNAS */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
-    gap: 2px !important;
+    gap: 0px !important;
 }
 
 div[data-testid="column"] {
@@ -108,6 +108,7 @@ div[data-testid="column"] {
     font-size: 34px;
     font-weight: 850;
     line-height: 1.3;
+    text-align: center;
 }
 
 .info-equipe {
@@ -143,8 +144,7 @@ div[data-testid="column"] {
 /* CAMPOS */
 div[data-testid="stTextInput"] input {
     font-size: 22px;
-    height: 37px;
-    line-height: 0.9;
+    line-height: 1.4;
     padding-top: 10px;
     padding-bottom: 10px;
     border-radius: 18px;
@@ -190,6 +190,7 @@ textarea::placeholder {
     font-size: 18px;
     padding-left: 8px;
     padding-right: 8px;
+    margin: 0 !important;
 }
 
 .stButton > button:hover {
@@ -263,7 +264,6 @@ textarea::placeholder {
         font-size: 25px !important;
     }
 
-    /* ABAS */
     .stTabs [data-baseweb="tab-list"] {
         gap: 2px;
     }
@@ -280,11 +280,10 @@ textarea::placeholder {
         font-weight: 800 !important;
     }
 
-    /* COLUNAS */
     div[data-testid="stHorizontalBlock"] {
         gap: 0px !important;
     }
-    
+
     div[data-testid="column"] {
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -292,7 +291,6 @@ textarea::placeholder {
         min-width: 0 !important;
     }
 
-    /* BOTÕES */
     .stButton > button {
         width: 100% !important;
         margin: 0px !important;
@@ -303,7 +301,6 @@ textarea::placeholder {
         padding-right: 4px;
     }
 
-    /* BLOCOS EXPLICAÇÃO */
     .step-card {
         padding: 20px;
         border-radius: 20px;
@@ -318,7 +315,6 @@ textarea::placeholder {
         font-size: 19px;
     }
 
-    /* CAMPOS */
     div[data-testid="stTextInput"] input {
         font-size: 21px !important;
         line-height: 1.4 !important;
@@ -326,19 +322,18 @@ textarea::placeholder {
         padding-bottom: 10px !important;
     }
 
-textarea,
-.stNumberInput input {
-    font-size: 21px !important;
-}
+    textarea,
+    .stNumberInput input {
+        font-size: 21px !important;
+    }
 
-    /* POST-ITS */
     .postit-texto {
         font-size: 25px;
     }
 }
+
 </style>
 """, unsafe_allow_html=True)
-
 
 # =========================
 # BANCO
@@ -358,7 +353,6 @@ CREATE TABLE IF NOT EXISTS postits (
 """)
 conn.commit()
 
-
 # =========================
 # FUNÇÕES
 # =========================
@@ -372,34 +366,66 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
     if nome_timer not in st.session_state:
         st.session_state[nome_timer] = None
 
-    col1, col2 = st.columns(2)
+    # BOTÃO ÚNICO
+    if st.session_state[nome_timer] is None:
 
-    with col1:
-        if st.button("Iniciar", key=f"iniciar_{nome_timer}"):
+        if st.button(
+            "Iniciar cronômetro",
+            key=f"iniciar_{nome_timer}"
+        ):
+
             st.session_state[nome_timer] = time.time()
 
-    with col2:
-        if st.button("Parar", key=f"encerrar_{nome_timer}"):
-            st.session_state[nome_timer] = None
-            st.warning("Cronômetro parado.")
+            st.rerun()
 
+    else:
+
+        if st.button(
+            "Parar cronômetro",
+            key=f"parar_{nome_timer}"
+        ):
+
+            st.session_state[nome_timer] = None
+
+            st.rerun()
+
+    # CONTADOR
     if st.session_state[nome_timer]:
 
-        st_autorefresh(interval=1000, key=f"refresh_{nome_timer}")
+        st_autorefresh(
+            interval=1000,
+            key=f"refresh_{nome_timer}"
+        )
 
-        tempo_passado = int(time.time() - st.session_state[nome_timer])
-        tempo_restante = max(tempo_total_segundos - tempo_passado, 0)
+        tempo_passado = int(
+            time.time() - st.session_state[nome_timer]
+        )
+
+        tempo_restante = max(
+            tempo_total_segundos - tempo_passado,
+            0
+        )
 
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
-        st.markdown(f"## ⏱️ {minutos:02d}:{segundos:02d}")
-        st.progress(tempo_restante / tempo_total_segundos)
+        st.markdown(
+            f"## ⏱️ {minutos:02d}:{segundos:02d}"
+        )
+
+        st.progress(
+            tempo_restante / tempo_total_segundos
+        )
 
         if tempo_restante == 0:
+
             st.error("Tempo encerrado!")
+
             st.session_state[nome_timer] = None
 
+
+```python
+# CONTINUAÇÃO DO CÓDIGO
 
 def buscar_mais_votados():
 
@@ -450,9 +476,15 @@ if "editando_foco" not in st.session_state:
 
 st.markdown(
     """
-    <h2 style="text-align:center; color:#002f5f;">
+    <div style="
+        text-align:center;
+        color:#002f5f;
+        font-size:34px;
+        font-weight:850;
+        margin-bottom:18px;
+    ">
         Foco
-    </h2>
+    </div>
     """,
     unsafe_allow_html=True
 )
@@ -762,18 +794,9 @@ with aba1:
         st.info("O resultado aparecerá aqui após a votação.")
 
     col_reset1, col_reset2 = st.columns(
-    [1,1],
-    gap="small"
+        [1,1],
+        gap="small"
     )
-
-    st.markdown("""
-    <style>
-    div[data-testid="column"] {
-        padding-left: 0rem !important;
-        padding-right: 0rem !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
 
     with col_reset1:
         if st.button("Zerar votos"):
@@ -799,3 +822,5 @@ with aba2:
     st.title("Principais Obstáculos")
 
     st.info("Essa aba está reservada para a próxima etapa.")
+
+
