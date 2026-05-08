@@ -142,8 +142,11 @@ div[data-testid="column"] {
 
 /* CAMPOS */
 div[data-testid="stTextInput"] input {
-    font-size: 24px;
-    height: 66px;
+    font-size: 22px;
+    height: 74px;
+    line-height: 1.3;
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-radius: 18px;
     border: 2px solid #cfd9e6;
     background-color: #ffffff;
