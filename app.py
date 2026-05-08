@@ -1013,18 +1013,30 @@ with aba2:
     if st.button("Adicionar entrave", key="botao_adicionar_entrave"):
 
         if not equipe_entrave.strip():
-            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
+
+            st.warning(
+                "Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves."
+            )
 
         elif not novo_entrave.strip():
-            st.warning("Digite o texto do entrave antes de adicionar.")
+
+            st.warning(
+                "Digite o texto do entrave antes de adicionar."
+            )
 
         else:
+
             cursor.execute("""
             INSERT INTO entraves (sala, equipe, texto, votos)
             VALUES (?, ?, ?, 0)
-            """, (sala_atual, equipe_entrave, novo_entrave.strip()))
+            """, (
+                sala_atual,
+                equipe_entrave,
+                novo_entrave.strip()
+            ))
 
             conn.commit()
+
             st.success("Entrave adicionado!")
             st.rerun()
 
@@ -1055,134 +1067,209 @@ with aba2:
     if "entraves_votados" not in st.session_state:
         st.session_state.entraves_votados = set()
 
-if entraves:
+    if entraves:
 
-    equipes = {}
+        equipes = {}
 
-    for entrave_id, equipe, texto, votos in entraves:
-        if equipe not in equipes:
-            equipes[equipe] = []
+        for entrave_id, equipe, texto, votos in entraves:
 
-        equipes[equipe].append((entrave_id, texto, votos))
+            if equipe not in equipes:
+                equipes[equipe] = []
 
-    for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
+            equipes[equipe].append(
+                (entrave_id, texto, votos)
+            )
 
-        cor_time = cores_times[indice % len(cores_times)]
+        for indice, (
+            equipe,
+            lista_entraves
+        ) in enumerate(equipes.items()):
 
-        st.markdown(
-            f"""
+            cor_time = (
+                cores_times[
+                    indice % len(cores_times)
+                ]
+            )
+
+            st.markdown(
+                f"""
 <div style="
-    background: #ffffff;
-    border: 2px solid #d7e7f5;
-    border-left: 10px solid #002f5f;
-    border-radius: 28px;
-    padding: 28px;
-    margin: 32px 0;
-    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+    background:#ffffff;
+    border:2px solid #d7e7f5;
+    border-left:10px solid #002f5f;
+    border-radius:28px;
+    padding:28px;
+    margin:32px 0;
+    box-shadow:0 8px 24px rgba(15,23,42,0.06);
 ">
 
-    <div style="
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-bottom: 22px;
-        border-bottom: 2px solid #e5eef7;
-        padding-bottom: 18px;
-    ">
-        <div>
-            <div style="
-                color: #002f5f;
-                font-size: 30px;
-                font-weight: 900;
-                line-height: 1.1;
-            ">
-                {equipe}
-            </div>
+<div style="
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:22px;
+    border-bottom:2px solid #e5eef7;
+    padding-bottom:18px;
+">
 
-            <div style="
-                color: #55708f;
-                font-size: 17px;
-                font-weight: 600;
-                margin-top: 6px;
-            ">
-                Mural de entraves da equipe
-            </div>
-        </div>
+<div>
+<div style="
+    color:#002f5f;
+    font-size:30px;
+    font-weight:900;
+    line-height:1.1;
+">
+{equipe}
+</div>
 
-        <div style="
-            background: {cor_time};
-            color: #002f5f;
-            border: 2px solid rgba(0,47,95,0.15);
-            padding: 10px 16px;
-            border-radius: 999px;
-            font-size: 16px;
-            font-weight: 800;
-            white-space: nowrap;
-        ">
-            {len(lista_entraves)} post-it(s)
-        </div>
-    </div>
+<div style="
+    color:#55708f;
+    font-size:17px;
+    font-weight:600;
+    margin-top:6px;
+">
+Mural de entraves da equipe
+</div>
+</div>
+
+<div style="
+    background:{cor_time};
+    color:#002f5f;
+    border:2px solid rgba(0,47,95,0.15);
+    padding:10px 16px;
+    border-radius:999px;
+    font-size:16px;
+    font-weight:800;
+">
+{len(lista_entraves)} post-it(s)
+</div>
+
+</div>
 </div>
 """,
-            unsafe_allow_html=True
-        )
+                unsafe_allow_html=True
+            )
 
-        colunas_mural = st.columns(2)
+            colunas_mural = st.columns(2)
 
-        for i, (entrave_id, texto, votos) in enumerate(lista_entraves):
+            for i, (
+                entrave_id,
+                texto,
+                votos
+            ) in enumerate(lista_entraves):
 
-            with colunas_mural[i % 2]:
+                with colunas_mural[i % 2]:
 
-                foi_votado = entrave_id in st.session_state.entraves_votados
+                    foi_votado = (
+                        entrave_id
+                        in st.session_state.entraves_votados
+                    )
 
-                cor_postit = "#fbcfe8" if foi_votado else cor_time
-                borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
+                    cor_postit = (
+                        "#fbcfe8"
+                        if foi_votado
+                        else cor_time
+                    )
 
-                html_postit = f"""
-<div style="background:{cor_postit}; padding:24px; border-radius:22px; min-height:150px; margin-bottom:14px; color:#111827; border:{borda}; box-shadow:0 6px 16px rgba(15,23,42,0.08);">
-<div style="color:#111827; font-size:23px; line-height:1.45; font-weight:800;">{texto}</div>
-<div style="margin-top:16px; color:#002f5f; font-size:18px; font-weight:800;">Votos: {votos}</div>
+                    borda = (
+                        "3px solid #ec4899"
+                        if foi_votado
+                        else "2px solid rgba(0,47,95,0.18)"
+                    )
+
+                    html_postit = f"""
+<div style="
+    background:{cor_postit};
+    padding:24px;
+    border-radius:22px;
+    min-height:150px;
+    margin-bottom:14px;
+    color:#111827;
+    border:{borda};
+    box-shadow:0 6px 16px rgba(15,23,42,0.08);
+">
+<div style="
+    color:#111827;
+    font-size:23px;
+    line-height:1.45;
+    font-weight:800;
+">
+{texto}
+</div>
+
+<div style="
+    margin-top:16px;
+    color:#002f5f;
+    font-size:18px;
+    font-weight:800;
+">
+Votos: {votos}
+</div>
 </div>
 """
 
-                st.markdown(html_postit, unsafe_allow_html=True)
+                    st.markdown(
+                        html_postit,
+                        unsafe_allow_html=True
+                    )
 
-                if foi_votado:
+                    if foi_votado:
 
-                    if st.button(
-                        "Desfazer voto",
-                        key=f"desfazer_entrave_{entrave_id}"
-                    ):
+                        if st.button(
+                            "Desfazer voto",
+                            key=f"desfazer_entrave_{entrave_id}"
+                        ):
 
-                        cursor.execute("""
-                        UPDATE entraves
-                        SET votos = CASE
-                            WHEN votos > 0 THEN votos - 1
-                            ELSE 0
-                        END
-                        WHERE id = ? AND sala = ?
-                        """, (entrave_id, sala_atual))
+                            cursor.execute("""
+                            UPDATE entraves
+                            SET votos = CASE
+                                WHEN votos > 0
+                                THEN votos - 1
+                                ELSE 0
+                            END
+                            WHERE id = ?
+                            AND sala = ?
+                            """, (
+                                entrave_id,
+                                sala_atual
+                            ))
 
-                        conn.commit()
-                        st.session_state.entraves_votados.remove(entrave_id)
-                        st.rerun()
+                            conn.commit()
 
-                else:
+                            st.session_state.entraves_votados.remove(
+                                entrave_id
+                            )
 
-                    if st.button(
-                        "Votar",
-                        key=f"votar_entrave_{entrave_id}"
-                    ):
+                            st.rerun()
 
-                        cursor.execute("""
-                        UPDATE entraves
-                        SET votos = votos + 1
-                        WHERE id = ? AND sala = ?
-                        """, (entrave_id, sala_atual))
+                    else:
 
-                        conn.commit()
-                        st.session_state.entraves_votados.add(entrave_id)
-                        st.rerun()
+                        if st.button(
+                            "Votar",
+                            key=f"votar_entrave_{entrave_id}"
+                        ):
+
+                            cursor.execute("""
+                            UPDATE entraves
+                            SET votos = votos + 1
+                            WHERE id = ?
+                            AND sala = ?
+                            """, (
+                                entrave_id,
+                                sala_atual
+                            ))
+
+                            conn.commit()
+
+                            st.session_state.entraves_votados.add(
+                                entrave_id
+                            )
+
+                            st.rerun()
+
     else:
-        st.info("Nenhum entrave adicionado ainda nesta sala.")
+
+        st.info(
+            "Nenhum entrave adicionado ainda nesta sala."
+        )
