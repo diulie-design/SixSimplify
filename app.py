@@ -818,38 +818,38 @@ with aba1:
 if vencedores and not tem_empate:
 
     st.markdown(
-f"""
+        f"""
 <div class="resultado-final-header">
 <div class="resultado-label">FOCO NO FOCO</div>
 <div class="resultado-texto">{vencedores[0][2]}</div>
-</div>  
-""",     
-       unsafe_allow_html=True
+</div>
+""",
+        unsafe_allow_html=True
     )
-    
-    elif tem_empate:
 
-        st.warning(
-            "Houve empate. Faça uma nova votação apenas com os empatados."
+elif tem_empate:
+
+    st.warning(
+        "Houve empate. Faça uma nova votação apenas com os empatados."
+    )
+
+    if st.button("Iniciar votação de desempate"):
+
+        ids_empatados = [str(item[0]) for item in vencedores]
+
+        cursor.execute("UPDATE postits SET ativo = 0")
+
+        cursor.execute(
+            f"""
+            UPDATE postits
+            SET ativo = 1, votos = 0
+            WHERE id IN ({",".join(ids_empatados)})
+            """
         )
 
-        if st.button("Iniciar votação de desempate"):
-
-            ids_empatados = [str(item[0]) for item in vencedores]
-
-            cursor.execute("UPDATE postits SET ativo = 0")
-
-            cursor.execute(
-                f"""
-                UPDATE postits
-                SET ativo = 1, votos = 0
-                WHERE id IN ({",".join(ids_empatados)})
-                """
-            )
-
-            conn.commit()
-            st.session_state.postits_votados = set()
-            st.rerun()
+        conn.commit()
+        st.session_state.postits_votados = set()
+        st.rerun()
 
     else:
         st.info("O resultado aparecerá aqui após a votação.")
