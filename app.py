@@ -590,7 +590,7 @@ else:
 
 aba1, aba2 = st.tabs([
     "Foco no Foco",
-    "Principais Obstáculos"
+    "Principais Entraves"
 ])
 
 
