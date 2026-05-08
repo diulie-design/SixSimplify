@@ -143,7 +143,7 @@ div[data-testid="column"] {
 /* CAMPOS */
 div[data-testid="stTextInput"] input {
     font-size: 22px;
-    height: 35px;
+    height: 37px;
     line-height: 0.9;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -320,7 +320,7 @@ textarea::placeholder {
     div[data-testid="stTextInput"] input {
         font-size: 21px !important;
         height: 74px !important;
-        line-height: 1.3 !important;
+        line-height: 0.9 !important;
         padding-top: 10px !important;
         padding-bottom: 10px !important;
     }
