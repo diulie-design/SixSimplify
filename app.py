@@ -53,8 +53,6 @@ h3 {
     box-shadow: 0 10px 30px rgba(0,47,95,0.15);
 }
 
-
-
 .header-title {
     text-align: center;
     color: white;
@@ -66,9 +64,9 @@ h3 {
 
 .header-subtitle {
     text-align: center;
-    color: rgba(255,255,255,0.75);
-    font-size: 34px;
-    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    font-size: 28px;
+    font-weight: 600;
 }
 
 .foco-salvo-card {
@@ -111,6 +109,7 @@ h3 {
     font-weight: 850;
     line-height: 1.25;
 }
+
 /* ABAS */
 .stTabs [data-baseweb="tab-list"] {
     gap: 8px;
@@ -341,7 +340,7 @@ textarea::placeholder {
     }
 
     .header-subtitle {
-        font-size: 17px;
+        font-size: 22px;
     }
 
     .stTabs [data-baseweb="tab-list"] {
@@ -428,7 +427,22 @@ CREATE TABLE IF NOT EXISTS postits (
     equipe TEXT,
     texto TEXT,
     votos INTEGER DEFAULT 0,
-    ativo INTEGER DEFAULT 1
+    ativo INTEGER DEFAULT 1,
+    sala TEXT DEFAULT 'geral'
+)
+""")
+conn.commit()
+
+try:
+    cursor.execute("ALTER TABLE postits ADD COLUMN sala TEXT DEFAULT 'geral'")
+    conn.commit()
+except:
+    pass
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS salas (
+    sala TEXT PRIMARY KEY,
+    foco TEXT
 )
 """)
 conn.commit()
@@ -497,14 +511,14 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
             st.session_state[nome_timer] = None
 
 
-def buscar_mais_votados():
+def buscar_mais_votados(sala_atual):
 
     cursor.execute("""
     SELECT id, equipe, texto, votos
     FROM postits
-    WHERE ativo = 1
+    WHERE ativo = 1 AND sala = ?
     ORDER BY votos DESC
-    """)
+    """, (sala_atual,))
 
     dados = cursor.fetchall()
 
@@ -530,6 +544,9 @@ def buscar_mais_votados():
 # SESSION STATE
 # =========================
 
+if "sala" not in st.session_state:
+    st.session_state.sala = None
+
 if "postits_votados" not in st.session_state:
     st.session_state.postits_votados = set()
 
@@ -538,6 +555,53 @@ if "foco_salvo" not in st.session_state:
 
 if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
+
+
+# =========================
+# ENTRADA POR SENHA / SALA
+# =========================
+
+if st.session_state.sala is None:
+
+    st.markdown(
+        """
+<div class="header-foco">
+<div class="header-title">Entrar na sala</div>
+<div class="header-subtitle">Digite a senha combinada para acessar a dinâmica</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    senha_sala = st.text_input(
+        "Senha da sala",
+        type="password",
+        placeholder="Digite a senha da reunião"
+    )
+
+    if st.button("Entrar"):
+        if senha_sala.strip():
+            st.session_state.sala = senha_sala.strip()
+            st.session_state.postits_votados = set()
+            st.rerun()
+        else:
+            st.warning("Digite uma senha para entrar.")
+
+    st.stop()
+
+sala_atual = st.session_state.sala
+
+cursor.execute(
+    "SELECT foco FROM salas WHERE sala = ?",
+    (sala_atual,)
+)
+foco_banco = cursor.fetchone()
+
+if foco_banco:
+    st.session_state.foco_salvo = foco_banco[0]
+else:
+    st.session_state.foco_salvo = ""
+
 
 # =========================
 # FOCO GERAL
@@ -573,6 +637,15 @@ if st.session_state.editando_foco:
 
         if foco_digitado.strip():
             st.session_state.foco_salvo = foco_digitado.strip()
+
+            cursor.execute("""
+            INSERT INTO salas (sala, foco)
+            VALUES (?, ?)
+            ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
+            """, (sala_atual, st.session_state.foco_salvo))
+
+            conn.commit()
+
             st.session_state.editando_foco = False
             st.rerun()
         else:
@@ -583,6 +656,7 @@ else:
     if st.button("Editar foco"):
         st.session_state.editando_foco = True
         st.rerun()
+
 
 # =========================
 # ABAS
@@ -601,6 +675,8 @@ aba1, aba2 = st.tabs([
 with aba1:
 
     st.title("Foco no Foco")
+
+    st.caption(f"Sala atual: {sala_atual}")
 
     st.markdown(
         """
@@ -711,13 +787,15 @@ with aba1:
 
     if st.button("Adicionar post-it"):
 
-        if qtd_palavras != 6:
+        if not nome_equipe.strip():
+            st.warning("Salve o nome da equipe antes de adicionar um post-it.")
+        elif qtd_palavras != 6:
             st.error("O post-it precisa ter exatamente 6 palavras.")
         else:
             cursor.execute("""
-            INSERT INTO postits (equipe, texto, votos, ativo)
-            VALUES (?, ?, 0, 1)
-            """, (nome_equipe, novo_postit))
+            INSERT INTO postits (equipe, texto, votos, ativo, sala)
+            VALUES (?, ?, 0, 1, ?)
+            """, (nome_equipe, novo_postit, sala_atual))
 
             conn.commit()
             st.success("Post-it adicionado!")
@@ -736,9 +814,9 @@ with aba1:
     cursor.execute("""
     SELECT id, equipe, texto, votos
     FROM postits
-    WHERE ativo = 1
+    WHERE ativo = 1 AND sala = ?
     ORDER BY id DESC
-    """)
+    """, (sala_atual,))
 
     postits = cursor.fetchall()
 
@@ -775,8 +853,8 @@ with aba1:
                         WHEN votos > 0 THEN votos - 1
                         ELSE 0
                     END
-                    WHERE id = ?
-                    """, (postit_id,))
+                    WHERE id = ? AND sala = ?
+                    """, (postit_id, sala_atual))
 
                     conn.commit()
                     st.session_state.postits_votados.remove(postit_id)
@@ -791,15 +869,15 @@ with aba1:
                     cursor.execute("""
                     UPDATE postits
                     SET votos = votos + 1
-                    WHERE id = ?
-                    """, (postit_id,))
+                    WHERE id = ? AND sala = ?
+                    """, (postit_id, sala_atual))
 
                     conn.commit()
                     st.session_state.postits_votados.add(postit_id)
                     st.rerun()
 
     else:
-        st.info("Nenhum post-it disponível ainda.")
+        st.info("Nenhum post-it disponível ainda nesta sala.")
 
     st.markdown(
         """
@@ -813,55 +891,65 @@ with aba1:
 
     st.markdown("## Foco no Foco")
 
-    vencedores, maior_voto, tem_empate = buscar_mais_votados()
+    vencedores, maior_voto, tem_empate = buscar_mais_votados(sala_atual)
 
-if vencedores and not tem_empate:
+    if vencedores and not tem_empate:
 
-    st.markdown(
-        f"""
+        st.markdown(
+            f"""
 <div class="resultado-final-header">
 <div class="resultado-label">FOCO NO FOCO</div>
 <div class="resultado-texto">{vencedores[0][2]}</div>
 </div>
 """,
-        unsafe_allow_html=True
-    )
-
-elif tem_empate:
-
-    st.warning(
-        "Houve empate. Faça uma nova votação apenas com os empatados."
-    )
-
-    if st.button("Iniciar votação de desempate"):
-
-        ids_empatados = [str(item[0]) for item in vencedores]
-
-        cursor.execute("UPDATE postits SET ativo = 0")
-
-        cursor.execute(
-            f"""
-            UPDATE postits
-            SET ativo = 1, votos = 0
-            WHERE id IN ({",".join(ids_empatados)})
-            """
+            unsafe_allow_html=True
         )
 
-        conn.commit()
-        st.session_state.postits_votados = set()
-        st.rerun()
+    elif tem_empate:
+
+        st.warning(
+            "Houve empate. Faça uma nova votação apenas com os empatados."
+        )
+
+        if st.button("Iniciar votação de desempate"):
+
+            ids_empatados = [str(item[0]) for item in vencedores]
+
+            cursor.execute(
+                "UPDATE postits SET ativo = 0 WHERE sala = ?",
+                (sala_atual,)
+            )
+
+            cursor.execute(
+                f"""
+                UPDATE postits
+                SET ativo = 1, votos = 0
+                WHERE id IN ({",".join(ids_empatados)}) AND sala = ?
+                """,
+                (sala_atual,)
+            )
+
+            conn.commit()
+            st.session_state.postits_votados = set()
+            st.rerun()
 
     else:
         st.info("O resultado aparecerá aqui após a votação.")
 
     if st.button("Mostrar todos"):
-        cursor.execute("UPDATE postits SET ativo = 1")
+        cursor.execute(
+            "UPDATE postits SET ativo = 1 WHERE sala = ?",
+            (sala_atual,)
+        )
         conn.commit()
         st.session_state.postits_votados = set()
         st.rerun()
 
     if st.button("Zerar votos"):
-        cursor.execute("UPDATE postits SET votos = 0")
+        cursor.execute(
+            "UPDATE postits SET votos = 0 WHERE sala = ?",
+            (sala_atual,)
+        )
         conn.commit()
         st.session_state.postits_votados = set()
         st.rerun()
