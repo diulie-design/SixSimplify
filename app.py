@@ -471,17 +471,20 @@ if "editando_foco" not in st.session_state:
 # FOCO GERAL
 # =========================
 
+# =========================
+# FOCO GERAL
+# =========================
+
 st.markdown(
     """
     <div style="
         background: linear-gradient(135deg, #002f5f 0%, #0a4d8c 100%);
         padding: 36px 28px;
         border-radius: 28px;
-        margin-bottom: 28px;
+        margin-bottom: 22px;
         box-shadow: 0 10px 30px rgba(0,47,95,0.15);
         border: 1px solid rgba(255,255,255,0.08);
     ">
-
         <div style="
             text-align:center;
             color:white;
@@ -514,7 +517,6 @@ st.markdown(
         ">
             Defina o tema principal da reunião
         </div>
-
     </div>
     """,
     unsafe_allow_html=True
@@ -522,20 +524,6 @@ st.markdown(
 
 if st.session_state.editando_foco:
 
-    st.markdown(
-    """
-    <div style="
-        background:white;
-        padding:22px;
-        border-radius:24px;
-        margin-top:-8px;
-        margin-bottom:30px;
-        border:1px solid #dbe4ef;
-        box-shadow: 0 6px 18px rgba(15,23,42,0.05);
-    ">
-    """,
-    unsafe_allow_html=True
-)
     foco_digitado = st.text_input(
         label="campo_foco",
         value=st.session_state.foco_salvo,
@@ -567,8 +555,6 @@ else:
     if st.button("Editar foco"):
         st.session_state.editando_foco = True
         st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)
 
 # =========================
 # ABAS
