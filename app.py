@@ -515,27 +515,21 @@ if "foco_salvo" not in st.session_state:
 if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
 
-
 # =========================
 # FOCO GERAL
 # =========================
 
+tema_header = (
+    st.session_state.foco_salvo
+    if st.session_state.foco_salvo
+    else "Defina o tema principal da reunião"
+)
+
 st.markdown(
     f"""
 <div class="header-foco">
-
-    <div class="header-title">
-        Foco
-    </div>
-
-    <div class="header-subtitle">
-        {
-            st.session_state.foco_salvo
-            if st.session_state.foco_salvo
-            else "Defina o tema principal da reunião"
-        }
-    </div>
-
+<div class="header-title">Foco</div>
+<div class="header-subtitle">{tema_header}</div>
 </div>
 """,
     unsafe_allow_html=True
@@ -562,19 +556,9 @@ if st.session_state.editando_foco:
 
 else:
 
-    st.markdown(
-        f"""
-<div class="foco-salvo-card">
-{st.session_state.foco_salvo}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
     if st.button("Editar foco"):
         st.session_state.editando_foco = True
         st.rerun()
-
 
 # =========================
 # ABAS
