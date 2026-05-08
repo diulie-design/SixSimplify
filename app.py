@@ -317,11 +317,18 @@ textarea::placeholder {
     }
 
     /* CAMPOS */
-    div[data-testid="stTextInput"] input,
-    textarea,
-    .stNumberInput input {
-        font-size: 22px !important;
+    div[data-testid="stTextInput"] input {
+        font-size: 21px !important;
+        height: 74px !important;
+        line-height: 1.3 !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
     }
+
+textarea,
+.stNumberInput input {
+    font-size: 21px !important;
+}
 
     /* POST-ITS */
     .postit-texto {
