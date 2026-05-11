@@ -736,12 +736,170 @@ else:
 # ABAS
 # =========================
 
-aba1, aba2 = st.tabs([
+aba0, aba1, aba2 = st.tabs([
+    "Summary",
     "Foco no Foco",
     "Principais Entraves"
 ])
 
+# =========================
+# ABA 0
+# =========================
 
+# =========================
+# ABA 0 - SUMMARY
+# =========================
+
+with aba0:
+
+    st.title("Summary")
+
+    st.markdown(
+        """
+<div class="step-card">
+<div class="step-title">Resumo do workshop</div>
+<div class="step-help">Aqui aparecem os principais resultados consolidados das próximas abas.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    # =========================
+    # FOCO
+    # =========================
+
+    st.markdown("## Foco")
+
+    if st.session_state.foco_salvo:
+
+        st.markdown(
+            f"""
+<div class="resultado-final-header">
+<div class="resultado-label">FOCO DA REUNIÃO</div>
+<div class="resultado-texto">{st.session_state.foco_salvo}</div>
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+    else:
+        st.info("O foco da reunião ainda não foi definido.")
+
+    # =========================
+    # FOCO NO FOCO
+    # =========================
+
+    st.markdown("## Foco no Foco")
+
+    vencedores_summary, maior_voto_summary, tem_empate_summary = buscar_mais_votados(
+        sala_atual
+    )
+
+    if vencedores_summary and not tem_empate_summary:
+
+        st.markdown(
+            f"""
+<div class="resultado-final-header">
+<div class="resultado-label">FOCO NO FOCO</div>
+<div class="resultado-texto">{vencedores_summary[0][2]}</div>
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+    elif tem_empate_summary:
+
+        st.warning(
+            "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco."
+        )
+
+    else:
+
+        st.info("O Foco no Foco ainda não foi definido pela votação.")
+
+    # =========================
+    # ENTRAVES POR CATEGORIA
+    # =========================
+
+    st.markdown("## Entraves categorizados")
+
+    cursor.execute("""
+    SELECT 
+        c.categoria,
+        e.equipe,
+        e.texto,
+        e.votos
+    FROM categorias_entraves c
+    JOIN entraves e ON c.entrave_id = e.id
+    WHERE c.sala = ?
+    ORDER BY c.categoria, e.votos DESC
+    """, (sala_atual,))
+
+    categorias_summary = cursor.fetchall()
+
+    if categorias_summary:
+
+        categorias_dict_summary = {}
+
+        for categoria, equipe_cat, texto_cat, votos_cat in categorias_summary:
+
+            if categoria not in categorias_dict_summary:
+                categorias_dict_summary[categoria] = []
+
+            categorias_dict_summary[categoria].append(
+                (equipe_cat, texto_cat, votos_cat)
+            )
+
+        for categoria, itens_categoria in categorias_dict_summary.items():
+
+            st.markdown(
+                f"""
+<div class="resultado-final-header">
+<div class="resultado-label">CATEGORIA</div>
+<div class="resultado-texto">{categoria}</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            for equipe_cat, texto_cat, votos_cat in itens_categoria:
+
+                st.markdown(
+                    f"""
+<div style="
+    background:#eaf2fb;
+    padding:24px;
+    border-radius:22px;
+    margin-bottom:14px;
+    border:2px solid #c9d9ea;
+    border-left:8px solid #002f5f;
+">
+<div style="
+    color:#002f5f;
+    font-size:17px;
+    font-weight:900;
+    margin-bottom:8px;
+">
+Equipe: {equipe_cat} • {votos_cat} voto(s)
+</div>
+
+<div style="
+    color:#111827;
+    font-size:22px;
+    line-height:1.45;
+    font-weight:800;
+">
+{texto_cat}
+</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+    else:
+
+        st.info("Nenhum entrave foi categorizado ainda.")
+        
 # =========================
 # ABA 1
 # =========================
