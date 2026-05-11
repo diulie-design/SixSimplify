@@ -436,7 +436,7 @@ textarea::placeholder {
 
     .stTabs [data-baseweb="tab-list"] {
         position: fixed !important;
-        top: 128px !important;
+        top: 108px !important;
         left: 0.75rem !important;
         right: 0.75rem !important;
         z-index: 9998 !important;
