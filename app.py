@@ -1022,19 +1022,12 @@ with aba2:
     if st.button("Adicionar entrave", key="botao_adicionar_entrave"):
 
         if not equipe_entrave.strip():
-
-            st.warning(
-                "Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves."
-            )
+            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
 
         elif not novo_entrave.strip():
-
-            st.warning(
-                "Digite o texto do entrave antes de adicionar."
-            )
+            st.warning("Digite o texto do entrave antes de adicionar.")
 
         else:
-
             cursor.execute("""
             INSERT INTO entraves (sala, equipe, texto, votos)
             VALUES (?, ?, ?, 0)
@@ -1045,7 +1038,6 @@ with aba2:
             ))
 
             conn.commit()
-
             st.success("Entrave adicionado!")
             st.rerun()
 
@@ -1076,6 +1068,8 @@ with aba2:
     if "entraves_votados" not in st.session_state:
         st.session_state.entraves_votados = set()
 
+    rankings = []
+
     if entraves:
 
         equipes = {}
@@ -1089,16 +1083,9 @@ with aba2:
                 (entrave_id, texto, votos)
             )
 
-        for indice, (
-            equipe,
-            lista_entraves
-        ) in enumerate(equipes.items()):
+        for indice, (equipe, lista_entraves) in enumerate(equipes.items()):
 
-            cor_time = (
-                cores_times[
-                    indice % len(cores_times)
-                ]
-            )
+            cor_time = cores_times[indice % len(cores_times)]
 
             st.markdown(
                 f"""
@@ -1111,7 +1098,6 @@ with aba2:
     margin:32px 0;
     box-shadow:0 8px 24px rgba(15,23,42,0.06);
 ">
-
 <div style="
     display:flex;
     align-items:center;
@@ -1121,7 +1107,6 @@ with aba2:
     border-bottom:2px solid #e5eef7;
     padding-bottom:18px;
 ">
-
 <div>
 <div style="
     color:#002f5f;
@@ -1131,7 +1116,6 @@ with aba2:
 ">
 {equipe}
 </div>
-
 <div style="
     color:#55708f;
     font-size:17px;
@@ -1141,7 +1125,6 @@ with aba2:
 Mural de entraves da equipe
 </div>
 </div>
-
 <div style="
     background:{cor_time};
     color:#002f5f;
@@ -1153,7 +1136,6 @@ Mural de entraves da equipe
 ">
 {len(lista_entraves)} post-it(s)
 </div>
-
 </div>
 </div>
 """,
@@ -1162,30 +1144,14 @@ Mural de entraves da equipe
 
             colunas_mural = st.columns(1)
 
-            for i, (
-                entrave_id,
-                texto,
-                votos
-            ) in enumerate(lista_entraves):
+            for i, (entrave_id, texto, votos) in enumerate(lista_entraves):
 
                 with colunas_mural[0]:
 
-                    foi_votado = (
-                        entrave_id
-                        in st.session_state.entraves_votados
-                    )
+                    foi_votado = entrave_id in st.session_state.entraves_votados
 
-                    cor_postit = (
-                        "#fbcfe8"
-                        if foi_votado
-                        else cor_time
-                    )
-
-                    borda = (
-                        "3px solid #ec4899"
-                        if foi_votado
-                        else "2px solid rgba(0,47,95,0.18)"
-                    )
+                    cor_postit = "#fbcfe8" if foi_votado else cor_time
+                    borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
 
                     html_postit = f"""
 <div style="
@@ -1206,7 +1172,6 @@ Mural de entraves da equipe
 ">
 {texto}
 </div>
-
 <div style="
     margin-top:16px;
     color:#002f5f;
@@ -1218,10 +1183,7 @@ Votos: {votos}
 </div>
 """
 
-                    st.markdown(
-                        html_postit,
-                        unsafe_allow_html=True
-                    )
+                    st.markdown(html_postit, unsafe_allow_html=True)
 
                     if foi_votado:
 
@@ -1229,12 +1191,10 @@ Votos: {votos}
                             "Desfazer voto",
                             key=f"desfazer_entrave_{entrave_id}"
                         ):
-
                             cursor.execute("""
                             UPDATE entraves
                             SET votos = CASE
-                                WHEN votos > 0
-                                THEN votos - 1
+                                WHEN votos > 0 THEN votos - 1
                                 ELSE 0
                             END
                             WHERE id = ?
@@ -1245,11 +1205,7 @@ Votos: {votos}
                             ))
 
                             conn.commit()
-
-                            st.session_state.entraves_votados.remove(
-                                entrave_id
-                            )
-
+                            st.session_state.entraves_votados.remove(entrave_id)
                             st.rerun()
 
                     else:
@@ -1258,7 +1214,6 @@ Votos: {votos}
                             "Votar",
                             key=f"votar_entrave_{entrave_id}"
                         ):
-
                             cursor.execute("""
                             UPDATE entraves
                             SET votos = votos + 1
@@ -1270,11 +1225,7 @@ Votos: {votos}
                             ))
 
                             conn.commit()
-
-                            st.session_state.entraves_votados.add(
-                                entrave_id
-                            )
-
+                            st.session_state.entraves_votados.add(entrave_id)
                             st.rerun()
 
         st.markdown("## Ranking dos entraves mais votados")
@@ -1291,7 +1242,6 @@ Votos: {votos}
 
         if entraves_mais_votados:
 
-            rankings = []
             votos_ja_usados = []
 
             for item in entraves_mais_votados:
@@ -1350,7 +1300,6 @@ Votos: {votos}
 ">
 {titulo_ranking} • {votos_top} voto(s)
 </div>
-
 <div style="
     color:#002f5f;
     font-size:17px;
@@ -1359,7 +1308,6 @@ Votos: {votos}
 ">
 Equipe: {equipe_top}
 </div>
-
 <div style="
     color:#111827;
     font-size:24px;
@@ -1374,15 +1322,11 @@ Equipe: {equipe_top}
                 )
 
         else:
-
-            st.info(
-                "O ranking dos entraves aparecerá aqui após a votação."
-            )
+            st.info("O ranking dos entraves aparecerá aqui após a votação.")
 
     else:
+        st.info("Nenhum entrave adicionado ainda nesta sala.")
 
-        st.info(
-            "Nenhum entrave adicionado ainda nesta sala."
     st.markdown("## Categorizar entraves do Top 3")
 
     if "limpar_categoria" not in st.session_state:
@@ -1393,7 +1337,7 @@ Equipe: {equipe_top}
         st.session_state["entraves_para_categoria"] = []
         st.session_state["limpar_categoria"] = False
 
-    if "rankings" in locals() and rankings:
+    if rankings:
 
         opcoes_top3 = {
             f"{posicao}º lugar | {item[0]} | {item[1]}": item
@@ -1421,10 +1365,10 @@ Equipe: {equipe_top}
                 st.warning("Escolha pelo menos um entrave.")
 
             else:
+
                 for item_escolhido in entraves_escolhidos:
 
                     dados_entrave = opcoes_top3[item_escolhido]
-
                     entrave_id_top = dados_entrave[3]
 
                     cursor.execute("""
@@ -1526,7 +1470,6 @@ Equipe: {equipe_top}
 ">
 Equipe: {equipe_cat} • {votos_cat} voto(s)
 </div>
-
 <div style="
     color:#111827;
     font-size:22px;
@@ -1553,10 +1496,7 @@ Equipe: {equipe_cat} • {votos_cat} voto(s)
                         """, (categoria_id,))
 
                         conn.commit()
-
                         st.rerun()
 
     else:
         st.info("Nenhuma categoria criada ainda.")
-        )
-
