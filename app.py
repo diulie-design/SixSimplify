@@ -463,8 +463,15 @@ textarea::placeholder {
         font-size: 18px !important;
     }
 
-    .stTabs {
-        padding-top: 280px !important;
+    .mobile-fixed-spacer {
+    display: none;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-fixed-spacer {
+            display: block;
+            height: 230px;
+        }
     }
     
     div[data-testid="stVerticalBlock"] {
@@ -793,7 +800,10 @@ else:
         st.session_state.editando_foco = True
         st.rerun()
 
-
+st.markdown(
+    '<div class="mobile-fixed-spacer"></div>',
+    unsafe_allow_html=True
+)
 # =========================
 # ABAS
 # =========================
