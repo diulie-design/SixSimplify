@@ -414,20 +414,40 @@ textarea::placeholder {
 @media (max-width: 768px) {
 
     .header-foco {
-        position: sticky;
-        top: 0;
-        z-index: 999;
-        margin-bottom: 10px;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        z-index: 9999 !important;
+        margin-top: 0.5rem !important;
+        margin-bottom: 0 !important;
+        padding: 18px 16px !important;
+        border-radius: 22px !important;
+    }
+
+    .header-title {
+        font-size: 28px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .header-subtitle {
+        font-size: 18px !important;
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        position: sticky;
-        top: 155px;
-        z-index: 998;
-        background: #f7f9fc;
-        padding-top: 8px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e5eef7;
+        position: fixed !important;
+        top: 128px !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        z-index: 9998 !important;
+        background: #f7f9fc !important;
+        padding-top: 8px !important;
+        padding-bottom: 10px !important;
+        border-bottom: 2px solid #e5eef7 !important;
+    }
+
+    .stTabs {
+        padding-top: 210px !important;
     }
 }
 </style>
