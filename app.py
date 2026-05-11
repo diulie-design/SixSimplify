@@ -736,41 +736,21 @@ else:
 # ABAS
 # =========================
 
-# =========================
-# NAVEGAÇÃO ENTRE PÁGINAS
-# =========================
-
-if "pagina" not in st.session_state:
-    st.session_state.pagina = "summary"
-
-
-def ir_para(pagina):
-    st.session_state.pagina = pagina
-    st.rerun()
-
-
-st.markdown("## Navegação")
-
-col_nav1, col_nav2, col_nav3 = st.columns(3)
-
-with col_nav1:
-    if st.button("Summary", key="nav_summary"):
-        ir_para("summary")
-
-with col_nav2:
-    if st.button("Foco no Foco", key="nav_foco"):
-        ir_para("foco")
-
-with col_nav3:
-    if st.button("Principais Entraves", key="nav_entraves"):
-        ir_para("entraves")
-
+aba0, aba1, aba2 = st.tabs([
+    "Summary",
+    "Foco no Foco",
+    "Principais Entraves"
+])
 
 # =========================
-# PÁGINA 0 - SUMMARY
+# ABA 0
 # =========================
 
-if st.session_state.pagina == "summary":
+# =========================
+# ABA 0 - SUMMARY
+# =========================
+
+with aba0:
 
     st.title("Summary")
 
@@ -778,11 +758,15 @@ if st.session_state.pagina == "summary":
         """
 <div class="step-card">
 <div class="step-title">Resumo do workshop</div>
-<div class="step-help">Aqui aparecem os principais resultados consolidados das próximas etapas.</div>
+<div class="step-help">Aqui aparecem os principais resultados consolidados das próximas abas.</div>
 </div>
 """,
         unsafe_allow_html=True
     )
+
+    # =========================
+    # FOCO
+    # =========================
 
     st.markdown("## Foco")
 
@@ -800,6 +784,10 @@ if st.session_state.pagina == "summary":
 
     else:
         st.info("O foco da reunião ainda não foi definido.")
+
+    # =========================
+    # FOCO NO FOCO
+    # =========================
 
     st.markdown("## Foco no Foco")
 
@@ -822,12 +810,16 @@ if st.session_state.pagina == "summary":
     elif tem_empate_summary:
 
         st.warning(
-            "Há empate no Foco no Foco. Faça a votação de desempate na etapa Foco no Foco."
+            "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco."
         )
 
     else:
 
         st.info("O Foco no Foco ainda não foi definido pela votação.")
+
+    # =========================
+    # ENTRAVES POR CATEGORIA
+    # =========================
 
     st.markdown("## Entraves categorizados")
 
@@ -890,6 +882,7 @@ if st.session_state.pagina == "summary":
 ">
 Equipe: {equipe_cat} • {votos_cat} voto(s)
 </div>
+
 <div style="
     color:#111827;
     font-size:22px;
@@ -906,18 +899,12 @@ Equipe: {equipe_cat} • {votos_cat} voto(s)
     else:
 
         st.info("Nenhum entrave foi categorizado ainda.")
-
-    st.markdown("---")
-
-    if st.button("Próximo ➡", key="summary_proximo"):
-        ir_para("foco")
-
-
+        
 # =========================
-# PÁGINA 1 - FOCO NO FOCO
+# ABA 1
 # =========================
 
-elif st.session_state.pagina == "foco":
+with aba1:
 
     st.title("Foco no Foco")
 
@@ -1199,24 +1186,11 @@ elif st.session_state.pagina == "foco":
         st.session_state.postits_votados = set()
         st.rerun()
 
-    st.markdown("---")
-
-    col_voltar, col_proximo = st.columns(2)
-
-    with col_voltar:
-        if st.button("⬅ Voltar", key="foco_voltar"):
-            ir_para("summary")
-
-    with col_proximo:
-        if st.button("Próximo ➡", key="foco_proximo"):
-            ir_para("entraves")
-
-
 # =========================
-# PÁGINA 2 - PRINCIPAIS ENTRAVES
+# ABA 2
 # =========================
 
-elif st.session_state.pagina == "entraves":
+with aba2:
 
     st.title("Principais Entraves")
 
@@ -1254,7 +1228,7 @@ elif st.session_state.pagina == "entraves":
     if st.button("Adicionar entrave", key="botao_adicionar_entrave"):
 
         if not equipe_entrave.strip():
-            st.warning("Salve o nome da equipe na etapa Foco no Foco antes de adicionar entraves.")
+            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
 
         elif not novo_entrave.strip():
             st.warning("Digite o texto do entrave antes de adicionar.")
@@ -1732,8 +1706,3 @@ Equipe: {equipe_cat} • {votos_cat} voto(s)
 
     else:
         st.info("Nenhuma categoria criada ainda.")
-
-    st.markdown("---")
-
-    if st.button("⬅ Voltar", key="entraves_voltar"):
-        ir_para("foco")
