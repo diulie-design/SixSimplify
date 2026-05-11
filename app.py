@@ -419,7 +419,7 @@ textarea::placeholder {
 
     .header-foco {
         position: fixed !important;
-        top: 14px !important;
+        top: 20px !important;
         left: 0.75rem !important;
         right: 0.75rem !important;
         z-index: 9999 !important;
@@ -453,7 +453,7 @@ textarea::placeholder {
     }
 
     .stTabs {
-        padding-top: 176px !important;
+        padding-top: 100px !important;
     }
 }
 </style>
