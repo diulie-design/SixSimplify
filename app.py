@@ -410,7 +410,26 @@ textarea::placeholder {
         font-size: 25px;
     }
 }
+/* FIXAR HEADER + ABAS NO CELULAR */
+@media (max-width: 768px) {
 
+    .header-foco {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+        margin-bottom: 10px;
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        position: sticky;
+        top: 155px;
+        z-index: 998;
+        background: #f7f9fc;
+        padding-top: 8px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e5eef7;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
