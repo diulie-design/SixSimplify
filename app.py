@@ -410,50 +410,30 @@ textarea::placeholder {
         font-size: 25px;
     }
 }
-/* FIXAR HEADER + ABAS NO CELULAR */
+/* FIXAR SOMENTE AS ABAS NO CELULAR */
 @media (max-width: 768px) {
 
     .main .block-container {
-        padding-top: 0.5rem !important;
-    }
-
-    .header-foco {
-        position: fixed !important;
-        top: 70px !important;
-        left: 0.75rem !important;
-        right: 0.75rem !important;
-        z-index: 9999 !important;
-        margin: 0 !important;
-        padding: 22px 16px !important;
-        border-radius: 22px !important;
-    }
-
-    .header-title {
-        font-size: 28px !important;
-        line-height: 1.1 !important;
-        margin-bottom: 6px !important;
-    }
-
-    .header-subtitle {
-        font-size: 18px !important;
-        line-height: 1.2 !important;
+        padding-top: 1rem !important;
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        position: fixed !important;
-        top: 132px !important;
-        left: 0.75rem !important;
-        right: 0.75rem !important;
+        position: sticky !important;
+        top: 0 !important;
         z-index: 9998 !important;
         background: #f7f9fc !important;
-        padding-top: 6px !important;
-        padding-bottom: 6px !important;
-        margin-bottom: 0 !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        margin-bottom: 12px !important;
         border-bottom: 2px solid #e5eef7 !important;
     }
 
-    .stTabs {
-        padding-top: 10px !important;
+    .stTabs [data-baseweb="tab"] {
+        min-height: 62px !important;
+    }
+
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 18px !important;
     }
 }
 </style>
