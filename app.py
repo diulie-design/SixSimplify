@@ -413,41 +413,47 @@ textarea::placeholder {
 /* FIXAR HEADER + ABAS NO CELULAR */
 @media (max-width: 768px) {
 
+    .main .block-container {
+        padding-top: 0.5rem !important;
+    }
+
     .header-foco {
         position: fixed !important;
-        top: 0 !important;
+        top: 14px !important;
         left: 0.75rem !important;
         right: 0.75rem !important;
         z-index: 9999 !important;
-        margin-top: 0.5rem !important;
-        margin-bottom: 0 !important;
-        padding: 18px 16px !important;
+        margin: 0 !important;
+        padding: 22px 16px !important;
         border-radius: 22px !important;
     }
 
     .header-title {
         font-size: 28px !important;
-        margin-bottom: 4px !important;
+        line-height: 1.1 !important;
+        margin-bottom: 6px !important;
     }
 
     .header-subtitle {
         font-size: 18px !important;
+        line-height: 1.2 !important;
     }
 
     .stTabs [data-baseweb="tab-list"] {
         position: fixed !important;
-        top: 108px !important;
+        top: 132px !important;
         left: 0.75rem !important;
         right: 0.75rem !important;
         z-index: 9998 !important;
         background: #f7f9fc !important;
-        padding-top: 8px !important;
-        padding-bottom: 10px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 0 !important;
         border-bottom: 2px solid #e5eef7 !important;
     }
 
     .stTabs {
-        padding-top: 210px !important;
+        padding-top: 176px !important;
     }
 }
 </style>
