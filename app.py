@@ -464,10 +464,14 @@ textarea::placeholder {
     }
 
     .stTabs {
-        padding-top: 178px !important;
+        padding-top: 280px !important;
     }
-}
-</style>
+    
+    div[data-testid="stVerticalBlock"] {
+        gap: 0.5rem !important;
+    }
+    }
+    </style>
 """, unsafe_allow_html=True)
 
 # =========================
