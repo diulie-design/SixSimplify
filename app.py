@@ -587,7 +587,55 @@ if "editando_foco" not in st.session_state:
 # ENTRADA POR SENHA / SALA
 # =========================
 
+# =========================
+# ENTRADA POR SENHA / SALA
+# =========================
+
 if st.session_state.sala is None:
+
+    st.markdown(
+        """
+<div style="
+    text-align:center;
+    margin-bottom:18px;
+">
+
+<div style="
+    color:#002f5f;
+    font-size:18px;
+    font-weight:700;
+    letter-spacing:6px;
+    text-transform:uppercase;
+    opacity:0.75;
+    margin-bottom:8px;
+">
+EMBRAER
+</div>
+
+<div style="
+    color:#002f5f;
+    font-size:56px;
+    font-weight:900;
+    line-height:1;
+    margin-bottom:10px;
+">
+SIX SIMPLIFY
+</div>
+
+<div style="
+    color:#4b6584;
+    font-size:24px;
+    font-weight:600;
+    letter-spacing:2px;
+    text-transform:uppercase;
+">
+Workshop
+</div>
+
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     st.markdown(
         """
