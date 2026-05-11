@@ -453,7 +453,7 @@ textarea::placeholder {
     }
 
     .stTabs {
-        padding-top: 80px !important;
+        padding-top: 10px !important;
     }
 }
 </style>
