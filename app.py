@@ -1383,135 +1383,133 @@ Equipe: {equipe_top}
 
         st.info(
             "Nenhum entrave adicionado ainda nesta sala."
+    st.markdown("## Categorizar entraves do Top 3")
+
+    if "limpar_categoria" not in st.session_state:
+        st.session_state["limpar_categoria"] = False
+
+    if st.session_state["limpar_categoria"]:
+        st.session_state["nova_categoria_entraves"] = ""
+        st.session_state["entraves_para_categoria"] = []
+        st.session_state["limpar_categoria"] = False
+
+    if "rankings" in locals() and rankings:
+
+        opcoes_top3 = {
+            f"{posicao}º lugar | {item[0]} | {item[1]}": item
+            for posicao, item in rankings
+        }
+
+        nova_categoria = st.text_input(
+            "Nome da categoria",
+            placeholder="Exemplo: Tecnologia",
+            key="nova_categoria_entraves"
         )
-st.markdown("## Categorizar entraves do Top 3")
 
-if "limpar_categoria" not in st.session_state:
-    st.session_state["limpar_categoria"] = False
+        entraves_escolhidos = st.multiselect(
+            "Escolha os entraves",
+            options=list(opcoes_top3.keys()),
+            key="entraves_para_categoria"
+        )
 
-if st.session_state["limpar_categoria"]:
-    st.session_state["nova_categoria_entraves"] = ""
-    st.session_state["entraves_para_categoria"] = []
-    st.session_state["limpar_categoria"] = False
+        if st.button("Salvar categoria"):
 
-opcoes_top3 = {
-    f"{posicao}º lugar | {item[0]} | {item[1]}": item
-    for posicao, item in rankings
-}
+            if not nova_categoria.strip():
+                st.warning("Digite o nome da categoria.")
 
-nova_categoria = st.text_input(
-    "Nome da categoria",
-    placeholder="Exemplo: Tecnologia",
-    key="nova_categoria_entraves"
-)
+            elif not entraves_escolhidos:
+                st.warning("Escolha pelo menos um entrave.")
 
-entraves_escolhidos = st.multiselect(
-    "Escolha os entraves",
-    options=list(opcoes_top3.keys()),
-    key="entraves_para_categoria"
-)
+            else:
+                for item_escolhido in entraves_escolhidos:
 
-if st.button("Salvar categoria"):
+                    dados_entrave = opcoes_top3[item_escolhido]
 
-    if not nova_categoria.strip():
+                    entrave_id_top = dados_entrave[3]
 
-        st.warning("Digite o nome da categoria.")
+                    cursor.execute("""
+                    INSERT INTO categorias_entraves (
+                        sala,
+                        categoria,
+                        entrave_id
+                    )
+                    VALUES (?, ?, ?)
+                    """, (
+                        sala_atual,
+                        nova_categoria.strip(),
+                        entrave_id_top
+                    ))
 
-    elif not entraves_escolhidos:
+                conn.commit()
 
-        st.warning("Escolha pelo menos um entrave.")
+                st.session_state["limpar_categoria"] = True
+
+                st.success("Categoria criada!")
+                st.rerun()
 
     else:
+        st.info("A categorização aparecerá após existirem entraves no Top 3.")
 
-        for item_escolhido in entraves_escolhidos:
+    st.markdown("## Categorias criadas")
 
-            dados_entrave = opcoes_top3[item_escolhido]
+    cursor.execute("""
+    SELECT 
+        c.id,
+        c.categoria,
+        e.equipe,
+        e.texto,
+        e.votos
+    FROM categorias_entraves c
+    JOIN entraves e ON c.entrave_id = e.id
+    WHERE c.sala = ?
+    ORDER BY c.categoria, e.votos DESC
+    """, (sala_atual,))
 
-            equipe_top = dados_entrave[0]
-            texto_top = dados_entrave[1]
-            votos_top = dados_entrave[2]
-            entrave_id_top = dados_entrave[3]
+    categorias_salvas = cursor.fetchall()
 
-            cursor.execute("""
-            INSERT INTO categorias_entraves (
-                sala,
-                categoria,
-                entrave_id
+    if categorias_salvas:
+
+        categorias_dict = {}
+
+        for row_id, categoria, equipe_cat, texto_cat, votos_cat in categorias_salvas:
+
+            if categoria not in categorias_dict:
+                categorias_dict[categoria] = []
+
+            categorias_dict[categoria].append(
+                (
+                    row_id,
+                    equipe_cat,
+                    texto_cat,
+                    votos_cat
+                )
             )
-            VALUES (?, ?, ?)
-            """, (
-                sala_atual,
-                nova_categoria.strip(),
-                entrave_id_top
-            ))
 
-        conn.commit()
+        for categoria, itens_categoria in categorias_dict.items():
 
-        st.session_state["limpar_categoria"] = True
-
-        st.success("Categoria criada!")
-        st.rerun()
-
-st.markdown("## Categorias criadas")
-
-cursor.execute("""
-SELECT 
-    c.id,
-    c.categoria,
-    e.equipe,
-    e.texto,
-    e.votos
-FROM categorias_entraves c
-JOIN entraves e ON c.entrave_id = e.id
-WHERE c.sala = ?
-ORDER BY c.categoria, e.votos DESC
-""", (sala_atual,))
-
-categorias_salvas = cursor.fetchall()
-
-if categorias_salvas:
-
-    categorias_dict = {}
-
-    for row_id, categoria, equipe_cat, texto_cat, votos_cat in categorias_salvas:
-
-        if categoria not in categorias_dict:
-            categorias_dict[categoria] = []
-
-        categorias_dict[categoria].append(
-            (
-                row_id,
-                equipe_cat,
-                texto_cat,
-                votos_cat
-            )
-        )
-
-    for categoria, itens_categoria in categorias_dict.items():
-
-        st.markdown(
-            f"""
+            st.markdown(
+                f"""
 <div class="resultado-final-header">
 <div class="resultado-label">CATEGORIA</div>
 <div class="resultado-texto">{categoria}</div>
 </div>
 """,
-            unsafe_allow_html=True
-        )
+                unsafe_allow_html=True
+            )
 
-        for item_categoria in itens_categoria:
+            for item_categoria in itens_categoria:
 
-            categoria_id = item_categoria[0]
-            equipe_cat = item_categoria[1]
-            texto_cat = item_categoria[2]
-            votos_cat = item_categoria[3]
+                categoria_id = item_categoria[0]
+                equipe_cat = item_categoria[1]
+                texto_cat = item_categoria[2]
+                votos_cat = item_categoria[3]
 
-            col_categoria1, col_categoria2 = st.columns([9,1])
+                col_categoria1, col_categoria2 = st.columns([9, 1])
 
-            with col_categoria1:
+                with col_categoria1:
 
-                st.markdown(
-                    f"""
+                    st.markdown(
+                        f"""
 <div style="
     background:#eaf2fb;
     padding:24px;
@@ -1539,25 +1537,26 @@ Equipe: {equipe_cat} • {votos_cat} voto(s)
 </div>
 </div>
 """,
-                    unsafe_allow_html=True
-                )
+                        unsafe_allow_html=True
+                    )
 
-            with col_categoria2:
+                with col_categoria2:
 
-                if st.button(
-                    "✕",
-                    key=f"remover_categoria_{categoria_id}"
-                ):
+                    if st.button(
+                        "✕",
+                        key=f"remover_categoria_{categoria_id}"
+                    ):
 
-                    cursor.execute("""
-                    DELETE FROM categorias_entraves
-                    WHERE id = ?
-                    """, (categoria_id,))
+                        cursor.execute("""
+                        DELETE FROM categorias_entraves
+                        WHERE id = ?
+                        """, (categoria_id,))
 
-                    conn.commit()
+                        conn.commit()
 
-                    st.rerun()
+                        st.rerun()
 
-else:
+    else:
+        st.info("Nenhuma categoria criada ainda.")
+        )
 
-    st.info("Nenhuma categoria criada ainda.")
