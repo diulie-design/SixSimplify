@@ -410,21 +410,48 @@ textarea::placeholder {
         font-size: 25px;
     }
 }
-/* FIXAR SOMENTE AS ABAS NO CELULAR */
+/* FIXAR HEADER + ABAS SOMENTE DENTRO DA SALA */
 @media (max-width: 768px) {
 
     .main .block-container {
         padding-top: 1rem !important;
     }
 
+    .sala-header-fixo {
+        position: fixed !important;
+        top: 12px !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
+        z-index: 9999 !important;
+    }
+
+    .sala-header-fixo .header-foco {
+        margin: 0 !important;
+        padding: 20px 16px !important;
+        border-radius: 22px !important;
+    }
+
+    .sala-header-fixo .header-title {
+        font-size: 28px !important;
+        line-height: 1.1 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .sala-header-fixo .header-subtitle {
+        font-size: 18px !important;
+        line-height: 1.2 !important;
+    }
+
     .stTabs [data-baseweb="tab-list"] {
-        position: sticky !important;
-        top: 0 !important;
+        position: fixed !important;
+        top: 124px !important;
+        left: 0.75rem !important;
+        right: 0.75rem !important;
         z-index: 9998 !important;
         background: #f7f9fc !important;
-        padding-top: 8px !important;
-        padding-bottom: 8px !important;
-        margin-bottom: 12px !important;
+        padding-top: 6px !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 0 !important;
         border-bottom: 2px solid #e5eef7 !important;
     }
 
@@ -434,6 +461,10 @@ textarea::placeholder {
 
     .stTabs [data-baseweb="tab"] p {
         font-size: 18px !important;
+    }
+
+    .stTabs {
+        padding-top: 178px !important;
     }
 }
 </style>
@@ -714,9 +745,11 @@ tema_header = (
 
 st.markdown(
     f"""
+<div class="sala-header-fixo">
 <div class="header-foco">
 <div class="header-title">Foco</div>
 <div class="header-subtitle">{tema_header}</div>
+</div>
 </div>
 """,
     unsafe_allow_html=True
