@@ -1746,7 +1746,7 @@ with aba2:
     font-weight:800;
     margin-bottom:10px;
 ">
-Equipe: {esc(equipe_top)}
+{t("team_label")}: {esc(equipe_top)}
 </div>
 <div style="
     color:#111827;
