@@ -1107,7 +1107,7 @@ with aba0:
     st.title(t("summary_title"))
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("summary_step_title")}</div>\n<div class="step-help">{t("summary_step_help")}</div>
 </div>
@@ -1177,7 +1177,7 @@ with aba1:
     st.caption(f"{t('current_room')}: {sala_atual}")
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("team_step_title")}</div>\n<div class="step-help">{t("team_step_help")}</div>
 </div>
@@ -1245,7 +1245,7 @@ with aba1:
     nome_equipe = st.session_state.nome_equipe_salvo
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("postit_step_title")}</div>\n<div class="step-help">{t("postit_step_help")}</div>
 </div>
@@ -1297,7 +1297,7 @@ with aba1:
             st.rerun()
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("vote_step_title")}</div>\n<div class="step-help">{t("vote_step_help")}</div>
 </div>
@@ -1374,7 +1374,7 @@ with aba1:
         st.info(t("no_postit"))
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("result_step_title")}</div>\n<div class="step-help">{t("result_step_help")}</div>
 </div>
@@ -1455,7 +1455,7 @@ with aba2:
     st.title(t("barriers_title"))
 
     st.markdown(
-        """
+        f"""
 <div class="step-card">
 <div class="step-title">{t("add_barrier_title")}</div>\n<div class="step-help">{t("add_barrier_help")}</div>
 </div>
@@ -1697,7 +1697,7 @@ with aba2:
         if rankings:
 
             st.markdown(
-                """
+                f"""
 <div class="resultado-final-header">
 <div class="resultado-label">{t("ranking_label")}</div>\n<div class="resultado-texto">{t("top3")}</div>
 </div>
