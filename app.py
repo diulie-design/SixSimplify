@@ -909,7 +909,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
     font-weight:900;
     margin-bottom:8px;
 ">
-Equipe: {esc(equipe_cat)} • {votos_cat} voto(s)
+{t("team_label")}: {esc(equipe_cat)} • {votos_cat} {t("votes").lower()}
 </div>
 <div style="
     color:#111827;
