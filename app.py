@@ -53,6 +53,8 @@ h3 {
     box-shadow: 0 10px 30px rgba(0,47,95,0.15);
 }
 
+
+
 .header-title {
     text-align: center;
     color: white;
@@ -67,6 +69,22 @@ h3 {
     color: rgba(255,255,255,0.75);
     font-size: 34px;
     font-weight: 500;
+}
+
+.foco-salvo-card {
+    background: linear-gradient(135deg, #eaf2fb 0%, #d7e7f5 100%);
+    color: #002f5f;
+    padding: 28px;
+    border-radius: 22px;
+    margin: 14px 0 28px 0;
+    border-left: 8px solid #002f5f;
+    border-top: 1px solid #c9d9ea;
+    border-right: 1px solid #c9d9ea;
+    border-bottom: 1px solid #c9d9ea;
+    font-size: 34px;
+    font-weight: 850;
+    line-height: 1.3;
+    text-align: center;
 }
 
 .resultado-final-header {
@@ -93,7 +111,6 @@ h3 {
     font-weight: 850;
     line-height: 1.25;
 }
-
 /* ABAS */
 .stTabs [data-baseweb="tab-list"] {
     gap: 8px;
@@ -328,27 +345,30 @@ textarea::placeholder {
     }
 
     .stTabs [data-baseweb="tab-list"] {
-        position: sticky !important;
-        top: 0px !important;
-        z-index: 9998 !important;
-        background: #f7f9fc !important;
         gap: 2px;
-        padding-top: 8px !important;
-        padding-bottom: 8px !important;
-        margin-bottom: 16px !important;
-        border-bottom: 2px solid #e5eef7 !important;
     }
 
     .stTabs [data-baseweb="tab"] {
-        min-height: 62px !important;
+        min-height: 70px;
         padding: 0 12px;
         border-radius: 18px;
     }
 
     .stTabs [data-baseweb="tab"] p {
-        font-size: 18px !important;
+        font-size: 20px !important;
         line-height: 1.05 !important;
         font-weight: 800 !important;
+    }
+
+    div[data-testid="stHorizontalBlock"] {
+        gap: 0px !important;
+    }
+
+    div[data-testid="column"] {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        flex: 1 1 0% !important;
+        min-width: 0 !important;
     }
 
     .stButton > button {
@@ -389,6 +409,85 @@ textarea::placeholder {
 
     .postit-texto {
         font-size: 25px;
+    }
+}
+
+
+
+/* TOPO FIXO NO CELULAR */
+.espaco-topo-fixo-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .st-key-topo_fixo_mobile {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        z-index: 9999 !important;
+        background: #f7f9fc !important;
+        padding: 8px 12px 10px 12px !important;
+        box-shadow: 0 8px 24px rgba(15,23,42,0.12) !important;
+    }
+
+    .st-key-topo_fixo_mobile .header-foco {
+        margin: 0 0 8px 0 !important;
+        padding: 16px 12px !important;
+        border-radius: 18px !important;
+    }
+
+    .st-key-topo_fixo_mobile .header-title {
+        font-size: 28px !important;
+        line-height: 1.05 !important;
+        margin-bottom: 4px !important;
+    }
+
+    .st-key-topo_fixo_mobile .header-subtitle {
+        font-size: 18px !important;
+        line-height: 1.15 !important;
+    }
+
+    .st-key-topo_fixo_mobile div[data-testid="stTextInput"] input {
+        min-height: 48px !important;
+        font-size: 18px !important;
+        border-radius: 14px !important;
+    }
+
+    .st-key-topo_fixo_mobile .stButton > button {
+        min-height: 44px !important;
+        font-size: 15px !important;
+        border-radius: 14px !important;
+        margin-top: 4px !important;
+    }
+
+    .stTabs [data-baseweb="tab-list"] {
+        position: fixed !important;
+        top: 230px !important;
+        left: 12px !important;
+        right: 12px !important;
+        z-index: 9998 !important;
+        background: #f7f9fc !important;
+        padding: 8px 0 8px 0 !important;
+        margin-bottom: 0 !important;
+        border-bottom: 2px solid #e5eef7 !important;
+        box-shadow: 0 6px 14px rgba(15,23,42,0.06) !important;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        min-height: 58px !important;
+        padding: 0 10px !important;
+        border-radius: 16px !important;
+    }
+
+    .stTabs [data-baseweb="tab"] p {
+        font-size: 17px !important;
+    }
+
+    .espaco-topo-fixo-mobile {
+        display: block !important;
+        height: 310px !important;
     }
 }
 
@@ -472,6 +571,7 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
         )
 
         if tempo_restante == 0:
+
             st.error("Tempo encerrado!")
             st.session_state[nome_timer] = None
 
@@ -518,52 +618,66 @@ if "foco_salvo" not in st.session_state:
 if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
 
-
 # =========================
 # FOCO GERAL
 # =========================
 
-tema_header = (
-    st.session_state.foco_salvo
-    if st.session_state.foco_salvo
-    else "Defina o tema principal da reunião"
-)
+with st.container(key="topo_fixo_mobile"):
 
-st.markdown(
-    f"""
+    tema_header = (
+        st.session_state.foco_salvo
+        if st.session_state.foco_salvo
+        else "Defina o tema principal da reunião"
+    )
+
+    st.markdown(
+        f"""
 <div class="header-foco">
 <div class="header-title">Foco</div>
 <div class="header-subtitle">{tema_header}</div>
 </div>
 """,
-    unsafe_allow_html=True
-)
-
-if st.session_state.editando_foco:
-
-    foco_digitado = st.text_input(
-        label="campo_foco",
-        value=st.session_state.foco_salvo,
-        placeholder="Digite o tema da reunião",
-        key="campo_foco",
-        label_visibility="collapsed"
+        unsafe_allow_html=True
     )
 
-    if st.button("Salvar foco"):
+    if st.session_state.editando_foco:
 
-        if foco_digitado.strip():
-            st.session_state.foco_salvo = foco_digitado.strip()
-            st.session_state.editando_foco = False
+        foco_digitado = st.text_input(
+            label="campo_foco",
+            value=st.session_state.foco_salvo,
+            placeholder="Digite o tema da reunião",
+            key="campo_foco",
+            label_visibility="collapsed"
+        )
+
+        if st.button("Salvar foco"):
+
+            if foco_digitado.strip():
+                st.session_state.foco_salvo = foco_digitado.strip()
+
+                cursor.execute("""
+                INSERT INTO salas (sala, foco)
+                VALUES (?, ?)
+                ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
+                """, (sala_atual, st.session_state.foco_salvo))
+
+                conn.commit()
+
+                st.session_state.editando_foco = False
+                st.rerun()
+            else:
+                st.warning("Digite um foco antes de salvar.")
+
+    else:
+
+        if st.button("Editar foco"):
+            st.session_state.editando_foco = True
             st.rerun()
-        else:
-            st.warning("Digite um foco antes de salvar.")
 
-else:
-
-    if st.button("Editar foco"):
-        st.session_state.editando_foco = True
-        st.rerun()
-
+st.markdown(
+    '<div class="espaco-topo-fixo-mobile"></div>',
+    unsafe_allow_html=True
+)
 
 # =========================
 # ABAS
@@ -692,17 +806,13 @@ with aba1:
 
     if st.button("Adicionar post-it"):
 
-        if not nome_equipe.strip():
-            st.warning("Salve o nome da equipe antes de adicionar um post-it.")
-
-        elif qtd_palavras != 6:
+        if qtd_palavras != 6:
             st.error("O post-it precisa ter exatamente 6 palavras.")
-
         else:
             cursor.execute("""
             INSERT INTO postits (equipe, texto, votos, ativo)
             VALUES (?, ?, 0, 1)
-            """, (nome_equipe, novo_postit.strip()))
+            """, (nome_equipe, novo_postit))
 
             conn.commit()
             st.success("Post-it adicionado!")
@@ -800,41 +910,41 @@ with aba1:
 
     vencedores, maior_voto, tem_empate = buscar_mais_votados()
 
-    if vencedores and not tem_empate:
+if vencedores and not tem_empate:
 
-        st.markdown(
-            f"""
+    st.markdown(
+        f"""
 <div class="resultado-final-header">
 <div class="resultado-label">FOCO NO FOCO</div>
 <div class="resultado-texto">{vencedores[0][2]}</div>
 </div>
 """,
-            unsafe_allow_html=True
+        unsafe_allow_html=True
+    )
+
+elif tem_empate:
+
+    st.warning(
+        "Houve empate. Faça uma nova votação apenas com os empatados."
+    )
+
+    if st.button("Iniciar votação de desempate"):
+
+        ids_empatados = [str(item[0]) for item in vencedores]
+
+        cursor.execute("UPDATE postits SET ativo = 0")
+
+        cursor.execute(
+            f"""
+            UPDATE postits
+            SET ativo = 1, votos = 0
+            WHERE id IN ({",".join(ids_empatados)})
+            """
         )
 
-    elif tem_empate:
-
-        st.warning(
-            "Houve empate. Faça uma nova votação apenas com os empatados."
-        )
-
-        if st.button("Iniciar votação de desempate"):
-
-            ids_empatados = [str(item[0]) for item in vencedores]
-
-            cursor.execute("UPDATE postits SET ativo = 0")
-
-            cursor.execute(
-                f"""
-                UPDATE postits
-                SET ativo = 1, votos = 0
-                WHERE id IN ({",".join(ids_empatados)})
-                """
-            )
-
-            conn.commit()
-            st.session_state.postits_votados = set()
-            st.rerun()
+        conn.commit()
+        st.session_state.postits_votados = set()
+        st.rerun()
 
     else:
         st.info("O resultado aparecerá aqui após a votação.")
