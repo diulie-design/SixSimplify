@@ -501,6 +501,217 @@ def esc(valor):
     return html.escape(str(valor)) if valor is not None else ""
 
 
+TEXTOS = {
+    "pt": {
+        "lang_label": "Idioma / Language",
+        "pt_br": "Português (Brasil)",
+        "en": "English",
+        "enter_room": "Entrar na sala",
+        "enter_room_subtitle": "Digite a senha combinada para acessar a dinâmica",
+        "room_password": "Senha da sala",
+        "room_placeholder": "Digite a senha da reunião",
+        "enter_button": "Entrar",
+        "password_required": "Digite uma senha para entrar.",
+        "focus_default": "Defina o tema principal da reunião",
+        "save_focus": "Salvar foco",
+        "edit_focus": "Editar foco",
+        "focus_required": "Digite um foco antes de salvar.",
+        "tab_summary": "Summary",
+        "tab_focus": "Foco no Foco",
+        "tab_barriers": "Principais Entraves",
+        "summary_title": "Summary",
+        "summary_step_title": "Resumo do workshop",
+        "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
+        "focus": "Foco",
+        "meeting_focus": "FOCO DA REUNIÃO",
+        "focus_not_defined": "O foco da reunião ainda não foi definido.",
+        "focus_on_focus": "Foco no Foco",
+        "focus_on_focus_caps": "FOCO NO FOCO",
+        "focus_tie_summary": "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco.",
+        "focus_not_defined_vote": "O Foco no Foco ainda não foi definido pela votação.",
+        "categorized_barriers": "Entraves categorizados",
+        "current_room": "Sala atual",
+        "team_step_title": "1. Informe sua equipe",
+        "team_step_help": "Digite o nome da equipe e o líder. Depois clique em salvar.",
+        "time_step_minutes": "Tempo para essa etapa em minutos",
+        "team_name": "Nome da equipe",
+        "team_placeholder": "Exemplo: Time Azul",
+        "leader_name": "Líder da equipe",
+        "leader_placeholder": "Exemplo: Ana",
+        "save_team": "Salvar equipe",
+        "edit_team": "Editar equipe",
+        "team_label": "Equipe",
+        "leader_label": "Líder",
+        "postit_step_title": "2. Escreva seu post-it",
+        "postit_step_help": "Escreva uma frase com exatamente 6 palavras. Depois clique em adicionar.",
+        "time_postits_minutes": "Tempo para escrever os post-its em minutos",
+        "add_postit": "Adicionar post-it",
+        "postit_placeholder": "Exemplo: Melhorar comunicação entre áreas internas críticas",
+        "words": "palavras",
+        "missing_words": "Faltam palavras. O post-it precisa ter exatamente 6.",
+        "too_many_words": "Tem palavras demais. O post-it precisa ter exatamente 6.",
+        "save_team_before_postit": "Salve o nome da equipe antes de adicionar um post-it.",
+        "exact_words": "O post-it precisa ter exatamente 6 palavras.",
+        "postit_added": "Post-it adicionado!",
+        "vote_step_title": "3. Vote nos post-its",
+        "vote_step_help": "Leia os post-its e clique em votar. Se errar, clique em desfazer voto.",
+        "votes": "Votos",
+        "undo_vote": "Desfazer voto",
+        "vote": "Votar",
+        "no_postit": "Nenhum post-it disponível ainda nesta sala.",
+        "result_step_title": "4. Veja o resultado",
+        "result_step_help": "O post-it mais votado aparece abaixo. Se empatar, faça uma nova votação apenas com os empatados.",
+        "tie_warning": "Houve empate. Faça uma nova votação apenas com os empatados.",
+        "start_tie": "Iniciar votação de desempate",
+        "result_will_appear": "O resultado aparecerá aqui após a votação.",
+        "show_all": "Mostrar todos",
+        "reset_votes": "Zerar votos",
+        "barriers_title": "Principais Entraves",
+        "add_barrier_title": "Adicionar entrave",
+        "add_barrier_help": "Cada equipe pode adicionar quantos post-its quiser. Todos os participantes da mesma sala conseguirão visualizar e votar no mural completo.",
+        "time_barriers_minutes": "Tempo para pensar nos entraves em minutos",
+        "new_barrier": "Novo post-it de entrave",
+        "barrier_placeholder": "Digite aqui o principal entrave identificado pela equipe",
+        "add_barrier_button": "Adicionar entrave",
+        "save_team_before_barrier": "Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.",
+        "barrier_required": "Digite o texto do entrave antes de adicionar.",
+        "barrier_added": "Entrave adicionado!",
+        "barriers_board": "Mural de entraves por equipe",
+        "team_barriers_board": "Mural de entraves da equipe",
+        "postits_count": "post-it(s)",
+        "ranking_barriers": "Ranking dos entraves mais votados",
+        "ranking_label": "RANKING DOS ENTRAVES",
+        "top3": "Top 3 mais votados",
+        "ranking_empty": "O ranking dos entraves aparecerá aqui após a votação.",
+        "no_barriers": "Nenhum entrave adicionado ainda nesta sala.",
+        "categorize_top3": "Categorizar entraves do Top 3",
+        "category_name": "Nome da categoria",
+        "category_placeholder": "Exemplo: Tecnologia",
+        "choose_barriers": "Escolha os entraves",
+        "save_category": "Salvar categoria",
+        "category_required": "Digite o nome da categoria.",
+        "choose_one_barrier": "Escolha pelo menos um entrave.",
+        "category_created": "Categoria criada!",
+        "category_after_top3": "A categorização aparecerá após existirem entraves no Top 3.",
+        "created_categories": "Categorias criadas",
+        "category_caps": "CATEGORIA",
+        "no_categories": "Nenhuma categoria criada ainda.",
+        "first_place": "1º lugar",
+        "second_place": "2º lugar",
+        "third_place": "3º lugar",
+        "timer_start": "Iniciar cronômetro",
+        "timer_stop": "Parar cronômetro",
+        "timer_finished": "Tempo encerrado!"
+    },
+    "en": {
+        "lang_label": "Language / Idioma",
+        "pt_br": "Português (Brasil)",
+        "en": "English",
+        "enter_room": "Enter room",
+        "enter_room_subtitle": "Enter the agreed password to access the activity",
+        "room_password": "Room password",
+        "room_placeholder": "Enter the meeting password",
+        "enter_button": "Enter",
+        "password_required": "Enter a password to continue.",
+        "focus_default": "Define the main topic of the meeting",
+        "save_focus": "Save focus",
+        "edit_focus": "Edit focus",
+        "focus_required": "Enter a focus before saving.",
+        "tab_summary": "Summary",
+        "tab_focus": "Focus on Focus",
+        "tab_barriers": "Main Barriers",
+        "summary_title": "Summary",
+        "summary_step_title": "Workshop summary",
+        "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
+        "focus": "Focus",
+        "meeting_focus": "MEETING FOCUS",
+        "focus_not_defined": "The meeting focus has not been defined yet.",
+        "focus_on_focus": "Focus on Focus",
+        "focus_on_focus_caps": "FOCUS ON FOCUS",
+        "focus_tie_summary": "There is a tie in Focus on Focus. Run the tie-break vote in the Focus on Focus tab.",
+        "focus_not_defined_vote": "Focus on Focus has not been defined by voting yet.",
+        "categorized_barriers": "Categorized barriers",
+        "current_room": "Current room",
+        "team_step_title": "1. Enter your team",
+        "team_step_help": "Enter the team name and leader. Then click save.",
+        "time_step_minutes": "Time for this step in minutes",
+        "team_name": "Team name",
+        "team_placeholder": "Example: Blue Team",
+        "leader_name": "Team leader",
+        "leader_placeholder": "Example: Ana",
+        "save_team": "Save team",
+        "edit_team": "Edit team",
+        "team_label": "Team",
+        "leader_label": "Leader",
+        "postit_step_title": "2. Write your post-it",
+        "postit_step_help": "Write a sentence with exactly 6 words. Then click add.",
+        "time_postits_minutes": "Time to write post-its in minutes",
+        "add_postit": "Add post-it",
+        "postit_placeholder": "Example: Improve communication between critical internal areas",
+        "words": "words",
+        "missing_words": "You need more words. The post-it must have exactly 6.",
+        "too_many_words": "Too many words. The post-it must have exactly 6.",
+        "save_team_before_postit": "Save the team name before adding a post-it.",
+        "exact_words": "The post-it must have exactly 6 words.",
+        "postit_added": "Post-it added!",
+        "vote_step_title": "3. Vote on post-its",
+        "vote_step_help": "Read the post-its and click vote. If you make a mistake, click undo vote.",
+        "votes": "Votes",
+        "undo_vote": "Undo vote",
+        "vote": "Vote",
+        "no_postit": "No post-its available in this room yet.",
+        "result_step_title": "4. See the result",
+        "result_step_help": "The most voted post-it appears below. If there is a tie, run a new vote only with tied post-its.",
+        "tie_warning": "There is a tie. Run a new vote only with the tied post-its.",
+        "start_tie": "Start tie-break vote",
+        "result_will_appear": "The result will appear here after voting.",
+        "show_all": "Show all",
+        "reset_votes": "Reset votes",
+        "barriers_title": "Main Barriers",
+        "add_barrier_title": "Add barrier",
+        "add_barrier_help": "Each team can add as many post-its as needed. Everyone in the same room can view and vote on the full board.",
+        "time_barriers_minutes": "Time to think about barriers in minutes",
+        "new_barrier": "New barrier post-it",
+        "barrier_placeholder": "Enter the main barrier identified by the team",
+        "add_barrier_button": "Add barrier",
+        "save_team_before_barrier": "Save the team name in the Focus on Focus tab before adding barriers.",
+        "barrier_required": "Enter the barrier text before adding.",
+        "barrier_added": "Barrier added!",
+        "barriers_board": "Barrier board by team",
+        "team_barriers_board": "Team barrier board",
+        "postits_count": "post-it(s)",
+        "ranking_barriers": "Ranking of most voted barriers",
+        "ranking_label": "BARRIER RANKING",
+        "top3": "Top 3 most voted",
+        "ranking_empty": "The barrier ranking will appear here after voting.",
+        "no_barriers": "No barriers added in this room yet.",
+        "categorize_top3": "Categorize Top 3 barriers",
+        "category_name": "Category name",
+        "category_placeholder": "Example: Technology",
+        "choose_barriers": "Choose barriers",
+        "save_category": "Save category",
+        "category_required": "Enter the category name.",
+        "choose_one_barrier": "Choose at least one barrier.",
+        "category_created": "Category created!",
+        "category_after_top3": "Categorization will appear after there are barriers in the Top 3.",
+        "created_categories": "Created categories",
+        "category_caps": "CATEGORY",
+        "no_categories": "No categories created yet.",
+        "first_place": "1st place",
+        "second_place": "2nd place",
+        "third_place": "3rd place",
+        "timer_start": "Start timer",
+        "timer_stop": "Stop timer",
+        "timer_finished": "Time is up!"
+    }
+}
+
+
+def t(chave):
+    idioma = st.session_state.get("idioma", "pt")
+    return TEXTOS.get(idioma, TEXTOS["pt"]).get(chave, TEXTOS["pt"].get(chave, chave))
+
+
 def contar_palavras(texto):
     return len(texto.strip().split())
 
@@ -513,7 +724,7 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
     if st.session_state[nome_timer] is None:
 
         if st.button(
-            "Iniciar cronômetro",
+            t("timer_start"),
             key=f"iniciar_{nome_timer}"
         ):
             st.session_state[nome_timer] = time.time()
@@ -522,7 +733,7 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
     else:
 
         if st.button(
-            "Parar cronômetro",
+            t("timer_stop"),
             key=f"parar_{nome_timer}"
         ):
             st.session_state[nome_timer] = None
@@ -556,7 +767,7 @@ def mostrar_cronometro(nome_timer, tempo_total_segundos):
         )
 
         if tempo_restante == 0:
-            st.error("Tempo encerrado!")
+            st.error(t("timer_finished"))
             st.session_state[nome_timer] = None
 
 
@@ -636,7 +847,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
     categorias_salvas = cursor.fetchall()
 
     if not categorias_salvas:
-        st.info("Nenhuma categoria criada ainda.")
+        st.info(t("no_categories"))
         return
 
     categorias_dict = {}
@@ -660,7 +871,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
         st.markdown(
             f"""
 <div class="resultado-final-header">
-<div class="resultado-label">CATEGORIA</div>
+<div class="resultado-label">{t("category_caps")}</div>
 <div class="resultado-texto">{esc(categoria)}</div>
 </div>
 """,
@@ -738,6 +949,9 @@ Equipe: {esc(equipe_cat)} • {votos_cat} voto(s)
 if "sala" not in st.session_state:
     st.session_state.sala = None
 
+if "idioma" not in st.session_state:
+    st.session_state.idioma = "pt"
+
 if "postits_votados" not in st.session_state:
     st.session_state.postits_votados = set()
 
@@ -768,30 +982,39 @@ if st.session_state.sala is None:
         unsafe_allow_html=True
     )
 
+    idioma_opcao = st.selectbox(
+        t("lang_label"),
+        [t("pt_br"), t("en")],
+        index=0 if st.session_state.idioma == "pt" else 1,
+        key="seletor_idioma"
+    )
+
+    st.session_state.idioma = "en" if idioma_opcao == t("en") else "pt"
+
     st.markdown(
-        """
+        f"""
 <div class="header-foco">
-<div class="header-title">Entrar na sala</div>
-<div class="header-subtitle">Digite a senha combinada para acessar a dinâmica</div>
+<div class="header-title">{t("enter_room")}</div>
+<div class="header-subtitle">{t("enter_room_subtitle")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
 
     senha_sala = st.text_input(
-        "Senha da sala",
+        t("room_password"),
         type="password",
-        placeholder="Digite a senha da reunião"
+        placeholder=t("room_placeholder")
     )
 
-    if st.button("Entrar"):
+    if st.button(t("enter_button")):
         if senha_sala.strip():
             st.session_state.sala = senha_sala.strip()
             st.session_state.postits_votados = set()
             st.session_state.entraves_votados = set()
             st.rerun()
         else:
-            st.warning("Digite uma senha para entrar.")
+            st.warning(t("password_required"))
 
     st.stop()
 
@@ -816,7 +1039,7 @@ else:
 tema_header = (
     st.session_state.foco_salvo
     if st.session_state.foco_salvo
-    else "Defina o tema principal da reunião"
+    else t("focus_default")
 )
 
 st.markdown(
@@ -839,7 +1062,7 @@ if st.session_state.editando_foco:
         label_visibility="collapsed"
     )
 
-    if st.button("Salvar foco"):
+    if st.button(t("save_focus")):
 
         if foco_digitado.strip():
             st.session_state.foco_salvo = foco_digitado.strip()
@@ -855,11 +1078,11 @@ if st.session_state.editando_foco:
             st.session_state.editando_foco = False
             st.rerun()
         else:
-            st.warning("Digite um foco antes de salvar.")
+            st.warning(t("focus_required"))
 
 else:
 
-    if st.button("Editar foco"):
+    if st.button(t("edit_focus")):
         st.session_state.editando_foco = True
         st.rerun()
 
@@ -869,9 +1092,9 @@ else:
 # =========================
 
 aba0, aba1, aba2 = st.tabs([
-    "Summary",
-    "Foco no Foco",
-    "Principais Entraves"
+    t("tab_summary"),
+    t("tab_focus"),
+    t("tab_barriers")
 ])
 
 
@@ -881,26 +1104,25 @@ aba0, aba1, aba2 = st.tabs([
 
 with aba0:
 
-    st.title("Summary")
+    st.title(t("summary_title"))
 
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">Resumo do workshop</div>
-<div class="step-help">Aqui aparecem os principais resultados consolidados das próximas abas.</div>
+<div class="step-title">{t("summary_step_title")}</div>\n<div class="step-help">{t("summary_step_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
 
-    st.markdown("## Foco")
+    st.markdown(f"## {t('focus')}")
 
     if st.session_state.foco_salvo:
 
         st.markdown(
             f"""
 <div class="resultado-final-header">
-<div class="resultado-label">FOCO DA REUNIÃO</div>
+<div class="resultado-label">{t("meeting_focus")}</div>
 <div class="resultado-texto">{esc(st.session_state.foco_salvo)}</div>
 </div>
 """,
@@ -908,9 +1130,9 @@ with aba0:
         )
 
     else:
-        st.info("O foco da reunião ainda não foi definido.")
+        st.info(t("focus_not_defined"))
 
-    st.markdown("## Foco no Foco")
+    st.markdown(f"## {t('focus_on_focus')}")
 
     vencedores_summary, _, tem_empate_summary = buscar_mais_votados(
         sala_atual
@@ -921,7 +1143,7 @@ with aba0:
         st.markdown(
             f"""
 <div class="resultado-final-header">
-<div class="resultado-label">FOCO NO FOCO</div>
+<div class="resultado-label">{t("focus_on_focus_caps")}</div>
 <div class="resultado-texto">{esc(vencedores_summary[0][2])}</div>
 </div>
 """,
@@ -930,15 +1152,13 @@ with aba0:
 
     elif tem_empate_summary:
 
-        st.warning(
-            "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco."
-        )
+        st.warning(t("focus_tie_summary"))
 
     else:
 
-        st.info("O Foco no Foco ainda não foi definido pela votação.")
+        st.info(t("focus_not_defined_vote"))
 
-    st.markdown("## Entraves categorizados")
+    st.markdown(f"## {t('categorized_barriers')}")
 
     mostrar_categorias(
         sala_atual,
@@ -952,15 +1172,14 @@ with aba0:
 
 with aba1:
 
-    st.title("Foco no Foco")
+    st.title(t("focus_on_focus"))
 
-    st.caption(f"Sala atual: {sala_atual}")
+    st.caption(f"{t('current_room')}: {sala_atual}")
 
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">1. Informe sua equipe</div>
-<div class="step-help">Digite o nome da equipe e o líder. Depois clique em salvar.</div>
+<div class="step-title">{t("team_step_title")}</div>\n<div class="step-help">{t("team_step_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
@@ -976,7 +1195,7 @@ with aba1:
         st.session_state.editando_equipe = True
 
     tempo_cadastro_minutos = st.number_input(
-        "Tempo para essa etapa em minutos",
+        t("time_step_minutes"),
         min_value=1,
         max_value=60,
         value=1
@@ -990,18 +1209,18 @@ with aba1:
     if st.session_state.editando_equipe:
 
         nome_equipe_digitado = st.text_input(
-            "Nome da equipe",
+            t("team_name"),
             value=st.session_state.nome_equipe_salvo,
-            placeholder="Exemplo: Time Azul"
+            placeholder=t("team_placeholder")
         )
 
         lider_equipe_digitado = st.text_input(
-            "Líder da equipe",
+            t("leader_name"),
             value=st.session_state.lider_equipe_salvo,
-            placeholder="Exemplo: Ana"
+            placeholder=t("leader_placeholder")
         )
 
-        if st.button("Salvar equipe"):
+        if st.button(t("save_team")):
 
             st.session_state.nome_equipe_salvo = nome_equipe_digitado
             st.session_state.lider_equipe_salvo = lider_equipe_digitado
@@ -1013,14 +1232,13 @@ with aba1:
         st.markdown(
             f"""
 <div class="bloco-azul info-equipe">
-<strong>Equipe:</strong> {esc(st.session_state.nome_equipe_salvo)}<br>
-<strong>Líder:</strong> {esc(st.session_state.lider_equipe_salvo)}
+<strong>{t("team_label")}:</strong> {esc(st.session_state.nome_equipe_salvo)}<br>\n<strong>{t("leader_label")}:</strong> {esc(st.session_state.lider_equipe_salvo)}
 </div>
 """,
             unsafe_allow_html=True
         )
 
-        if st.button("Editar equipe"):
+        if st.button(t("edit_team")):
             st.session_state.editando_equipe = True
             st.rerun()
 
@@ -1029,15 +1247,14 @@ with aba1:
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">2. Escreva seu post-it</div>
-<div class="step-help">Escreva uma frase com exatamente 6 palavras. Depois clique em adicionar.</div>
+<div class="step-title">{t("postit_step_title")}</div>\n<div class="step-help">{t("postit_step_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
 
     tempo_postit_minutos = st.number_input(
-        "Tempo para escrever os post-its em minutos",
+        t("time_postits_minutes"),
         min_value=1,
         max_value=60,
         value=5
@@ -1049,26 +1266,26 @@ with aba1:
     )
 
     novo_postit = st.text_area(
-        "Adicionar post-it",
-        placeholder="Exemplo: Melhorar comunicação entre áreas internas críticas"
+        t("add_postit"),
+        placeholder=t("postit_placeholder")
     )
 
     qtd_palavras = contar_palavras(novo_postit)
 
-    st.caption(f"{qtd_palavras}/6 palavras")
+    st.caption(f"{qtd_palavras}/6 {t('words')}")
 
     if qtd_palavras < 6 and qtd_palavras > 0:
-        st.warning("Faltam palavras. O post-it precisa ter exatamente 6.")
+        st.warning(t("missing_words"))
 
     if qtd_palavras > 6:
-        st.error("Tem palavras demais. O post-it precisa ter exatamente 6.")
+        st.error(t("too_many_words"))
 
-    if st.button("Adicionar post-it"):
+    if st.button(t("add_postit")):
 
         if not nome_equipe.strip():
-            st.warning("Salve o nome da equipe antes de adicionar um post-it.")
+            st.warning(t("save_team_before_postit"))
         elif qtd_palavras != 6:
-            st.error("O post-it precisa ter exatamente 6 palavras.")
+            st.error(t("exact_words"))
         else:
             cursor.execute("""
             INSERT INTO postits (equipe, texto, votos, ativo, sala)
@@ -1076,14 +1293,13 @@ with aba1:
             """, (nome_equipe, novo_postit, sala_atual))
 
             conn.commit()
-            st.success("Post-it adicionado!")
+            st.success(t("postit_added"))
             st.rerun()
 
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">3. Vote nos post-its</div>
-<div class="step-help">Leia os post-its e clique em votar. Se errar, clique em desfazer voto.</div>
+<div class="step-title">{t("vote_step_title")}</div>\n<div class="step-help">{t("vote_step_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
@@ -1113,7 +1329,7 @@ with aba1:
 <div class="{classe_postit}">
 <h4>{esc(equipe)}</h4>
 <div class="postit-texto">{esc(texto)}</div>
-<div class="votos">Votos: {votos}</div>
+<div class="votos">{t("votes")}: {votos}</div>
 </div>
 """,
                 unsafe_allow_html=True
@@ -1122,7 +1338,7 @@ with aba1:
             if postit_id in st.session_state.postits_votados:
 
                 if st.button(
-                    "Desfazer voto",
+                    t("undo_vote"),
                     key=f"desfazer_{postit_id}"
                 ):
                     cursor.execute("""
@@ -1141,7 +1357,7 @@ with aba1:
             else:
 
                 if st.button(
-                    "Votar",
+                    t("vote"),
                     key=f"votar_{postit_id}"
                 ):
                     cursor.execute("""
@@ -1155,19 +1371,18 @@ with aba1:
                     st.rerun()
 
     else:
-        st.info("Nenhum post-it disponível ainda nesta sala.")
+        st.info(t("no_postit"))
 
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">4. Veja o resultado</div>
-<div class="step-help">O post-it mais votado aparece abaixo. Se empatar, faça uma nova votação apenas com os empatados.</div>
+<div class="step-title">{t("result_step_title")}</div>\n<div class="step-help">{t("result_step_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
 
-    st.markdown("## Foco no Foco")
+    st.markdown(f"## {t('focus_on_focus')}")
 
     vencedores, _, tem_empate = buscar_mais_votados(sala_atual)
 
@@ -1176,7 +1391,7 @@ with aba1:
         st.markdown(
             f"""
 <div class="resultado-final-header">
-<div class="resultado-label">FOCO NO FOCO</div>
+<div class="resultado-label">{t("focus_on_focus_caps")}</div>
 <div class="resultado-texto">{esc(vencedores[0][2])}</div>
 </div>
 """,
@@ -1185,11 +1400,9 @@ with aba1:
 
     elif tem_empate:
 
-        st.warning(
-            "Houve empate. Faça uma nova votação apenas com os empatados."
-        )
+        st.warning(t("tie_warning"))
 
-        if st.button("Iniciar votação de desempate"):
+        if st.button(t("start_tie")):
 
             ids_empatados = [str(item[0]) for item in vencedores]
 
@@ -1212,9 +1425,9 @@ with aba1:
             st.rerun()
 
     else:
-        st.info("O resultado aparecerá aqui após a votação.")
+        st.info(t("result_will_appear"))
 
-    if st.button("Mostrar todos"):
+    if st.button(t("show_all")):
         cursor.execute(
             "UPDATE postits SET ativo = 1 WHERE sala = ?",
             (sala_atual,)
@@ -1223,7 +1436,7 @@ with aba1:
         st.session_state.postits_votados = set()
         st.rerun()
 
-    if st.button("Zerar votos"):
+    if st.button(t("reset_votes")):
         cursor.execute(
             "UPDATE postits SET votos = 0 WHERE sala = ?",
             (sala_atual,)
@@ -1239,20 +1452,19 @@ with aba1:
 
 with aba2:
 
-    st.title("Principais Entraves")
+    st.title(t("barriers_title"))
 
     st.markdown(
         """
 <div class="step-card">
-<div class="step-title">Adicionar entrave</div>
-<div class="step-help">Cada equipe pode adicionar quantos post-its quiser. Todos os participantes da mesma sala conseguirão visualizar e votar no mural completo.</div>
+<div class="step-title">{t("add_barrier_title")}</div>\n<div class="step-help">{t("add_barrier_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
 
     tempo_entraves_minutos = st.number_input(
-        "Tempo para pensar nos entraves em minutos",
+        t("time_barriers_minutes"),
         min_value=1,
         max_value=60,
         value=7,
@@ -1267,18 +1479,18 @@ with aba2:
     equipe_entrave = st.session_state.nome_equipe_salvo
 
     novo_entrave = st.text_area(
-        "Novo post-it de entrave",
-        placeholder="Digite aqui o principal entrave identificado pela equipe",
+        t("new_barrier"),
+        placeholder=t("barrier_placeholder"),
         key="campo_entrave"
     )
 
-    if st.button("Adicionar entrave", key="botao_adicionar_entrave"):
+    if st.button(t("add_barrier_button"), key="botao_adicionar_entrave"):
 
         if not equipe_entrave.strip():
-            st.warning("Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.")
+            st.warning(t("save_team_before_barrier"))
 
         elif not novo_entrave.strip():
-            st.warning("Digite o texto do entrave antes de adicionar.")
+            st.warning(t("barrier_required"))
 
         else:
             cursor.execute("""
@@ -1291,10 +1503,10 @@ with aba2:
             ))
 
             conn.commit()
-            st.success("Entrave adicionado!")
+            st.success(t("barrier_added"))
             st.rerun()
 
-    st.markdown("## Mural de entraves por equipe")
+    st.markdown(f"## {t('barriers_board')}")
 
     cursor.execute("""
     SELECT id, equipe, texto, votos
@@ -1370,7 +1582,7 @@ with aba2:
     font-weight:600;
     margin-top:6px;
 ">
-Mural de entraves da equipe
+{t("team_barriers_board")}
 </div>
 </div>
 <div style="
@@ -1382,7 +1594,7 @@ Mural de entraves da equipe
     font-size:16px;
     font-weight:800;
 ">
-{len(lista_entraves)} post-it(s)
+{len(lista_entraves)} {t("postits_count")}
 </div>
 </div>
 </div>
@@ -1426,7 +1638,7 @@ Mural de entraves da equipe
     font-size:18px;
     font-weight:800;
 ">
-Votos: {votos}
+{t("votes")}: {votos}
 </div>
 </div>
 """
@@ -1436,7 +1648,7 @@ Votos: {votos}
                     if foi_votado:
 
                         if st.button(
-                            "Desfazer voto",
+                            t("undo_vote"),
                             key=f"desfazer_entrave_{entrave_id}"
                         ):
                             cursor.execute("""
@@ -1459,7 +1671,7 @@ Votos: {votos}
                     else:
 
                         if st.button(
-                            "Votar",
+                            t("vote"),
                             key=f"votar_entrave_{entrave_id}"
                         ):
                             cursor.execute("""
@@ -1476,7 +1688,7 @@ Votos: {votos}
                             st.session_state.entraves_votados.add(entrave_id)
                             st.rerun()
 
-        st.markdown("## Ranking dos entraves mais votados")
+        st.markdown(f"## {t('ranking_barriers')}")
 
         rankings = buscar_rankings_entraves(
             sala_atual
@@ -1487,8 +1699,7 @@ Votos: {votos}
             st.markdown(
                 """
 <div class="resultado-final-header">
-<div class="resultado-label">RANKING DOS ENTRAVES</div>
-<div class="resultado-texto">Top 3 mais votados</div>
+<div class="resultado-label">{t("ranking_label")}</div>\n<div class="resultado-texto">{t("top3")}</div>
 </div>
 """,
                 unsafe_allow_html=True
@@ -1497,15 +1708,15 @@ Votos: {votos}
             for posicao, (equipe_top, texto_top, votos_top, _) in rankings:
 
                 if posicao == 1:
-                    titulo_ranking = "1º lugar"
+                    titulo_ranking = t("first_place")
                     cor_ranking = "#e79eff"
                     borda_ranking = "#8f7193"
                 elif posicao == 2:
-                    titulo_ranking = "2º lugar"
+                    titulo_ranking = t("second_place")
                     cor_ranking = "#dbeafe"
                     borda_ranking = "#2563eb"
                 else:
-                    titulo_ranking = "3º lugar"
+                    titulo_ranking = t("third_place")
                     cor_ranking = "#c7f7f7"
                     borda_ranking = "#96c4c4"
 
@@ -1551,12 +1762,12 @@ Equipe: {esc(equipe_top)}
                 )
 
         else:
-            st.info("O ranking dos entraves aparecerá aqui após a votação.")
+            st.info(t("ranking_empty"))
 
     else:
-        st.info("Nenhum entrave adicionado ainda nesta sala.")
+        st.info(t("no_barriers"))
 
-    st.markdown("## Categorizar entraves do Top 3")
+    st.markdown(f"## {t('categorize_top3')}")
 
     if "limpar_categoria" not in st.session_state:
         st.session_state["limpar_categoria"] = False
@@ -1578,24 +1789,24 @@ Equipe: {esc(equipe_top)}
         }
 
         nova_categoria = st.text_input(
-            "Nome da categoria",
-            placeholder="Exemplo: Tecnologia",
+            t("category_name"),
+            placeholder=t("category_placeholder"),
             key="nova_categoria_entraves"
         )
 
         entraves_escolhidos = st.multiselect(
-            "Escolha os entraves",
+            t("choose_barriers"),
             options=list(opcoes_top3.keys()),
             key="entraves_para_categoria"
         )
 
-        if st.button("Salvar categoria"):
+        if st.button(t("save_category")):
 
             if not nova_categoria.strip():
-                st.warning("Digite o nome da categoria.")
+                st.warning(t("category_required"))
 
             elif not entraves_escolhidos:
-                st.warning("Escolha pelo menos um entrave.")
+                st.warning(t("choose_one_barrier"))
 
             else:
 
@@ -1621,13 +1832,13 @@ Equipe: {esc(equipe_top)}
 
                 st.session_state["limpar_categoria"] = True
 
-                st.success("Categoria criada!")
+                st.success(t("category_created"))
                 st.rerun()
 
     else:
-        st.info("A categorização aparecerá após existirem entraves no Top 3.")
+        st.info(t("category_after_top3"))
 
-    st.markdown("## Categorias criadas")
+    st.markdown(f"## {t('created_categories')}")
 
     mostrar_categorias(
         sala_atual,
