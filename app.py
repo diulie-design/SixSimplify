@@ -360,6 +360,48 @@ textarea::placeholder {
     margin-top: 18px;
 }
 
+/* CRONÔMETRO COMPARTILHADO */
+.timer-card {
+    background: #ffffff;
+    border: 2px solid #d7e7f5;
+    border-left: 8px solid #002f5f;
+    border-radius: 24px;
+    padding: 22px;
+    margin: 18px 0 28px 0;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+}
+
+.timer-title {
+    color: #002f5f;
+    font-size: 22px;
+    font-weight: 850;
+    margin-bottom: 6px;
+}
+
+.timer-help {
+    color: #55708f;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.timer-display {
+    color: #002f5f;
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.timer-status {
+    color: #24476b;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 6px;
+}
+
 /* CELULAR */
 @media (max-width: 768px) {
 
@@ -484,6 +526,14 @@ textarea::placeholder {
     .postit-texto {
         font-size: 25px;
     }
+
+    .timer-display {
+        font-size: 38px;
+    }
+
+    .timer-title {
+        font-size: 20px;
+    }
 }
 
 </style>
@@ -546,6 +596,19 @@ CREATE TABLE IF NOT EXISTS categorias_entraves (
     sala TEXT,
     categoria TEXT,
     entrave_id INTEGER
+)
+""")
+conn.commit()
+
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS timers (
+    sala TEXT,
+    aba TEXT,
+    inicio REAL,
+    duracao INTEGER,
+    ativo INTEGER DEFAULT 0,
+    PRIMARY KEY (sala, aba)
 )
 """)
 conn.commit()
@@ -659,7 +722,13 @@ TEXTOS = {
         "third_place": "3º lugar",
         "timer_start": "Iniciar cronômetro",
         "timer_stop": "Parar cronômetro",
-        "timer_finished": "Tempo encerrado!"
+        "timer_finished": "Tempo encerrado!",
+        "timer_shared_title": "Cronômetro da etapa",
+        "timer_shared_help": "Defina o tempo e clique no relógio para iniciar ou parar para todos nesta sala.",
+        "timer_minutes": "Tempo em minutos",
+        "timer_click_start": "Clique no relógio para iniciar",
+        "timer_running": "Cronômetro em andamento",
+        "timer_stopped": "Cronômetro parado"
     },
     "en": {
         "lang_label": "Language / Idioma",
@@ -760,7 +829,13 @@ TEXTOS = {
         "third_place": "3rd place",
         "timer_start": "Start timer",
         "timer_stop": "Stop timer",
-        "timer_finished": "Time is up!"
+        "timer_finished": "Time is up!",
+        "timer_shared_title": "Step timer",
+        "timer_shared_help": "Set the time and click the clock to start or stop it for everyone in this room.",
+        "timer_minutes": "Time in minutes",
+        "timer_click_start": "Click the clock to start",
+        "timer_running": "Timer running",
+        "timer_stopped": "Timer stopped"
     }
 }
 
@@ -774,59 +849,142 @@ def contar_palavras(texto):
     return len(texto.strip().split())
 
 
-def mostrar_cronometro(nome_timer, tempo_total_segundos):
+def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
-    if nome_timer not in st.session_state:
-        st.session_state[nome_timer] = None
+    cursor.execute("""
+    SELECT inicio, duracao, ativo
+    FROM timers
+    WHERE sala = ? AND aba = ?
+    """, (sala_atual, aba_timer))
 
-    if st.session_state[nome_timer] is None:
+    timer_banco = cursor.fetchone()
+
+    inicio = None
+    duracao = int(valor_padrao * 60)
+    ativo = 0
+
+    if timer_banco:
+        inicio, duracao, ativo = timer_banco
+
+    st.markdown(
+        f"""
+<div class="timer-card">
+<div class="timer-title">{t("timer_shared_title")}</div>
+<div class="timer-help">{t("timer_shared_help")}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    col_tempo, col_relogio = st.columns([8, 1])
+
+    with col_tempo:
+
+        minutos_configurados = st.number_input(
+            t("timer_minutes"),
+            min_value=1,
+            max_value=120,
+            value=max(int(duracao // 60), 1),
+            key=f"tempo_{aba_timer}"
+        )
+
+    with col_relogio:
+
+        botao_relogio = "⏹️" if ativo else "⏱️"
 
         if st.button(
-            t("timer_start"),
-            key=f"iniciar_{nome_timer}"
+            botao_relogio,
+            key=f"botao_timer_{aba_timer}"
         ):
-            st.session_state[nome_timer] = time.time()
-            st.rerun()
 
-    else:
+            if ativo:
+                cursor.execute("""
+                INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                VALUES (?, ?, NULL, ?, 0)
+                ON CONFLICT(sala, aba)
+                DO UPDATE SET
+                    inicio = NULL,
+                    duracao = excluded.duracao,
+                    ativo = 0
+                """, (
+                    sala_atual,
+                    aba_timer,
+                    int(minutos_configurados * 60)
+                ))
 
-        if st.button(
-            t("timer_stop"),
-            key=f"parar_{nome_timer}"
-        ):
-            st.session_state[nome_timer] = None
-            st.rerun()
+                conn.commit()
+                st.rerun()
 
-    if st.session_state[nome_timer]:
+            else:
+                cursor.execute("""
+                INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                VALUES (?, ?, ?, ?, 1)
+                ON CONFLICT(sala, aba)
+                DO UPDATE SET
+                    inicio = excluded.inicio,
+                    duracao = excluded.duracao,
+                    ativo = 1
+                """, (
+                    sala_atual,
+                    aba_timer,
+                    time.time(),
+                    int(minutos_configurados * 60)
+                ))
+
+                conn.commit()
+                st.rerun()
+
+    if ativo and inicio:
 
         st_autorefresh(
             interval=1000,
-            key=f"refresh_{nome_timer}"
+            key=f"refresh_timer_{aba_timer}"
         )
 
-        tempo_passado = int(
-            time.time() - st.session_state[nome_timer]
-        )
-
-        tempo_restante = max(
-            tempo_total_segundos - tempo_passado,
-            0
-        )
+        tempo_passado = int(time.time() - inicio)
+        tempo_restante = max(int(duracao) - tempo_passado, 0)
 
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
         st.markdown(
-            f"## ⏱️ {minutos:02d}:{segundos:02d}"
+            f"""
+<div class="timer-display">⏱️ {minutos:02d}:{segundos:02d}</div>
+<div class="timer-status">{t("timer_running")}</div>
+""",
+            unsafe_allow_html=True
         )
 
         st.progress(
-            tempo_restante / tempo_total_segundos
+            tempo_restante / int(duracao)
+            if int(duracao) > 0
+            else 0
         )
 
         if tempo_restante == 0:
+
+            cursor.execute("""
+            UPDATE timers
+            SET ativo = 0
+            WHERE sala = ? AND aba = ?
+            """, (
+                sala_atual,
+                aba_timer
+            ))
+
+            conn.commit()
             st.error(t("timer_finished"))
-            st.session_state[nome_timer] = None
+            st.rerun()
+
+    else:
+
+        st.markdown(
+            f"""
+<div class="timer-display">⏱️ {int(minutos_configurados):02d}:00</div>
+<div class="timer-status">{t("timer_click_start")}</div>
+""",
+            unsafe_allow_html=True
+        )
 
 
 def buscar_mais_votados(sala_atual):
@@ -1258,6 +1416,12 @@ if aba_atual == t("tab_focus"):
 
     st.caption(f"{t('current_room')}: {sala_atual}")
 
+    mostrar_cronometro_compartilhado(
+        sala_atual,
+        "foco_no_foco",
+        valor_padrao=5
+    )
+
     st.markdown(
         f"""
 <div class="step-card">
@@ -1275,18 +1439,6 @@ if aba_atual == t("tab_focus"):
 
     if "editando_equipe" not in st.session_state:
         st.session_state.editando_equipe = True
-
-    tempo_cadastro_minutos = st.number_input(
-        t("time_step_minutes"),
-        min_value=1,
-        max_value=60,
-        value=1
-    )
-
-    mostrar_cronometro(
-        "timer_cadastro",
-        int(tempo_cadastro_minutos * 60)
-    )
 
     if st.session_state.editando_equipe:
 
@@ -1333,18 +1485,6 @@ if aba_atual == t("tab_focus"):
 </div>
 """,
         unsafe_allow_html=True
-    )
-
-    tempo_postit_minutos = st.number_input(
-        t("time_postits_minutes"),
-        min_value=1,
-        max_value=60,
-        value=5
-    )
-
-    mostrar_cronometro(
-        "timer_postit",
-        int(tempo_postit_minutos * 60)
     )
 
     novo_postit = st.text_area(
@@ -1536,6 +1676,12 @@ if aba_atual == t("tab_barriers"):
 
     st.title(t("barriers_title"))
 
+    mostrar_cronometro_compartilhado(
+        sala_atual,
+        "principais_entraves",
+        valor_padrao=7
+    )
+
     st.markdown(
         f"""
 <div class="step-card">
@@ -1543,19 +1689,6 @@ if aba_atual == t("tab_barriers"):
 </div>
 """,
         unsafe_allow_html=True
-    )
-
-    tempo_entraves_minutos = st.number_input(
-        t("time_barriers_minutes"),
-        min_value=1,
-        max_value=60,
-        value=7,
-        key="tempo_entraves"
-    )
-
-    mostrar_cronometro(
-        "timer_entraves",
-        int(tempo_entraves_minutos * 60)
     )
 
     equipe_entrave = st.session_state.nome_equipe_salvo
