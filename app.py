@@ -360,6 +360,47 @@ textarea::placeholder {
     margin-top: 18px;
 }
 
+/* CRONÔMETRO COMPARTILHADO */
+.timer-card {
+    background: #ffffff;
+    border: 2px solid #d7e7f5;
+    border-left: 8px solid #002f5f;
+    border-radius: 24px;
+    padding: 16px 18px;
+    margin: 18px 0 14px 0;
+    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+}
+
+.timer-title {
+    color: #002f5f;
+    font-size: 22px;
+    font-weight: 850;
+    margin-bottom: 6px;
+}
+
+.timer-help {
+    color: #55708f;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.timer-display {
+    color: #002f5f;
+    font-size: 46px;
+    font-weight: 900;
+    line-height: 1;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.timer-status {
+    color: #24476b;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 6px;
+}
 
 /* BOTÃO DO RELÓGIO DO CRONÔMETRO */
 .st-key-timer_area_foco_no_foco .stButton > button,
@@ -385,46 +426,103 @@ textarea::placeholder {
     line-height: 1 !important;
 }
 
-/* CRONÔMETRO COMPARTILHADO */
-.timer-card {
-    background: #ffffff;
-    border: 2px solid #d7e7f5;
+/* PÍLULA FLUTUANTE DO TEMPO */
+.timer-floating-pill {
+    position: fixed;
+    top: 86px;
+    right: 22px;
+    z-index: 999999;
+    background: rgba(255, 255, 255, 0.96);
+    border: 2px solid #c9d9ea;
     border-left: 8px solid #002f5f;
-    border-radius: 24px;
-    padding: 22px;
-    margin: 18px 0 28px 0;
-    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+    border-radius: 999px;
+    padding: 12px 18px 12px 16px;
+    box-shadow: 0 14px 34px rgba(0,47,95,0.24);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #002f5f;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 }
 
-.timer-title {
-    color: #002f5f;
-    font-size: 22px;
+.timer-floating-label {
+    font-size: 14px;
     font-weight: 850;
-    margin-bottom: 6px;
-}
-
-.timer-help {
-    color: #55708f;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 16px;
-}
-
-.timer-display {
-    color: #002f5f;
-    font-size: 46px;
-    font-weight: 900;
-    line-height: 1;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.timer-status {
     color: #24476b;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 6px;
+    line-height: 1;
+    text-align: right;
+}
+
+.timer-floating-time {
+    font-size: 34px;
+    font-weight: 950;
+    line-height: 1;
+    color: #002f5f;
+}
+
+.timer-floating-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    background: #002f5f;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 8px 18px rgba(0,47,95,0.22);
+}
+
+
+/* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
+.timer-fixed-pill-global {
+    position: fixed !important;
+    top: 88px !important;
+    right: 22px !important;
+    z-index: 2147483647 !important;
+    background: rgba(255,255,255,0.98) !important;
+    border: 2px solid #c9d9ea !important;
+    border-left: 8px solid #002f5f !important;
+    border-radius: 999px !important;
+    padding: 12px 18px 12px 16px !important;
+    box-shadow: 0 14px 34px rgba(0,47,95,0.25) !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    color: #002f5f !important;
+    font-family: inherit !important;
+    pointer-events: none !important;
+}
+
+.timer-fixed-pill-label {
+    font-size: 14px !important;
+    font-weight: 850 !important;
+    color: #24476b !important;
+    line-height: 1 !important;
+    text-align: right !important;
+    margin-bottom: 4px !important;
+}
+
+.timer-fixed-pill-time {
+    font-size: 34px !important;
+    font-weight: 950 !important;
+    line-height: 1 !important;
+    color: #002f5f !important;
+}
+
+.timer-fixed-pill-icon {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 999px !important;
+    background: #002f5f !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 26px !important;
+    box-shadow: 0 8px 18px rgba(0,47,95,0.22) !important;
 }
 
 /* CELULAR */
@@ -552,12 +650,61 @@ textarea::placeholder {
         font-size: 25px;
     }
 
-    .timer-display {
-        font-size: 38px;
+    .timer-fixed-pill-global {
+        top: auto !important;
+        bottom: 18px !important;
+        right: 10px !important;
+        padding: 9px 12px !important;
+        gap: 8px !important;
+        max-width: calc(100vw - 20px) !important;
     }
 
-    .timer-title {
-        font-size: 20px;
+    .timer-fixed-pill-label {
+        font-size: 11px !important;
+    }
+
+    .timer-fixed-pill-time {
+        font-size: 25px !important;
+    }
+
+    .timer-fixed-pill-icon {
+        width: 40px !important;
+        height: 40px !important;
+        min-width: 40px !important;
+        font-size: 22px !important;
+    }
+.timer-title {
+        font-size: 12px;
+    }
+
+    .timer-display {
+        font-size: 24px;
+    }
+
+    .timer-status {
+        font-size: 11px;
+    }
+    .timer-floating-pill {
+        top: auto;
+        bottom: 18px;
+        right: 10px;
+        padding: 9px 12px 9px 12px;
+        gap: 8px;
+        max-width: calc(100vw - 20px);
+    }
+
+    .timer-floating-label {
+        font-size: 11px;
+    }
+
+    .timer-floating-time {
+        font-size: 25px;
+    }
+
+    .timer-floating-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 22px;
     }
 
     .st-key-timer_area_foco_no_foco .stButton > button,
@@ -572,6 +719,7 @@ textarea::placeholder {
     .st-key-timer_area_principais_entraves .stButton > button p {
         font-size: 38px !important;
     }
+
 }
 
     
@@ -766,7 +914,8 @@ TEXTOS = {
         "timer_minutes": "Tempo em minutos",
         "timer_click_start": "Clique no relógio para iniciar",
         "timer_running": "Cronômetro em andamento",
-        "timer_stopped": "Cronômetro parado"
+        "timer_stopped": "Cronômetro parado",
+        "timer_remaining": "Faltam"
     },
     "en": {
         "lang_label": "Language / Idioma",
@@ -873,7 +1022,8 @@ TEXTOS = {
         "timer_minutes": "Time in minutes",
         "timer_click_start": "Click the clock to start",
         "timer_running": "Timer running",
-        "timer_stopped": "Timer stopped"
+        "timer_stopped": "Timer stopped",
+        "timer_remaining": "Remaining"
     }
 }
 
@@ -987,6 +1137,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
+        # Tempo principal, logo abaixo do botão do cronômetro
         st.markdown(
             f"""
 <div class="timer-display">⏱️ {minutos:02d}:{segundos:02d}</div>
@@ -1025,6 +1176,45 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 """,
             unsafe_allow_html=True
         )
+
+
+
+def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
+
+    cursor.execute("""
+    SELECT inicio, duracao, ativo
+    FROM timers
+    WHERE sala = ? AND aba = ?
+    """, (sala_atual, aba_timer))
+
+    timer_banco = cursor.fetchone()
+
+    if not timer_banco:
+        return
+
+    inicio, duracao, ativo = timer_banco
+
+    if not ativo or not inicio:
+        return
+
+    tempo_passado = int(time.time() - inicio)
+    tempo_restante = max(int(duracao) - tempo_passado, 0)
+
+    minutos = tempo_restante // 60
+    segundos = tempo_restante % 60
+
+    st.markdown(
+        f"""
+<div class="timer-fixed-pill-global">
+    <div>
+        <div class="timer-fixed-pill-label">{t("timer_remaining")}</div>
+        <div class="timer-fixed-pill-time">{minutos:02d}:{segundos:02d}</div>
+    </div>
+    <div class="timer-fixed-pill-icon">⏱️</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
 
 def buscar_mais_votados(sala_atual):
@@ -1303,6 +1493,20 @@ aba_atual = st.radio(
     label_visibility="collapsed",
     key="aba_atual"
 )
+
+
+# Pílula fixa do cronômetro da aba atual
+if aba_atual == t("tab_focus"):
+    mostrar_pilula_timer_fixa(
+        sala_atual,
+        "foco_no_foco"
+    )
+
+if aba_atual == t("tab_barriers"):
+    mostrar_pilula_timer_fixa(
+        sala_atual,
+        "principais_entraves"
+    )
 
 
 # =========================
