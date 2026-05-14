@@ -535,7 +535,43 @@ textarea::placeholder {
         font-size: 20px;
     }
 }
+# =========================
+# TRADUÇÃO DO MULTISELECT
+# =========================
 
+if idioma == "pt":
+
+    st.markdown("""
+    <script>
+    const observer = new MutationObserver(() => {
+
+        const placeholders = window.parent.document.querySelectorAll(
+            'input[placeholder="Choose options"]'
+        );
+
+        placeholders.forEach(el => {
+            el.placeholder = "Escolha os entraves";
+        });
+
+        const selectAlls = window.parent.document.querySelectorAll(
+            'div'
+        );
+
+        selectAlls.forEach(el => {
+            if (el.innerText === "Select all") {
+                el.innerText = "Selecionar todos";
+            }
+        });
+
+    });
+
+    observer.observe(window.parent.document, {
+        childList: true,
+        subtree: true
+    });
+    </script>
+    """, unsafe_allow_html=True)
+    
 </style>
 """, unsafe_allow_html=True)
 
