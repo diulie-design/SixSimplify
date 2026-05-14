@@ -167,6 +167,39 @@ h3 {
     color: white !important;
 }
 
+/* NAVEGAÇÃO COM BOTÕES */
+div[role="radiogroup"] {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+div[role="radiogroup"] label {
+    background: #ffffff;
+    border: 2px solid #dbe4ef;
+    border-radius: 18px;
+    padding: 16px 18px;
+    min-height: 54px;
+    color: #002f5f;
+    font-weight: 800;
+}
+
+div[role="radiogroup"] label:has(input:checked) {
+    background: #002f5f;
+    border-color: #002f5f;
+    color: white;
+}
+
+div[role="radiogroup"] label p {
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+}
+
+div[role="radiogroup"] label:has(input:checked) p {
+    color: white !important;
+}
+
 /* COLUNAS */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
@@ -381,6 +414,22 @@ textarea::placeholder {
 
     .stTabs [data-baseweb="tab"] p {
         font-size: 18px !important;
+        line-height: 1.05 !important;
+        font-weight: 800 !important;
+    }
+
+    div[role="radiogroup"] {
+        gap: 2px;
+    }
+
+    div[role="radiogroup"] label {
+        min-height: 54px;
+        padding: 12px 10px;
+        border-radius: 16px;
+    }
+
+    div[role="radiogroup"] label p {
+        font-size: 17px !important;
         line-height: 1.05 !important;
         font-weight: 800 !important;
     }
@@ -626,10 +675,10 @@ TEXTOS = {
         "save_focus": "Save focus",
         "edit_focus": "Edit focus",
         "focus_required": "Enter a focus before saving.",
-        "tab_summary": "Summary",
+        "tab_summary": "Resumo",
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
-        "summary_title": "Summary",
+        "summary_title": "Resumo",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
         "focus": "Focus",
@@ -1042,6 +1091,23 @@ else:
 
 
 # =========================
+# NAVEGAÇÃO
+# =========================
+
+aba_atual = st.radio(
+    "Navegação",
+    [
+        t("tab_summary"),
+        t("tab_focus"),
+        t("tab_barriers")
+    ],
+    horizontal=True,
+    label_visibility="collapsed",
+    key="aba_atual"
+)
+
+
+# =========================
 # HEADER DINÂMICO
 # =========================
 
@@ -1054,13 +1120,7 @@ foco_no_foco_header = ""
 if vencedores_header and not empate_header:
     foco_no_foco_header = vencedores_header[0][2]
 
-# Detecta aba atual
-query_params = st.query_params
-
-aba_atual = query_params.get("tab", "0")
-
-# Aba 2 = Principais Entraves
-if aba_atual == "2" and foco_no_foco_header:
+if aba_atual == t("tab_barriers") and foco_no_foco_header:
 
     titulo_header = t("focus_on_focus")
     subtitulo_header = foco_no_foco_header
@@ -1090,7 +1150,7 @@ if st.session_state.editando_foco:
     foco_digitado = st.text_input(
         label="campo_foco",
         value=st.session_state.foco_salvo,
-        placeholder="Digite o tema do workshop",
+        placeholder=t("focus_default"),
         key="campo_foco",
         label_visibility="collapsed"
     )
@@ -1121,21 +1181,10 @@ else:
 
 
 # =========================
-# ABAS
-# =========================
-
-aba0, aba1, aba2 = st.tabs([
-    t("tab_summary"),
-    t("tab_focus"),
-    t("tab_barriers")
-])
-
-
-# =========================
 # ABA 0 - SUMMARY
 # =========================
 
-with aba0:
+if aba_atual == t("tab_summary"):
 
     st.title(t("summary_title"))
 
@@ -1203,7 +1252,7 @@ with aba0:
 # ABA 1 - FOCO NO FOCO
 # =========================
 
-with aba1:
+if aba_atual == t("tab_focus"):
 
     st.title(t("focus_on_focus"))
 
@@ -1483,7 +1532,7 @@ with aba1:
 # ABA 2 - PRINCIPAIS ENTRAVES
 # =========================
 
-with aba2:
+if aba_atual == t("tab_barriers"):
 
     st.title(t("barriers_title"))
 
