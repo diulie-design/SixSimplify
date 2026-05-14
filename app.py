@@ -516,7 +516,7 @@ TEXTOS = {
         "save_focus": "Salvar foco",
         "edit_focus": "Editar foco",
         "focus_required": "Digite um foco antes de salvar.",
-        "tab_summary": "Summary",
+        "tab_summary": "Resumo",
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
         "summary_title": "Summary",
