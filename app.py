@@ -385,31 +385,14 @@ textarea::placeholder {
     line-height: 1 !important;
 }
 
-
-/* CRONÔMETRO FIXO DURANTE A ROLAGEM */
-.st-key-timer_floating_foco_no_foco,
-.st-key-timer_floating_principais_entraves {
-    position: sticky !important;
-    top: 10px !important;
-    z-index: 9999 !important;
-    background: rgba(247, 249, 252, 0.96) !important;
-    backdrop-filter: blur(8px) !important;
-    -webkit-backdrop-filter: blur(8px) !important;
-    padding: 12px 12px 16px 12px !important;
-    border-radius: 26px !important;
-    box-shadow: 0 12px 32px rgba(15,23,42,0.14) !important;
-    border: 1px solid rgba(201,217,234,0.85) !important;
-    margin-bottom: 26px !important;
-}
-
 /* CRONÔMETRO COMPARTILHADO */
 .timer-card {
     background: #ffffff;
     border: 2px solid #d7e7f5;
     border-left: 8px solid #002f5f;
     border-radius: 24px;
-    padding: 16px 18px;
-    margin: 0 0 14px 0;
+    padding: 22px;
+    margin: 18px 0 28px 0;
     box-shadow: 0 8px 24px rgba(15,23,42,0.06);
 }
 
@@ -433,7 +416,7 @@ textarea::placeholder {
     font-weight: 900;
     line-height: 1;
     text-align: center;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .timer-status {
@@ -906,144 +889,142 @@ def contar_palavras(texto):
 
 def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
-    with st.container(key=f"timer_floating_{aba_timer}"):
+    cursor.execute("""
+    SELECT inicio, duracao, ativo
+    FROM timers
+    WHERE sala = ? AND aba = ?
+    """, (sala_atual, aba_timer))
 
-        cursor.execute("""
-        SELECT inicio, duracao, ativo
-        FROM timers
-        WHERE sala = ? AND aba = ?
-        """, (sala_atual, aba_timer))
+    timer_banco = cursor.fetchone()
 
-        timer_banco = cursor.fetchone()
+    inicio = None
+    duracao = int(valor_padrao * 60)
+    ativo = 0
 
-        inicio = None
-        duracao = int(valor_padrao * 60)
-        ativo = 0
+    if timer_banco:
+        inicio, duracao, ativo = timer_banco
 
-        if timer_banco:
-            inicio, duracao, ativo = timer_banco
-
-        st.markdown(
-            f"""
+    st.markdown(
+        f"""
 <div class="timer-card">
 <div class="timer-title">{t("timer_shared_title")}</div>
 <div class="timer-help">{t("timer_shared_help")}</div>
 </div>
 """,
-            unsafe_allow_html=True
+        unsafe_allow_html=True
+    )
+
+    col_tempo, col_relogio = st.columns([7, 1])
+
+    with col_tempo:
+
+        minutos_configurados = st.number_input(
+            t("timer_minutes"),
+            min_value=1,
+            max_value=120,
+            value=max(int(duracao // 60), 1),
+            key=f"tempo_{aba_timer}"
         )
 
-        col_tempo, col_relogio = st.columns([7, 1])
+    with col_relogio:
 
-        with col_tempo:
+        with st.container(key=f"timer_area_{aba_timer}"):
 
-            minutos_configurados = st.number_input(
-                t("timer_minutes"),
-                min_value=1,
-                max_value=120,
-                value=max(int(duracao // 60), 1),
-                key=f"tempo_{aba_timer}"
-            )
+            botao_relogio = "⏹️" if ativo else "⏱️"
 
-        with col_relogio:
+            if st.button(
+                botao_relogio,
+                key=f"botao_timer_{aba_timer}"
+            ):
 
-            with st.container(key=f"timer_area_{aba_timer}"):
+                if ativo:
+                    cursor.execute("""
+                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                    VALUES (?, ?, NULL, ?, 0)
+                    ON CONFLICT(sala, aba)
+                    DO UPDATE SET
+                        inicio = NULL,
+                        duracao = excluded.duracao,
+                        ativo = 0
+                    """, (
+                        sala_atual,
+                        aba_timer,
+                        int(minutos_configurados * 60)
+                    ))
 
-                botao_relogio = "⏹️" if ativo else "⏱️"
+                    conn.commit()
+                    st.rerun()
 
-                if st.button(
-                    botao_relogio,
-                    key=f"botao_timer_{aba_timer}"
-                ):
+                else:
+                    cursor.execute("""
+                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                    VALUES (?, ?, ?, ?, 1)
+                    ON CONFLICT(sala, aba)
+                    DO UPDATE SET
+                        inicio = excluded.inicio,
+                        duracao = excluded.duracao,
+                        ativo = 1
+                    """, (
+                        sala_atual,
+                        aba_timer,
+                        time.time(),
+                        int(minutos_configurados * 60)
+                    ))
 
-                    if ativo:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, NULL, ?, 0)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = NULL,
-                            duracao = excluded.duracao,
-                            ativo = 0
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            int(minutos_configurados * 60)
-                        ))
+                    conn.commit()
+                    st.rerun()
 
-                        conn.commit()
-                        st.rerun()
+    if ativo and inicio:
 
-                    else:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, ?, ?, 1)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = excluded.inicio,
-                            duracao = excluded.duracao,
-                            ativo = 1
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            time.time(),
-                            int(minutos_configurados * 60)
-                        ))
+        st_autorefresh(
+            interval=1000,
+            key=f"refresh_timer_{aba_timer}"
+        )
 
-                        conn.commit()
-                        st.rerun()
+        tempo_passado = int(time.time() - inicio)
+        tempo_restante = max(int(duracao) - tempo_passado, 0)
 
-        if ativo and inicio:
+        minutos = tempo_restante // 60
+        segundos = tempo_restante % 60
 
-            st_autorefresh(
-                interval=1000,
-                key=f"refresh_timer_{aba_timer}"
-            )
-
-            tempo_passado = int(time.time() - inicio)
-            tempo_restante = max(int(duracao) - tempo_passado, 0)
-
-            minutos = tempo_restante // 60
-            segundos = tempo_restante % 60
-
-            st.markdown(
-                f"""
+        st.markdown(
+            f"""
 <div class="timer-display">⏱️ {minutos:02d}:{segundos:02d}</div>
 <div class="timer-status">{t("timer_running")}</div>
 """,
-                unsafe_allow_html=True
-            )
+            unsafe_allow_html=True
+        )
 
-            st.progress(
-                tempo_restante / int(duracao)
-                if int(duracao) > 0
-                else 0
-            )
+        st.progress(
+            tempo_restante / int(duracao)
+            if int(duracao) > 0
+            else 0
+        )
 
-            if tempo_restante == 0:
+        if tempo_restante == 0:
 
-                cursor.execute("""
-                UPDATE timers
-                SET ativo = 0
-                WHERE sala = ? AND aba = ?
-                """, (
-                    sala_atual,
-                    aba_timer
-                ))
+            cursor.execute("""
+            UPDATE timers
+            SET ativo = 0
+            WHERE sala = ? AND aba = ?
+            """, (
+                sala_atual,
+                aba_timer
+            ))
 
-                conn.commit()
-                st.error(t("timer_finished"))
-                st.rerun()
+            conn.commit()
+            st.error(t("timer_finished"))
+            st.rerun()
 
-        else:
+    else:
 
-            st.markdown(
-                f"""
+        st.markdown(
+            f"""
 <div class="timer-display">⏱️ {int(minutos_configurados):02d}:00</div>
 <div class="timer-status">{t("timer_click_start")}</div>
 """,
-                unsafe_allow_html=True
-            )
+            unsafe_allow_html=True
+        )
 
 
 def buscar_mais_votados(sala_atual):
