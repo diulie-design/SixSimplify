@@ -360,6 +360,31 @@ textarea::placeholder {
     margin-top: 18px;
 }
 
+
+/* BOTÃO DO RELÓGIO DO CRONÔMETRO */
+.st-key-timer_area_foco_no_foco .stButton > button,
+.st-key-timer_area_principais_entraves .stButton > button {
+    min-height: 104px !important;
+    height: 104px !important;
+    width: 104px !important;
+    border-radius: 999px !important;
+    font-size: 46px !important;
+    line-height: 1 !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-shadow: 0 10px 24px rgba(0,47,95,0.22) !important;
+}
+
+.st-key-timer_area_foco_no_foco .stButton > button p,
+.st-key-timer_area_principais_entraves .stButton > button p {
+    font-size: 46px !important;
+    line-height: 1 !important;
+}
+
 /* CRONÔMETRO COMPARTILHADO */
 .timer-card {
     background: #ffffff;
@@ -534,48 +559,25 @@ textarea::placeholder {
     .timer-title {
         font-size: 20px;
     }
+
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        min-height: 86px !important;
+        height: 86px !important;
+        width: 86px !important;
+        font-size: 38px !important;
+    }
+
+    .st-key-timer_area_foco_no_foco .stButton > button p,
+    .st-key-timer_area_principais_entraves .stButton > button p {
+        font-size: 38px !important;
+    }
 }
 
     
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# TRADUÇÃO DO MULTISELECT
-# =========================
-
-if idioma == "pt":
-
-    st.markdown("""
-    <script>
-    const observer = new MutationObserver(() => {
-
-        const placeholders = window.parent.document.querySelectorAll(
-            'input[placeholder="Choose options"]'
-        );
-
-        placeholders.forEach(el => {
-            el.placeholder = "Escolha os entraves";
-        });
-
-        const selectAlls = window.parent.document.querySelectorAll(
-            'div'
-        );
-
-        selectAlls.forEach(el => {
-            if (el.innerText === "Select all") {
-                el.innerText = "Selecionar todos";
-            }
-        });
-
-    });
-
-    observer.observe(window.parent.document, {
-        childList: true,
-        subtree: true
-    });
-    </script>
-    """, unsafe_allow_html=True)
 # =========================
 # BANCO
 # =========================
@@ -780,10 +782,10 @@ TEXTOS = {
         "save_focus": "Save focus",
         "edit_focus": "Edit focus",
         "focus_required": "Enter a focus before saving.",
-        "tab_summary": "Resumo",
+        "tab_summary": "Summary",
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
-        "summary_title": "Resumo",
+        "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
         "focus": "Focus",
@@ -912,7 +914,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         unsafe_allow_html=True
     )
 
-    col_tempo, col_relogio = st.columns([8, 1])
+    col_tempo, col_relogio = st.columns([7, 1])
 
     with col_tempo:
 
@@ -926,49 +928,51 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
     with col_relogio:
 
-        botao_relogio = "⏹️" if ativo else "⏱️"
+        with st.container(key=f"timer_area_{aba_timer}"):
 
-        if st.button(
-            botao_relogio,
-            key=f"botao_timer_{aba_timer}"
-        ):
+            botao_relogio = "⏹️" if ativo else "⏱️"
 
-            if ativo:
-                cursor.execute("""
-                INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                VALUES (?, ?, NULL, ?, 0)
-                ON CONFLICT(sala, aba)
-                DO UPDATE SET
-                    inicio = NULL,
-                    duracao = excluded.duracao,
-                    ativo = 0
-                """, (
-                    sala_atual,
-                    aba_timer,
-                    int(minutos_configurados * 60)
-                ))
+            if st.button(
+                botao_relogio,
+                key=f"botao_timer_{aba_timer}"
+            ):
 
-                conn.commit()
-                st.rerun()
+                if ativo:
+                    cursor.execute("""
+                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                    VALUES (?, ?, NULL, ?, 0)
+                    ON CONFLICT(sala, aba)
+                    DO UPDATE SET
+                        inicio = NULL,
+                        duracao = excluded.duracao,
+                        ativo = 0
+                    """, (
+                        sala_atual,
+                        aba_timer,
+                        int(minutos_configurados * 60)
+                    ))
 
-            else:
-                cursor.execute("""
-                INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                VALUES (?, ?, ?, ?, 1)
-                ON CONFLICT(sala, aba)
-                DO UPDATE SET
-                    inicio = excluded.inicio,
-                    duracao = excluded.duracao,
-                    ativo = 1
-                """, (
-                    sala_atual,
-                    aba_timer,
-                    time.time(),
-                    int(minutos_configurados * 60)
-                ))
+                    conn.commit()
+                    st.rerun()
 
-                conn.commit()
-                st.rerun()
+                else:
+                    cursor.execute("""
+                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                    VALUES (?, ?, ?, ?, 1)
+                    ON CONFLICT(sala, aba)
+                    DO UPDATE SET
+                        inicio = excluded.inicio,
+                        duracao = excluded.duracao,
+                        ativo = 1
+                    """, (
+                        sala_atual,
+                        aba_timer,
+                        time.time(),
+                        int(minutos_configurados * 60)
+                    ))
+
+                    conn.commit()
+                    st.rerun()
 
     if ativo and inicio:
 
@@ -2048,7 +2052,8 @@ if aba_atual == t("tab_barriers"):
         entraves_escolhidos = st.multiselect(
             t("choose_barriers"),
             options=list(opcoes_top3.keys()),
-            key="entraves_para_categoria"
+            key="entraves_para_categoria",
+            placeholder=t("choose_barriers")
         )
 
         if st.button(t("save_category")):
