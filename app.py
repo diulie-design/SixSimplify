@@ -535,6 +535,11 @@ textarea::placeholder {
         font-size: 20px;
     }
 }
+
+    
+</style>
+""", unsafe_allow_html=True)
+
 # =========================
 # TRADUÇÃO DO MULTISELECT
 # =========================
@@ -571,11 +576,6 @@ if idioma == "pt":
     });
     </script>
     """, unsafe_allow_html=True)
-    
-</style>
-""", unsafe_allow_html=True)
-
-
 # =========================
 # BANCO
 # =========================
