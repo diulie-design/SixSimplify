@@ -7,6 +7,15 @@ from streamlit_autorefresh import st_autorefresh
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
 
 # =========================
+# AUTOREFRESH GLOBAL
+# =========================
+
+st_autorefresh(
+    interval=5000,
+    key="refresh_global"
+)
+
+# =========================
 # ESTILO
 # =========================
 
@@ -1033,20 +1042,44 @@ else:
 
 
 # =========================
-# FOCO GERAL
+# HEADER DINÂMICO
 # =========================
 
-tema_header = (
-    st.session_state.foco_salvo
-    if st.session_state.foco_salvo
-    else t("focus_default")
+vencedores_header, _, empate_header = buscar_mais_votados(
+    sala_atual
 )
+
+foco_no_foco_header = ""
+
+if vencedores_header and not empate_header:
+    foco_no_foco_header = vencedores_header[0][2]
+
+# Detecta aba atual
+query_params = st.query_params
+
+aba_atual = query_params.get("tab", "0")
+
+# Aba 2 = Principais Entraves
+if aba_atual == "2" and foco_no_foco_header:
+
+    titulo_header = t("focus_on_focus")
+    subtitulo_header = foco_no_foco_header
+
+else:
+
+    titulo_header = t("focus")
+
+    subtitulo_header = (
+        st.session_state.foco_salvo
+        if st.session_state.foco_salvo
+        else t("focus_default")
+    )
 
 st.markdown(
     f"""
 <div class="header-foco">
-<div class="header-title">Foco</div>
-<div class="header-subtitle">{esc(tema_header)}</div>
+<div class="header-title">{esc(titulo_header)}</div>
+<div class="header-subtitle">{esc(subtitulo_header)}</div>
 </div>
 """,
     unsafe_allow_html=True
