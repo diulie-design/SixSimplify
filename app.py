@@ -519,7 +519,7 @@ TEXTOS = {
         "tab_summary": "Resumo",
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
-        "summary_title": "Summary",
+        "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
         "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
         "focus": "Foco",
