@@ -79,6 +79,29 @@ h3 {
     font-weight: 600;
 }
 
+/* CABEÇALHO FIXO */
+.fixed-workshop-header {
+    position: fixed !important;
+    top: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(1000px, calc(100vw - 48px)) !important;
+    z-index: 2147483000 !important;
+    background: rgba(247, 249, 252, 0.92) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 10px 0 10px 0 !important;
+    border-radius: 32px !important;
+}
+
+.fixed-workshop-header .header-foco {
+    margin-bottom: 0 !important;
+}
+
+.fixed-workshop-header-spacer {
+    height: 220px;
+}
+
 .landing-title {
     text-align: center;
     margin-bottom: 18px;
@@ -478,7 +501,7 @@ textarea::placeholder {
 /* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
 .timer-fixed-pill-global {
     position: fixed !important;
-    top: 88px !important;
+    top: 235px !important;
     right: 22px !important;
     z-index: 2147483647 !important;
     background: rgba(255,255,255,0.98) !important;
@@ -557,6 +580,17 @@ textarea::placeholder {
 
     .header-subtitle {
         font-size: 22px;
+    }
+
+    .fixed-workshop-header {
+        top: 8px !important;
+        width: calc(100vw - 20px) !important;
+        padding: 8px 0 !important;
+        border-radius: 26px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 205px;
     }
 
     .landing-main {
@@ -1539,10 +1573,13 @@ else:
 
 st.markdown(
     f"""
-<div class="header-foco">
-<div class="header-title">{esc(titulo_header)}</div>
-<div class="header-subtitle">{esc(subtitulo_header)}</div>
+<div class="fixed-workshop-header">
+    <div class="header-foco">
+        <div class="header-title">{esc(titulo_header)}</div>
+        <div class="header-subtitle">{esc(subtitulo_header)}</div>
+    </div>
 </div>
+<div class="fixed-workshop-header-spacer"></div>
 """,
     unsafe_allow_html=True
 )
