@@ -1029,7 +1029,7 @@ TEXTOS = {
         "meeting_focus": "FOCO DO WORKSHOP",
         "focus_not_defined": "O foco do workshop ainda não foi definido.",
         "focus_on_focus": "Foco no Foco",
-        "focus_on_focus_caps": "FOCO NO FOCO",
+        "focus_on_focus_caps": "Onde queremos chegar?",
         "focus_tie_summary": "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco.",
         "focus_not_defined_vote": "O Foco no Foco ainda não foi definido pela votação.",
         "categorized_barriers": "Entraves categorizados",
