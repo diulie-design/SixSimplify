@@ -3359,3 +3359,50 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   MOBILE — PRINCIPAIS ENTRAVES + HIPÓTESES LADO A LADO
+   ========================================================= */
+@media (max-width: 768px) {
+
+    div[role="radiogroup"] {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 6px !important;
+    }
+
+    div[role="radiogroup"] label {
+        flex: 0 0 auto !important;
+        width: auto !important;
+        min-width: auto !important;
+        max-width: none !important;
+    }
+
+    /* 3º botão = Principais Entraves | 4º botão = Hipóteses de Solução */
+    div[role="radiogroup"] label:nth-child(3),
+    div[role="radiogroup"] label:nth-child(4) {
+        flex: 1 1 calc(50% - 6px) !important;
+        max-width: calc(50% - 6px) !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    div[role="radiogroup"] label:nth-child(3) p,
+    div[role="radiogroup"] label:nth-child(4) p {
+        width: 100% !important;
+        text-align: center !important;
+        white-space: normal !important;
+        font-size: 14px !important;
+        line-height: 1.05 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
