@@ -6,14 +6,6 @@ from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
 
-# Detecta dispositivo mobile
-user_agent = st.context.headers.get("User-Agent", "")
-st.session_state["is_mobile"] = any(
-    termo in user_agent.lower()
-    for termo in ["iphone", "android", "mobile"]
-)
-
-
 # =========================
 # AUTOREFRESH GLOBAL
 # =========================
@@ -85,29 +77,6 @@ h3 {
     color: rgba(255,255,255,0.85);
     font-size: 28px;
     font-weight: 600;
-}
-
-/* CABEÇALHO FIXO */
-.fixed-workshop-header {
-    position: fixed !important;
-    top: 160px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: min(1000px, calc(100vw - 48px)) !important;
-    z-index: 2147483000 !important;
-    background: rgba(247, 249, 252, 0.92) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    padding: 10px 0 10px 0 !important;
-    border-radius: 32px !important;
-}
-
-.fixed-workshop-header .header-foco {
-    margin-bottom: 0 !important;
-}
-
-.fixed-workshop-header-spacer {
-    height: 300px;
 }
 
 .landing-title {
@@ -195,56 +164,6 @@ h3 {
 }
 
 .stTabs [aria-selected="true"] p {
-    color: white !important;
-}
-
-/* NAVEGAÇÃO COM BOTÕES FIXA */
-div[role="radiogroup"] {
-    position: fixed !important;
-    top: 12px !important;
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-    width: min(1000px, calc(100vw - 48px)) !important;
-    z-index: 2147483100 !important;
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 8px !important;
-    margin-bottom: 0 !important;
-    background: rgba(247, 249, 252, 0.94) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    padding: 10px !important;
-    border-radius: 28px !important;
-    box-shadow: 0 10px 30px rgba(15,23,42,0.10) !important;
-}
-
-div[role="radiogroup"] label {
-    background: #ffffff;
-    border: 2px solid #dbe4ef;
-    border-radius: 18px;
-    padding: 16px 18px;
-    min-height: 54px;
-    color: #002f5f;
-    font-weight: 800;
-    flex: 1 1 auto !important;
-    justify-content: flex-start !important;
-    white-space: nowrap !important;
-}
-
-div[role="radiogroup"] label:has(input:checked) {
-    background: #002f5f;
-    border-color: #002f5f;
-    color: white;
-}
-
-div[role="radiogroup"] label p {
-    font-size: 21px !important;
-    font-weight: 800 !important;
-    line-height: 1.1 !important;
-    white-space: nowrap !important;
-}
-
-div[role="radiogroup"] label:has(input:checked) p {
     color: white !important;
 }
 
@@ -369,7 +288,7 @@ textarea::placeholder {
     background: #fff6b8;
     padding: 26px;
     border-radius: 22px;
-    min-height: 260px;
+    min-height: 190px;
     margin-bottom: 20px;
     color: #1f2937;
     border: 2px solid #f0dc7a;
@@ -408,194 +327,6 @@ textarea::placeholder {
     margin-top: 18px;
 }
 
-/* CRONÔMETRO COMPARTILHADO */
-.timer-card {
-    background: #ffffff;
-    border: 2px solid #d7e7f5;
-    border-left: 8px solid #002f5f;
-    border-radius: 24px;
-    padding: 16px 18px;
-    margin: 18px 0 14px 0;
-    box-shadow: 0 8px 24px rgba(15,23,42,0.06);
-}
-
-.timer-title {
-    color: #002f5f;
-    font-size: 22px;
-    font-weight: 850;
-    margin-bottom: 6px;
-}
-
-.timer-help {
-    color: #55708f;
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 0;
-}
-
-.timer-display {
-    color: #002f5f;
-    font-size: 46px;
-    font-weight: 900;
-    line-height: 1;
-    text-align: center;
-    margin-top: 10px;
-}
-
-.timer-status {
-    color: #24476b;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 6px;
-}
-
-/* BOTÃO DO RELÓGIO DO CRONÔMETRO */
-.st-key-timer_area_foco_no_foco .stButton > button,
-.st-key-timer_area_principais_entraves .stButton > button {
-    min-height: 104px !important;
-    height: 104px !important;
-    width: 104px !important;
-    border-radius: 999px !important;
-    font-size: 46px !important;
-    line-height: 1 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-shadow: 0 10px 24px rgba(0,47,95,0.22) !important;
-}
-
-.st-key-timer_area_foco_no_foco .stButton > button p,
-.st-key-timer_area_principais_entraves .stButton > button p {
-    font-size: 46px !important;
-    line-height: 1 !important;
-}
-
-/* PÍLULA FLUTUANTE DO TEMPO */
-.timer-floating-pill {
-    position: fixed;
-    top: 86px;
-    right: 22px;
-    z-index: 999999;
-    background: rgba(255, 255, 255, 0.96);
-    border: 2px solid #c9d9ea;
-    border-left: 8px solid #002f5f;
-    border-radius: 999px;
-    padding: 12px 18px 12px 16px;
-    box-shadow: 0 14px 34px rgba(0,47,95,0.24);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: #002f5f;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-}
-
-.timer-floating-label {
-    font-size: 14px;
-    font-weight: 850;
-    color: #24476b;
-    line-height: 1;
-    text-align: right;
-}
-
-.timer-floating-time {
-    font-size: 34px;
-    font-weight: 950;
-    line-height: 1;
-    color: #002f5f;
-}
-
-.timer-floating-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 999px;
-    background: #002f5f;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 26px;
-    box-shadow: 0 8px 18px rgba(0,47,95,0.22);
-}
-
-
-/* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
-.timer-fixed-pill-global {
-    position: fixed !important;
-    top: 195px !important;
-    right: 22px !important;
-    z-index: 2147483647 !important;
-    background: rgba(255,255,255,0.98) !important;
-    border: 2px solid #c9d9ea !important;
-    border-left: 8px solid #002f5f !important;
-    border-radius: 999px !important;
-    padding: 12px 18px 12px 16px !important;
-    box-shadow: 0 14px 34px rgba(0,47,95,0.25) !important;
-    display: flex !important;
-    align-items: center !important;
-    gap: 12px !important;
-    color: #002f5f !important;
-    font-family: inherit !important;
-    pointer-events: none !important;
-}
-
-.timer-fixed-pill-label {
-    font-size: 14px !important;
-    font-weight: 850 !important;
-    color: #24476b !important;
-    line-height: 1 !important;
-    text-align: right !important;
-    margin-bottom: 4px !important;
-}
-
-.timer-fixed-pill-time {
-    font-size: 34px !important;
-    font-weight: 950 !important;
-    line-height: 1 !important;
-    color: #002f5f !important;
-}
-
-.timer-fixed-pill-icon {
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
-    border-radius: 999px !important;
-    background: #002f5f !important;
-    color: white !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    font-size: 26px !important;
-    box-shadow: 0 8px 18px rgba(0,47,95,0.22) !important;
-}
-
-
-/* AJUSTES DO CRONÔMETRO */
-.st-key-timer_area_foco_no_foco .stButton > button,
-.st-key-timer_area_principais_entraves .stButton > button {
-    margin-left: 8px !important;
-    margin-right: auto !important;
-}
-
-/* aproxima os botões -/+ do campo de minutos */
-div[data-testid="stNumberInput"] {
-    max-width: 360px !important;
-}
-
-div[data-testid="stNumberInput"] > div {
-    max-width: 360px !important;
-}
-
-/* no cronômetro, deixa o campo mais compacto */
-.st-key-tempo_foco_no_foco,
-.st-key-tempo_principais_entraves {
-    max-width: 360px !important;
-}
-
 /* CELULAR */
 @media (max-width: 768px) {
 
@@ -618,32 +349,17 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .header-foco {
-        padding: 16px 18px !important;
-        border-radius: 22px;
-        min-height: auto !important;
+        padding: 28px 20px;
+        border-radius: 24px;
     }
 
     .header-title {
-        font-size: 28px !important;
-        line-height: 1.05 !important;
-        margin-bottom: 6px !important;
+        font-size: 36px;
     }
 
     .header-subtitle {
-        font-size: 16px !important;
-        line-height: 1.25 !important;
+        font-size: 22px;
     }
-
-    .fixed-workshop-header {
-        top: 160px !important;
-        width: calc(100vw - 20px) !important;
-        padding: 8px 0 !important;
-        border-radius: 26px !important;
-    }
-
-    .fixed-workshop-header-spacer {
-    height: 300px;
-}
 
     .landing-main {
         font-size: 40px;
@@ -667,33 +383,6 @@ div[data-testid="stNumberInput"] > div {
         font-size: 18px !important;
         line-height: 1.05 !important;
         font-weight: 800 !important;
-    }
-
-    div[role="radiogroup"] {
-        top: 8px !important;
-        width: calc(100vw - 20px) !important;
-        gap: 6px !important;
-        padding: 8px !important;
-        border-radius: 22px !important;
-        flex-wrap: wrap !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-    }
-
-    div[role="radiogroup"] label {
-        min-height: 46px;
-        padding: 9px 10px;
-        border-radius: 16px;
-        flex: 0 0 auto !important;
-        white-space: nowrap !important;
-        max-width: 100% !important;
-    }
-
-    div[role="radiogroup"] label p {
-        font-size: 16px !important;
-        line-height: 1.05 !important;
-        font-weight: 800 !important;
-        white-space: nowrap !important;
     }
 
     div[data-testid="stHorizontalBlock"] {
@@ -746,166 +435,11 @@ div[data-testid="stNumberInput"] > div {
     .postit-texto {
         font-size: 25px;
     }
-
-    .timer-fixed-pill-global {
-        top: auto !important;
-        bottom: 105px !important;
-        right: 10px !important;
-        padding: 9px 12px !important;
-        gap: 8px !important;
-        max-width: calc(100vw - 20px) !important;
-    }
-
-    .timer-fixed-pill-label {
-        font-size: 11px !important;
-    }
-
-    .timer-fixed-pill-time {
-        font-size: 25px !important;
-    }
-
-    .timer-fixed-pill-icon {
-        width: 40px !important;
-        height: 40px !important;
-        min-width: 40px !important;
-        font-size: 22px !important;
-    }
-.timer-title {
-        font-size: 12px;
-    }
-
-    .timer-display {
-        font-size: 24px;
-    }
-
-    .timer-status {
-        font-size: 11px;
-    }
-    .timer-floating-pill {
-        top: auto;
-        bottom: 105px;
-        right: 10px;
-        padding: 9px 12px 9px 12px;
-        gap: 8px;
-        max-width: calc(100vw - 20px);
-    }
-
-    .timer-floating-label {
-        font-size: 11px;
-    }
-
-    .timer-floating-time {
-        font-size: 25px;
-    }
-
-    .timer-floating-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 22px;
-    }
-
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        min-height: 86px !important;
-        height: 86px !important;
-        width: 86px !important;
-        font-size: 38px !important;
-    }
-
-    .st-key-timer_area_foco_no_foco .stButton > button p,
-    .st-key-timer_area_principais_entraves .stButton > button p {
-        font-size: 38px !important;
-    }
-
-    /* Campo de minutos mais compacto no celular */
-    div[data-testid="stNumberInput"] {
-        max-width: 235px !important;
-    }
-
-    div[data-testid="stNumberInput"] > div {
-        max-width: 235px !important;
-    }
-
-    .st-key-tempo_foco_no_foco,
-    .st-key-tempo_principais_entraves {
-        max-width: 235px !important;
-    }
-
-    /* Relógio de iniciar/parar mais para a esquerda e mais para baixo no celular */
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        margin-left: -58px !important;
-        margin-top: 22px !important;
-        margin-right: auto !important;
-    }
-
-    /* remove qualquer espaço exagerado entre campo de tempo e relógio */
-    div[data-testid="stHorizontalBlock"] {
-        gap: 0px !important;
-    }
-
-    /* AJUSTE FINAL MOBILE: header compacto e relógio reposicionado */
-    .fixed-workshop-header .header-foco {
-        padding: 16px 18px !important;
-    }
-
-    .fixed-workshop-header .header-title {
-        font-size: 28px !important;
-        line-height: 1.05 !important;
-        margin-bottom: 6px !important;
-    }
-
-    .fixed-workshop-header .header-subtitle {
-        font-size: 16px !important;
-        line-height: 1.25 !important;
-    }
-
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        margin-left: -58px !important;
-        margin-top: 22px !important;
-    }
-
-    /* Mantém a pílula do cronômetro acima dos ícones flutuantes do Streamlit */
-    .timer-fixed-pill-global {
-        bottom: 105px !important;
-    }
-
-    .timer-floating-pill {
-        bottom: 105px !important;
-    }
-
-}
-
-    
-
-/* AJUSTE FINAL PARA 5 ABAS FIXAS */
-@media (min-width: 769px) {
-    .fixed-workshop-header {
-        top: 160px !important;
-    }
-
-    .fixed-workshop-header-spacer {
-        height: 300px !important;
-    }
-
-    .timer-fixed-pill-global {
-        top: 195px !important;
-    }
-}
-
-@media (max-width: 768px) {
-    .fixed-workshop-header {
-        top: 160px !important;
-    }
-
-    .fixed-workshop-header-spacer {
-        height: 300px !important;
-    }
 }
 
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================
 # BANCO
@@ -968,19 +502,6 @@ CREATE TABLE IF NOT EXISTS categorias_entraves (
 conn.commit()
 
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS timers (
-    sala TEXT,
-    aba TEXT,
-    inicio REAL,
-    duracao INTEGER,
-    ativo INTEGER DEFAULT 0,
-    PRIMARY KEY (sala, aba)
-)
-""")
-conn.commit()
-
-
 # =========================
 # FUNÇÕES
 # =========================
@@ -1007,21 +528,6 @@ TEXTOS = {
         "tab_summary": "Resumo",
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
-        "tab_solutions": "Hipóteses de Solução",
-        "tab_viability": "Viabilidade e Impacto",
-    "summary_solution_label": "COMO RESOLVER?",
-    "summary_solution_text": "Ainda em construção...",
-
-    "summary_viability_label": "POR ONDE JÁ PODEMOS COMEÇAR?",
-    "summary_viability_text": "Ainda em construção...",
-
-        "focus_subtitle": "Onde queremos chegar",
-        "barriers_subtitle": "O que nos impede?",
-        "solutions_subtitle": "Como resolver?",
-        "viability_subtitle": "Por onde já podemos começar?",
-        "under_construction": "Ainda em construção...",
-        "solutions_construction_help": "Essa etapa será utilizada para estruturar hipóteses de solução para os principais entraves identificados.",
-        "viability_construction_help": "Essa etapa será utilizada para avaliar viabilidade e impacto.",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
         "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
@@ -1029,7 +535,7 @@ TEXTOS = {
         "meeting_focus": "FOCO DO WORKSHOP",
         "focus_not_defined": "O foco do workshop ainda não foi definido.",
         "focus_on_focus": "Foco no Foco",
-        "focus_on_focus_caps": "ONDE QUEREMOS CHEGAR?",
+        "focus_on_focus_caps": "FOCO NO FOCO",
         "focus_tie_summary": "Há empate no Foco no Foco. Faça a votação de desempate na aba Foco no Foco.",
         "focus_not_defined_vote": "O Foco no Foco ainda não foi definido pela votação.",
         "categorized_barriers": "Entraves categorizados",
@@ -1097,21 +603,14 @@ TEXTOS = {
         "category_created": "Categoria criada!",
         "category_after_top3": "A categorização aparecerá após existirem entraves no Top 3.",
         "created_categories": "Categorias criadas",
-        "category_caps": "O QUE NOS IMPEDE?<br>CATEGORIA",
+        "category_caps": "CATEGORIA",
         "no_categories": "Nenhuma categoria criada ainda.",
         "first_place": "1º lugar",
         "second_place": "2º lugar",
         "third_place": "3º lugar",
         "timer_start": "Iniciar cronômetro",
         "timer_stop": "Parar cronômetro",
-        "timer_finished": "Tempo encerrado!",
-        "timer_shared_title": "Cronômetro da etapa",
-        "timer_shared_help": "Defina o tempo e clique no relógio para iniciar ou parar para todos nesta sala.",
-        "timer_minutes": "Tempo em minutos",
-        "timer_click_start": "Clique no relógio para iniciar",
-        "timer_running": "Cronômetro em andamento",
-        "timer_stopped": "Cronômetro parado",
-        "timer_remaining": "Faltam"
+        "timer_finished": "Tempo encerrado!"
     },
     "en": {
         "lang_label": "Language / Idioma",
@@ -1130,21 +629,6 @@ TEXTOS = {
         "tab_summary": "Summary",
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
-        "tab_solutions": "Solution Hypotheses",
-        "tab_viability": "Feasibility and Impact",
-    "summary_solution_label": "HOW CAN WE SOLVE IT?",
-    "summary_solution_text": "Still under construction...",
-
-    "summary_viability_label": "WHERE CAN WE START?",
-    "summary_viability_text": "Still under construction...",
-
-        "focus_subtitle": "Where we want to go",
-        "barriers_subtitle": "What is stopping us?",
-        "solutions_subtitle": "How can we solve it?",
-        "viability_subtitle": "Where can we start already?",
-        "under_construction": "Still under construction...",
-        "solutions_construction_help": "This step will be used to structure solution hypotheses for the main barriers identified.",
-        "viability_construction_help": "This step will be used to assess feasibility and impact.",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
@@ -1152,7 +636,7 @@ TEXTOS = {
         "meeting_focus": "MEETING FOCUS",
         "focus_not_defined": "The meeting focus has not been defined yet.",
         "focus_on_focus": "Focus on Focus",
-        "focus_on_focus_caps": "WHERE DO WE WANT TO GET TO?",
+        "focus_on_focus_caps": "FOCUS ON FOCUS",
         "focus_tie_summary": "There is a tie in Focus on Focus. Run the tie-break vote in the Focus on Focus tab.",
         "focus_not_defined_vote": "Focus on Focus has not been defined by voting yet.",
         "categorized_barriers": "Categorized barriers",
@@ -1220,21 +704,14 @@ TEXTOS = {
         "category_created": "Category created!",
         "category_after_top3": "Categorization will appear after there are barriers in the Top 3.",
         "created_categories": "Created categories",
-        "category_caps": "WHAT IS STOPPING US?<br>CATEGORY",
+        "category_caps": "CATEGORY",
         "no_categories": "No categories created yet.",
         "first_place": "1st place",
         "second_place": "2nd place",
         "third_place": "3rd place",
         "timer_start": "Start timer",
         "timer_stop": "Stop timer",
-        "timer_finished": "Time is up!",
-        "timer_shared_title": "Step timer",
-        "timer_shared_help": "Set the time and click the clock to start or stop it for everyone in this room.",
-        "timer_minutes": "Time in minutes",
-        "timer_click_start": "Click the clock to start",
-        "timer_running": "Timer running",
-        "timer_stopped": "Timer stopped",
-        "timer_remaining": "Remaining"
+        "timer_finished": "Time is up!"
     }
 }
 
@@ -1248,284 +725,59 @@ def contar_palavras(texto):
     return len(texto.strip().split())
 
 
-def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
+def mostrar_cronometro(nome_timer, tempo_total_segundos):
 
-    cursor.execute("""
-    SELECT inicio, duracao, ativo
-    FROM timers
-    WHERE sala = ? AND aba = ?
-    """, (sala_atual, aba_timer))
+    if nome_timer not in st.session_state:
+        st.session_state[nome_timer] = None
 
-    timer_banco = cursor.fetchone()
+    if st.session_state[nome_timer] is None:
 
-    inicio = None
-    duracao = int(valor_padrao * 60)
-    ativo = 0
+        if st.button(
+            t("timer_start"),
+            key=f"iniciar_{nome_timer}"
+        ):
+            st.session_state[nome_timer] = time.time()
+            st.rerun()
 
-    if timer_banco:
-        inicio, duracao, ativo = timer_banco
+    else:
 
-    st.markdown(
-        f"""
-<div class="timer-card">
-<div class="timer-title">{t("timer_shared_title")}</div>
-<div class="timer-help">{t("timer_shared_help")}</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+        if st.button(
+            t("timer_stop"),
+            key=f"parar_{nome_timer}"
+        ):
+            st.session_state[nome_timer] = None
+            st.rerun()
 
-    tempo_restante = None
-    minutos = max(int(duracao // 60), 1)
-    segundos = 0
-
-    if ativo and inicio:
+    if st.session_state[nome_timer]:
 
         st_autorefresh(
             interval=1000,
-            key=f"refresh_timer_{aba_timer}"
+            key=f"refresh_{nome_timer}"
         )
 
-        tempo_passado = int(time.time() - inicio)
-        tempo_restante = max(int(duracao) - tempo_passado, 0)
+        tempo_passado = int(
+            time.time() - st.session_state[nome_timer]
+        )
+
+        tempo_restante = max(
+            tempo_total_segundos - tempo_passado,
+            0
+        )
 
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
-    if st.session_state.get("is_mobile", False):
-
-        col_tempo, col_relogio = st.columns([5, 1])
-
-        with col_tempo:
-
-            minutos_configurados = st.number_input(
-                t("timer_minutes"),
-                min_value=1,
-                max_value=120,
-                value=max(int(duracao // 60), 1),
-                key=f"tempo_{aba_timer}"
-            )
-
-        with col_relogio:
-
-            with st.container(key=f"timer_area_{aba_timer}"):
-
-                botao_relogio = "⏹️" if ativo else "⏱️"
-
-                if st.button(
-                    botao_relogio,
-                    key=f"botao_timer_{aba_timer}"
-                ):
-
-                    if ativo:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, NULL, ?, 0)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = NULL,
-                            duracao = excluded.duracao,
-                            ativo = 0
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            int(minutos_configurados * 60)
-                        ))
-
-                        conn.commit()
-                        st.rerun()
-
-                    else:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, ?, ?, 1)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = excluded.inicio,
-                            duracao = excluded.duracao,
-                            ativo = 1
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            time.time(),
-                            int(minutos_configurados * 60)
-                        ))
-
-                        conn.commit()
-                        st.rerun()
-
-        if ativo and inicio:
-
-            st.markdown(
-                f"""
-<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
-<div class="timer-status">{t("timer_running")}</div>
-""",
-                unsafe_allow_html=True
-            )
-
-        else:
-
-            st.markdown(
-                f"""
-<div class="timer-display">{int(minutos_configurados):02d}:00</div>
-<div class="timer-status">{t("timer_click_start")}</div>
-""",
-                unsafe_allow_html=True
-            )
-
-    else:
-
-        col_tempo, col_display, col_relogio, col_espaco = st.columns([1.05, 0.58, 0.32, 1.55])
-
-        with col_tempo:
-
-            minutos_configurados = st.number_input(
-                t("timer_minutes"),
-                min_value=1,
-                max_value=120,
-                value=max(int(duracao // 60), 1),
-                key=f"tempo_{aba_timer}"
-            )
-
-        with col_display:
-
-            if ativo and inicio:
-
-                st.markdown(
-                    f"""
-<div class="timer-desktop-display">
-<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
-<div class="timer-status">{t("timer_running")}</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-            else:
-
-                st.markdown(
-                    f"""
-<div class="timer-desktop-display">
-<div class="timer-display">{int(minutos_configurados):02d}:00</div>
-<div class="timer-status">{t("timer_click_start")}</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-        with col_relogio:
-
-            st.markdown('<div class="timer-desktop-button">', unsafe_allow_html=True)
-
-            with st.container(key=f"timer_area_{aba_timer}"):
-
-                botao_relogio = "⏹️" if ativo else "⏱️"
-
-                if st.button(
-                    botao_relogio,
-                    key=f"botao_timer_{aba_timer}"
-                ):
-
-                    if ativo:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, NULL, ?, 0)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = NULL,
-                            duracao = excluded.duracao,
-                            ativo = 0
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            int(minutos_configurados * 60)
-                        ))
-
-                        conn.commit()
-                        st.rerun()
-
-                    else:
-                        cursor.execute("""
-                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                        VALUES (?, ?, ?, ?, 1)
-                        ON CONFLICT(sala, aba)
-                        DO UPDATE SET
-                            inicio = excluded.inicio,
-                            duracao = excluded.duracao,
-                            ativo = 1
-                        """, (
-                            sala_atual,
-                            aba_timer,
-                            time.time(),
-                            int(minutos_configurados * 60)
-                        ))
-
-                        conn.commit()
-                        st.rerun()
-
-            st.markdown("</div>", unsafe_allow_html=True)
-
-    if ativo and inicio:
+        st.markdown(
+            f"## ⏱️ {minutos:02d}:{segundos:02d}"
+        )
 
         st.progress(
-            tempo_restante / int(duracao)
-            if int(duracao) > 0
-            else 0
+            tempo_restante / tempo_total_segundos
         )
 
         if tempo_restante == 0:
-
-            cursor.execute("""
-            UPDATE timers
-            SET ativo = 0
-            WHERE sala = ? AND aba = ?
-            """, (
-                sala_atual,
-                aba_timer
-            ))
-
-            conn.commit()
             st.error(t("timer_finished"))
-            st.rerun()
-
-
-def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
-
-    cursor.execute("""
-    SELECT inicio, duracao, ativo
-    FROM timers
-    WHERE sala = ? AND aba = ?
-    """, (sala_atual, aba_timer))
-
-    timer_banco = cursor.fetchone()
-
-    if not timer_banco:
-        return
-
-    inicio, duracao, ativo = timer_banco
-
-    if not ativo or not inicio:
-        return
-
-    tempo_passado = int(time.time() - inicio)
-    tempo_restante = max(int(duracao) - tempo_passado, 0)
-
-    minutos = tempo_restante // 60
-    segundos = tempo_restante % 60
-
-    st.markdown(
-        f"""
-<div class="timer-fixed-pill-global">
-    <div>
-        <div class="timer-fixed-pill-label">{t("timer_remaining")}</div>
-        <div class="timer-fixed-pill-time">{minutos:02d}:{segundos:02d}</div>
-    </div>
-    <div class="timer-fixed-pill-icon">⏱️</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+            st.session_state[nome_timer] = None
 
 
 def buscar_mais_votados(sala_atual):
@@ -1635,24 +887,24 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
             unsafe_allow_html=True
         )
 
-        colunas_categoria = (
-            [st.container()]
-            if st.session_state.get("is_mobile", False)
-            else st.columns(3, gap="large")
-        )
-
-        for i, item_categoria in enumerate(itens_categoria):
+        for item_categoria in itens_categoria:
 
             categoria_id = item_categoria[0]
             equipe_cat = item_categoria[1]
             texto_cat = item_categoria[2]
             votos_cat = item_categoria[3]
 
-            with colunas_categoria[i % len(colunas_categoria)]:
+            if permitir_remover:
+                col_categoria1, col_categoria2 = st.columns([9, 1])
+            else:
+                col_categoria1 = st.container()
+                col_categoria2 = None
+
+            with col_categoria1:
 
                 st.markdown(
                     f"""
-<div class="desktop-card-html" style="
+<div style="
     background:#eaf2fb;
     padding:24px;
     border-radius:22px;
@@ -1668,7 +920,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
 ">
 {t("team_label")}: {esc(equipe_cat)} • {votos_cat} {t("votes").lower()}
 </div>
-<div class="texto-card" style="
+<div style="
     color:#111827;
     font-size:22px;
     line-height:1.45;
@@ -1681,7 +933,9 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
                     unsafe_allow_html=True
                 )
 
-                if permitir_remover:
+            if permitir_remover and col_categoria2 is not None:
+
+                with col_categoria2:
 
                     if st.button(
                         "✕",
@@ -1762,55 +1016,11 @@ if st.session_state.sala is None:
         placeholder=t("room_placeholder")
     )
 
-    equipe_url = st.query_params.get("equipe", "")
-    lider_url = st.query_params.get("lider", "")
-
-    equipe_login = ""
-    lider_login = ""
-
-    if equipe_url:
-
-        st.markdown(
-            """
-<div class="step-card">
-<div class="step-title">Equipe já identificada</div>
-<div class="step-help">Confirme ou edite sua equipe antes de entrar novamente.</div>
-</div>
-""",
-            unsafe_allow_html=True
-        )
-
-        equipe_login = st.text_input(
-            t("team_name"),
-            value=equipe_url,
-            placeholder=t("team_placeholder"),
-            key="equipe_login"
-        )
-
-        lider_login = st.text_input(
-            t("leader_name"),
-            value=lider_url,
-            placeholder=t("leader_placeholder"),
-            key="lider_login"
-        )
-
     if st.button(t("enter_button")):
         if senha_sala.strip():
             st.session_state.sala = senha_sala.strip()
             st.session_state.postits_votados = set()
             st.session_state.entraves_votados = set()
-
-            if equipe_url:
-                st.session_state.nome_equipe_salvo = equipe_login.strip()
-                st.session_state.lider_equipe_salvo = lider_login.strip()
-                st.session_state.editando_equipe = False
-
-                if equipe_login.strip():
-                    st.query_params["equipe"] = equipe_login.strip()
-
-                if lider_login.strip():
-                    st.query_params["lider"] = lider_login.strip()
-
             st.rerun()
         else:
             st.warning(t("password_required"))
@@ -1818,13 +1028,6 @@ if st.session_state.sala is None:
     st.stop()
 
 sala_atual = st.session_state.sala
-
-if st.query_params.get("equipe", "") and not st.session_state.get("nome_equipe_salvo", ""):
-    st.session_state.nome_equipe_salvo = st.query_params.get("equipe", "")
-    st.session_state.editando_equipe = False
-
-if st.query_params.get("lider", "") and not st.session_state.get("lider_equipe_salvo", ""):
-    st.session_state.lider_equipe_salvo = st.query_params.get("lider", "")
 
 cursor.execute(
     "SELECT foco FROM salas WHERE sala = ?",
@@ -1836,39 +1039,6 @@ if foco_banco:
     st.session_state.foco_salvo = foco_banco[0]
 else:
     st.session_state.foco_salvo = ""
-
-
-# =========================
-# NAVEGAÇÃO
-# =========================
-
-aba_atual = st.radio(
-    "Navegação",
-    [
-        t("tab_summary"),
-        t("tab_focus"),
-        t("tab_barriers"),
-        t("tab_solutions"),
-        t("tab_viability")
-    ],
-    horizontal=True,
-    label_visibility="collapsed",
-    key="aba_atual"
-)
-
-
-# Pílula fixa do cronômetro da aba atual
-if aba_atual == t("tab_focus"):
-    mostrar_pilula_timer_fixa(
-        sala_atual,
-        "foco_no_foco"
-    )
-
-if aba_atual == t("tab_barriers"):
-    mostrar_pilula_timer_fixa(
-        sala_atual,
-        "principais_entraves"
-    )
 
 
 # =========================
@@ -1884,7 +1054,13 @@ foco_no_foco_header = ""
 if vencedores_header and not empate_header:
     foco_no_foco_header = vencedores_header[0][2]
 
-if aba_atual == t("tab_barriers") and foco_no_foco_header:
+# Detecta aba atual
+query_params = st.query_params
+
+aba_atual = query_params.get("tab", "0")
+
+# Aba 2 = Principais Entraves
+if aba_atual == "2" and foco_no_foco_header:
 
     titulo_header = t("focus_on_focus")
     subtitulo_header = foco_no_foco_header
@@ -1899,39 +1075,22 @@ else:
         else t("focus_default")
     )
 
-if aba_atual == t("tab_summary"):
-
-    st.markdown(
-        f"""
+st.markdown(
+    f"""
 <div class="header-foco">
-    <div class="header-title">{esc(titulo_header)}</div>
-    <div class="header-subtitle">{esc(subtitulo_header)}</div>
+<div class="header-title">{esc(titulo_header)}</div>
+<div class="header-subtitle">{esc(subtitulo_header)}</div>
 </div>
 """,
-        unsafe_allow_html=True
-    )
-
-else:
-
-    st.markdown(
-        f"""
-<div class="fixed-workshop-header">
-    <div class="header-foco">
-        <div class="header-title">{esc(titulo_header)}</div>
-        <div class="header-subtitle">{esc(subtitulo_header)}</div>
-    </div>
-</div>
-<div class="fixed-workshop-header-spacer"></div>
-""",
-        unsafe_allow_html=True
-    )
+    unsafe_allow_html=True
+)
 
 if st.session_state.editando_foco:
 
     foco_digitado = st.text_input(
         label="campo_foco",
         value=st.session_state.foco_salvo,
-        placeholder=t("focus_default"),
+        placeholder="Digite o tema do workshop",
         key="campo_foco",
         label_visibility="collapsed"
     )
@@ -1962,10 +1121,21 @@ else:
 
 
 # =========================
+# ABAS
+# =========================
+
+aba0, aba1, aba2 = st.tabs([
+    t("tab_summary"),
+    t("tab_focus"),
+    t("tab_barriers")
+])
+
+
+# =========================
 # ABA 0 - SUMMARY
 # =========================
 
-if aba_atual == t("tab_summary"):
+with aba0:
 
     st.title(t("summary_title"))
 
@@ -2029,75 +1199,15 @@ if aba_atual == t("tab_summary"):
     )
 
 
-
-    # =========================
-    # HIPÓTESES DE SOLUÇÃO
-    # =========================
-
-    st.markdown("## Hipóteses de Solução")
-
-    st.markdown(
-        """
-<div class="resultado-final-header">
-<div class="resultado-label">COMO RESOLVER?</div>
-<div class="resultado-texto">
-Ainda em construção...
-</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    # =========================
-    # VIABILIDADE E IMPACTO
-    # =========================
-
-    st.markdown("## Viabilidade e Impacto")
-
-    st.markdown(
-        """
-<div class="resultado-final-header">
-<div class="resultado-label">POR ONDE JÁ PODEMOS COMEÇAR?</div>
-<div class="resultado-texto">
-Ainda em construção...
-</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-
 # =========================
 # ABA 1 - FOCO NO FOCO
 # =========================
 
-if aba_atual == t("tab_focus"):
+with aba1:
 
     st.title(t("focus_on_focus"))
 
-    st.markdown(
-        f"""
-<div style="
-    font-size:24px;
-    font-weight:500;
-    color:#222;
-    margin-top:-22px;
-    margin-bottom:4px;
-    opacity:0.92;
-">
-{t("focus_subtitle")}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
     st.caption(f"{t('current_room')}: {sala_atual}")
-
-    mostrar_cronometro_compartilhado(
-        sala_atual,
-        "foco_no_foco",
-        valor_padrao=5
-    )
 
     st.markdown(
         f"""
@@ -2117,6 +1227,18 @@ if aba_atual == t("tab_focus"):
     if "editando_equipe" not in st.session_state:
         st.session_state.editando_equipe = True
 
+    tempo_cadastro_minutos = st.number_input(
+        t("time_step_minutes"),
+        min_value=1,
+        max_value=60,
+        value=1
+    )
+
+    mostrar_cronometro(
+        "timer_cadastro",
+        int(tempo_cadastro_minutos * 60)
+    )
+
     if st.session_state.editando_equipe:
 
         nome_equipe_digitado = st.text_input(
@@ -2133,16 +1255,9 @@ if aba_atual == t("tab_focus"):
 
         if st.button(t("save_team")):
 
-            st.session_state.nome_equipe_salvo = nome_equipe_digitado.strip()
-            st.session_state.lider_equipe_salvo = lider_equipe_digitado.strip()
+            st.session_state.nome_equipe_salvo = nome_equipe_digitado
+            st.session_state.lider_equipe_salvo = lider_equipe_digitado
             st.session_state.editando_equipe = False
-
-            if nome_equipe_digitado.strip():
-                st.query_params["equipe"] = nome_equipe_digitado.strip()
-
-            if lider_equipe_digitado.strip():
-                st.query_params["lider"] = lider_equipe_digitado.strip()
-
             st.rerun()
 
     else:
@@ -2169,6 +1284,18 @@ if aba_atual == t("tab_focus"):
 </div>
 """,
         unsafe_allow_html=True
+    )
+
+    tempo_postit_minutos = st.number_input(
+        t("time_postits_minutes"),
+        min_value=1,
+        max_value=60,
+        value=5
+    )
+
+    mostrar_cronometro(
+        "timer_postit",
+        int(tempo_postit_minutos * 60)
     )
 
     novo_postit = st.text_area(
@@ -2222,132 +1349,59 @@ if aba_atual == t("tab_focus"):
 
     if postits:
 
-        if st.session_state.get("is_mobile", False):
+        for postit_id, equipe, texto, votos in postits:
 
-            # Mobile: mantém 1 post-it por vez
-            for postit_id, equipe, texto, votos in postits:
+            classe_postit = (
+                "postit-votado"
+                if postit_id in st.session_state.postits_votados
+                else "postit"
+            )
 
-                classe_postit = (
-                    "postit-votado"
-                    if postit_id in st.session_state.postits_votados
-                    else "postit"
-                )
-
-                st.markdown(
-                    f"""
+            st.markdown(
+                f"""
 <div class="{classe_postit}">
 <h4>{esc(equipe)}</h4>
 <div class="postit-texto">{esc(texto)}</div>
 <div class="votos">{t("votes")}: {votos}</div>
 </div>
 """,
-                    unsafe_allow_html=True
-                )
+                unsafe_allow_html=True
+            )
 
-                if postit_id in st.session_state.postits_votados:
+            if postit_id in st.session_state.postits_votados:
 
-                    if st.button(
-                        t("undo_vote"),
-                        key=f"desfazer_{postit_id}"
-                    ):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = CASE
-                            WHEN votos > 0 THEN votos - 1
-                            ELSE 0
-                        END
-                        WHERE id = ? AND sala = ?
-                        """, (postit_id, sala_atual))
+                if st.button(
+                    t("undo_vote"),
+                    key=f"desfazer_{postit_id}"
+                ):
+                    cursor.execute("""
+                    UPDATE postits
+                    SET votos = CASE
+                        WHEN votos > 0 THEN votos - 1
+                        ELSE 0
+                    END
+                    WHERE id = ? AND sala = ?
+                    """, (postit_id, sala_atual))
 
-                        conn.commit()
-                        st.session_state.postits_votados.remove(postit_id)
-                        st.rerun()
+                    conn.commit()
+                    st.session_state.postits_votados.remove(postit_id)
+                    st.rerun()
 
-                else:
+            else:
 
-                    if st.button(
-                        t("vote"),
-                        key=f"votar_{postit_id}"
-                    ):
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = votos + 1
-                        WHERE id = ? AND sala = ?
-                        """, (postit_id, sala_atual))
+                if st.button(
+                    t("vote"),
+                    key=f"votar_{postit_id}"
+                ):
+                    cursor.execute("""
+                    UPDATE postits
+                    SET votos = votos + 1
+                    WHERE id = ? AND sala = ?
+                    """, (postit_id, sala_atual))
 
-                        conn.commit()
-                        st.session_state.postits_votados.add(postit_id)
-                        st.rerun()
-
-        else:
-
-            # Desktop: post-it + botão ficam dentro da mesma coluna
-            colunas_postits = st.columns(3, gap="large")
-
-            for i, (postit_id, equipe, texto, votos) in enumerate(postits):
-
-                with colunas_postits[i % len(colunas_postits)]:
-
-                    classe_postit = (
-                        "postit-votado"
-                        if postit_id in st.session_state.postits_votados
-                        else "postit"
-                    )
-
-                    st.markdown(
-                        f"""
-<div class="desktop-card-html {classe_postit}" style="
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    min-height:260px;
-">
-<div>
-<h4>{esc(equipe)}</h4>
-<div class="postit-texto texto-card">{esc(texto)}</div>
-</div>
-<div class="votos">{t("votes")}: {votos}</div>
-</div>
-""",
-                        unsafe_allow_html=True
-                    )
-
-                    if postit_id in st.session_state.postits_votados:
-
-                        if st.button(
-                            t("undo_vote"),
-                            key=f"desfazer_{postit_id}",
-                            use_container_width=True
-                        ):
-                            cursor.execute("""
-                            UPDATE postits
-                            SET votos = CASE
-                                WHEN votos > 0 THEN votos - 1
-                                ELSE 0
-                            END
-                            WHERE id = ? AND sala = ?
-                            """, (postit_id, sala_atual))
-
-                            conn.commit()
-                            st.session_state.postits_votados.remove(postit_id)
-                            st.rerun()
-
-                    else:
-
-                        if st.button(
-                            t("vote"),
-                            key=f"votar_{postit_id}",
-                            use_container_width=True
-                        ):
-                            cursor.execute("""
-                            UPDATE postits
-                            SET votos = votos + 1
-                            WHERE id = ? AND sala = ?
-                            """, (postit_id, sala_atual))
-
-                            conn.commit()
-                            st.session_state.postits_votados.add(postit_id)
-                            st.rerun()
+                    conn.commit()
+                    st.session_state.postits_votados.add(postit_id)
+                    st.rerun()
 
     else:
         st.info(t("no_postit"))
@@ -2429,31 +1483,9 @@ if aba_atual == t("tab_focus"):
 # ABA 2 - PRINCIPAIS ENTRAVES
 # =========================
 
-if aba_atual == t("tab_barriers"):
+with aba2:
 
     st.title(t("barriers_title"))
-
-    st.markdown(
-        f"""
-<div style="
-    font-size:24px;
-    font-weight:500;
-    color:#222;
-    margin-top:-18px;
-    margin-bottom:10px;
-    opacity:0.92;
-">
-{t("barriers_subtitle")}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    mostrar_cronometro_compartilhado(
-        sala_atual,
-        "principais_entraves",
-        valor_padrao=7
-    )
 
     st.markdown(
         f"""
@@ -2464,14 +1496,20 @@ if aba_atual == t("tab_barriers"):
         unsafe_allow_html=True
     )
 
+    tempo_entraves_minutos = st.number_input(
+        t("time_barriers_minutes"),
+        min_value=1,
+        max_value=60,
+        value=7,
+        key="tempo_entraves"
+    )
+
+    mostrar_cronometro(
+        "timer_entraves",
+        int(tempo_entraves_minutos * 60)
+    )
+
     equipe_entrave = st.session_state.nome_equipe_salvo
-
-    if "limpar_campo_entrave" not in st.session_state:
-        st.session_state["limpar_campo_entrave"] = False
-
-    if st.session_state["limpar_campo_entrave"]:
-        st.session_state["campo_entrave"] = ""
-        st.session_state["limpar_campo_entrave"] = False
 
     novo_entrave = st.text_area(
         t("new_barrier"),
@@ -2498,7 +1536,6 @@ if aba_atual == t("tab_barriers"):
             ))
 
             conn.commit()
-            st.session_state["limpar_campo_entrave"] = True
             st.success(t("barrier_added"))
             st.rerun()
 
@@ -2598,15 +1635,11 @@ if aba_atual == t("tab_barriers"):
                 unsafe_allow_html=True
             )
 
-            # Desktop: 3 colunas lado a lado | Mobile: 1 coluna
-            if st.session_state.get("is_mobile", False):
-                colunas_mural = st.columns(1)
-            else:
-                colunas_mural = st.columns(3, gap="large")
+            colunas_mural = st.columns(1)
 
-            for i, (entrave_id, texto, votos) in enumerate(lista_entraves):
+            for _, (entrave_id, texto, votos) in enumerate(lista_entraves):
 
-                with colunas_mural[i % len(colunas_mural)]:
+                with colunas_mural[0]:
 
                     foi_votado = entrave_id in st.session_state.entraves_votados
 
@@ -2614,17 +1647,17 @@ if aba_atual == t("tab_barriers"):
                     borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
 
                     html_postit = f"""
-<div class="desktop-card-html" style="
+<div style="
     background:{cor_postit};
     padding:24px;
     border-radius:22px;
-    min-height:240px;
+    min-height:130px;
     margin-bottom:14px;
     color:#111827;
     border:{borda};
     box-shadow:0 6px 16px rgba(15,23,42,0.08);
 ">
-<div class="texto-card" style="
+<div style="
     color:#111827;
     font-size:23px;
     line-height:1.45;
@@ -2705,36 +1738,28 @@ if aba_atual == t("tab_barriers"):
                 unsafe_allow_html=True
             )
 
-            colunas_ranking = (
-                [st.container()]
-                if st.session_state.get("is_mobile", False)
-                else st.columns(3, gap="large")
-            )
+            for posicao, (equipe_top, texto_top, votos_top, _) in rankings:
 
-            for i, (posicao, (equipe_top, texto_top, votos_top, _)) in enumerate(rankings):
+                if posicao == 1:
+                    titulo_ranking = t("first_place")
+                    cor_ranking = "#e79eff"
+                    borda_ranking = "#8f7193"
+                elif posicao == 2:
+                    titulo_ranking = t("second_place")
+                    cor_ranking = "#dbeafe"
+                    borda_ranking = "#2563eb"
+                else:
+                    titulo_ranking = t("third_place")
+                    cor_ranking = "#c7f7f7"
+                    borda_ranking = "#96c4c4"
 
-                with colunas_ranking[i % len(colunas_ranking)]:
-
-                    if posicao == 1:
-                        titulo_ranking = t("first_place")
-                        cor_ranking = "#e79eff"
-                        borda_ranking = "#8f7193"
-                    elif posicao == 2:
-                        titulo_ranking = t("second_place")
-                        cor_ranking = "#dbeafe"
-                        borda_ranking = "#2563eb"
-                    else:
-                        titulo_ranking = t("third_place")
-                        cor_ranking = "#c7f7f7"
-                        borda_ranking = "#96c4c4"
-
-                    st.markdown(
-                        f"""
-<div class="desktop-card-html" style="
+                st.markdown(
+                    f"""
+<div style="
     background:{cor_ranking};
     padding:26px;
     border-radius:22px;
-    min-height:240px;
+    min-height:130px;
     margin-bottom:16px;
     color:#111827;
     border:3px solid {borda_ranking};
@@ -2756,7 +1781,7 @@ if aba_atual == t("tab_barriers"):
 ">
 {t("team_label")}: {esc(equipe_top)}
 </div>
-<div class="texto-card" style="
+<div style="
     color:#111827;
     font-size:24px;
     line-height:1.45;
@@ -2766,8 +1791,8 @@ if aba_atual == t("tab_barriers"):
 </div>
 </div>
 """,
-                        unsafe_allow_html=True
-                    )
+                    unsafe_allow_html=True
+                )
 
         else:
             st.info(t("ranking_empty"))
@@ -2805,8 +1830,7 @@ if aba_atual == t("tab_barriers"):
         entraves_escolhidos = st.multiselect(
             t("choose_barriers"),
             options=list(opcoes_top3.keys()),
-            key="entraves_para_categoria",
-            placeholder=t("choose_barriers")
+            key="entraves_para_categoria"
         )
 
         if st.button(t("save_category")):
@@ -2854,397 +1878,73 @@ if aba_atual == t("tab_barriers"):
         permitir_remover=True
     )
 
-st.markdown("""
-<style>
-@media (min-width: 769px) {
-
-    .fixed-workshop-header .header-foco {
-        padding: 18px 24px !important;
-        border-radius: 22px !important;
-    }
-
-    .fixed-workshop-header .header-title {
-        font-size: 42px !important;
-        line-height: 1 !important;
-        margin-bottom: 6px !important;
-    }
-
-    .fixed-workshop-header .header-subtitle {
-        font-size: 22px !important;
-        line-height: 1.2 !important;
-    }
-
-    div[data-testid="column"] {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
 
 st.markdown("""
 <style>
+/* HEADER COMPACTO E MAIS MODERNO */
 @media (min-width: 769px) {
-
-    .desktop-card-html {
-        min-height: 260px !important;
-        height: 260px !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-        overflow: hidden !important;
-    }
-
-    .desktop-card-html .texto-card {
-        max-height: 145px !important;
-        overflow: hidden !important;
-    }
-
-    .fixed-workshop-header .header-foco {
-        padding: 18px 24px !important;
-        border-radius: 22px !important;
-    }
-
-    .fixed-workshop-header .header-title {
-        font-size: 42px !important;
-        line-height: 1 !important;
-        margin-bottom: 6px !important;
-    }
-
-    .fixed-workshop-header .header-subtitle {
-        font-size: 22px !important;
-        line-height: 1.2 !important;
-    }
-
-    .fixed-workshop-header-spacer {
-        height: 300px !important;
-    }
-
-    div[data-testid="column"] {
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-@media (min-width: 769px) {
-
-    .timer-desktop-layout {
-        display: grid !important;
-        grid-template-columns: 0.85fr 0.55fr 0.35fr 1fr !important;
-        align-items: end !important;
-        gap: 10px !important;
-        margin-top: 10px !important;
-        margin-bottom: 24px !important;
-    }
-
-    .timer-desktop-layout [data-testid="stNumberInput"] {
-        max-width: 280px !important;
-    }
-
-    .timer-desktop-layout [data-testid="stNumberInput"] > div {
-        max-width: 280px !important;
-    }
-
-    .timer-desktop-display {
-        text-align: center !important;
-        padding-bottom: 4px !important;
-    }
-
-    .timer-desktop-display .timer-display {
-        font-size: 52px !important;
-        margin-top: 0 !important;
-    }
-
-    .timer-desktop-display .timer-status {
-        font-size: 17px !important;
-        margin-top: 8px !important;
-    }
-
-    .timer-desktop-button {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        padding-bottom: 0 !important;
-    }
-
-    .timer-desktop-button .stButton > button {
-        min-height: 118px !important;
-        height: 118px !important;
-        width: 118px !important;
-        border-radius: 999px !important;
-        font-size: 54px !important;
-        padding: 0 !important;
-        box-shadow: 0 14px 32px rgba(0,47,95,0.26) !important;
-    }
-
-    .timer-desktop-button .stButton > button p {
-        font-size: 54px !important;
-        line-height: 1 !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-@media (min-width: 769px) {
-    .timer-desktop-display {
-        text-align: left !important;
-        padding-top: 12px !important;
-    }
-
-    .timer-desktop-display .timer-display {
-        text-align: left !important;
-        font-size: 52px !important;
-    }
-
-    .timer-desktop-display .timer-status {
-        text-align: left !important;
-        font-size: 17px !important;
-        white-space: nowrap !important;
-    }
-
-    .timer-desktop-button {
-        justify-content: flex-start !important;
-        padding-top: 0 !important;
-    }
-
-    .timer-desktop-button .stButton > button {
-        margin-left: 0 !important;
-        margin-right: auto !important;
-    }
-
-    .st-key-tempo_foco_no_foco,
-    .st-key-tempo_principais_entraves,
-    div[data-testid="stNumberInput"] {
-        max-width: 320px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-@media (min-width: 769px) {
-    .timer-fixed-pill-global {
-        top: 195px !important;
-        right: 22px !important;
-        bottom: auto !important;
-        transform: none !important;
-        z-index: 2147483600 !important;
-    }
 
     .fixed-workshop-header {
-        width: min(760px, calc(100vw - 360px)) !important;
-        left: calc(50% - 105px) !important;
+        top: 135px !important;
+        width: min(620px, calc(100vw - 360px)) !important;
+        left: calc(50% - 110px) !important;
         transform: translateX(-50%) !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# =========================
-# ABA 3 - HIPÓTESES DE SOLUÇÃO
-# =========================
-
-if aba_atual == t("tab_solutions"):
-
-    st.title(t("tab_solutions"))
-
-    st.markdown(
-        f"""
-<div style="
-    font-size:24px;
-    font-weight:500;
-    color:#222;
-    margin-top:-18px;
-    margin-bottom:10px;
-    opacity:0.92;
-">
-{t("solutions_subtitle")}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        f"""
-<div class="step-card">
-<div class="step-title">{t("under_construction")}</div>
-<div class="step-help">{t("solutions_construction_help")}</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-
-# =========================
-# ABA 4 - VIABILIDADE E IMPACTO
-# =========================
-
-if aba_atual == t("tab_viability"):
-
-    st.title(t("tab_viability"))
-
-    st.markdown(
-        f"""
-<div style="
-    font-size:24px;
-    font-weight:500;
-    color:#222;
-    margin-top:-18px;
-    margin-bottom:10px;
-    opacity:0.92;
-">
-{t("viability_subtitle")}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        f"""
-<div class="step-card">
-<div class="step-title">{t("under_construction")}</div>
-<div class="step-help">{t("viability_construction_help")}</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-
-
-
-st.markdown("""
-<style>
-@media (min-width: 769px) {
-    div[role="radiogroup"] label {
-        padding-left: 12px !important;
-        padding-right: 12px !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        padding: 0 !important;
+        box-shadow: none !important;
     }
 
-    div[role="radiogroup"] label p {
-        font-size: 18px !important;
-        white-space: nowrap !important;
-    }
-}
-
-@media (max-width: 768px) {
-    div[role="radiogroup"] {
-        flex-wrap: wrap !important;
-        justify-content: flex-start !important;
+    .fixed-workshop-header .header-foco {
+        padding: 18px 26px !important;
+        border-radius: 24px !important;
+        min-height: auto !important;
+        box-shadow: 0 14px 34px rgba(0,47,95,0.18) !important;
     }
 
-    div[role="radiogroup"] label {
-        flex: 0 0 auto !important;
-        white-space: nowrap !important;
+    .fixed-workshop-header .header-title {
+        font-size: 28px !important;
+        margin-bottom: 8px !important;
+        line-height: 1 !important;
     }
 
-    div[role="radiogroup"] label p {
-        font-size: 15px !important;
-        white-space: nowrap !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-
-
-st.markdown("""
-<style>
-/* AJUSTE FINO — HEADER FIXO COM 5 ABAS */
-@media (min-width: 769px) {
-    .fixed-workshop-header {
-        top: 160px !important;
+    .fixed-workshop-header .header-subtitle {
+        font-size: 17px !important;
+        line-height: 1.25 !important;
+        opacity: 0.92 !important;
     }
 
     .fixed-workshop-header-spacer {
-        height: 300px !important;
+        height: 190px !important;
     }
 
     .timer-fixed-pill-global {
-        top: 195px !important;
+        top: 150px !important;
     }
 }
 
+/* MOBILE */
 @media (max-width: 768px) {
+
     .fixed-workshop-header {
-        top: 195px !important;
+        top: 180px !important;
+        width: calc(100vw - 22px) !important;
+    }
+
+    .fixed-workshop-header .header-foco {
+        padding: 16px 18px !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 24px !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 15px !important;
     }
 
     .fixed-workshop-header-spacer {
-        height: 390px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""<style>
-@media (max-width: 768px) {
-    .fixed-tabs-container button {
-        min-width: 46% !important;
-        flex: 1 1 46% !important;
-    }
-}
-</style>""", unsafe_allow_html=True)
-
-
-st.markdown("""<style>
-/* MOBILE - 5 ABAS */
-@media (max-width: 768px) {
-
-    .fixed-tabs-container {
-        display:flex !important;
-        flex-wrap:wrap !important;
-        gap:10px !important;
-        align-items:flex-start !important;
-    }
-
-    .fixed-tabs-container button {
-        white-space:nowrap !important;
-        min-width:auto !important;
-        flex:none !important;
-        padding:12px 18px !important;
-        font-size:15px !important;
-    }
-}
-</style>""", unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-
-/* MOBILE - ORGANIZAÇÃO DAS 5 ABAS */
-@media (max-width: 768px){
-
-    .fixed-tabs-container{
-        display:flex !important;
-        flex-wrap:wrap !important;
-        gap:10px !important;
-    }
-
-    .fixed-tabs-container button{
-        width:auto !important;
-        min-width:auto !important;
-        flex:none !important;
-        white-space:nowrap !important;
+        height: 240px !important;
     }
 }
 </style>
