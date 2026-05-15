@@ -907,6 +907,60 @@ div[data-testid="stNumberInput"] > div {
 </style>
 """, unsafe_allow_html=True)
 
+
+st.markdown("""
+<style>
+/* =========================================================
+   BOTÃO FLUTUANTE PARA MOSTRAR/ESCONDER CABEÇALHO FIXO
+   ========================================================= */
+
+.st-key-toggle_cabecalho_fixo {
+    position: fixed !important;
+    top: 16px !important;
+    right: 18px !important;
+    z-index: 2147483647 !important;
+}
+
+.st-key-toggle_cabecalho_fixo .stButton > button {
+    width: auto !important;
+    min-width: 132px !important;
+    min-height: 44px !important;
+    height: 44px !important;
+    padding: 0 14px !important;
+    border-radius: 999px !important;
+    font-size: 14px !important;
+    font-weight: 850 !important;
+    background: #002f5f !important;
+    color: white !important;
+    border: 2px solid #002f5f !important;
+    box-shadow: 0 8px 22px rgba(0,47,95,0.22) !important;
+}
+
+.st-key-toggle_cabecalho_fixo .stButton > button:hover {
+    background: #00447f !important;
+    border-color: #00447f !important;
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    .st-key-toggle_cabecalho_fixo {
+        top: auto !important;
+        right: 10px !important;
+        bottom: 24px !important;
+    }
+
+    .st-key-toggle_cabecalho_fixo .stButton > button {
+        min-width: 92px !important;
+        min-height: 42px !important;
+        height: 42px !important;
+        padding: 0 11px !important;
+        font-size: 12px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 # =========================
 # BANCO
 # =========================
@@ -1720,6 +1774,10 @@ if "editando_foco" not in st.session_state:
     st.session_state.editando_foco = True
 
 
+if "esconder_cabecalho_fixo" not in st.session_state:
+    st.session_state.esconder_cabecalho_fixo = False
+
+
 # =========================
 # ENTRADA POR SENHA / SALA
 # =========================
@@ -1871,6 +1929,24 @@ if aba_atual == t("tab_barriers"):
     )
 
 
+# Botão flutuante para esconder/mostrar cabeçalho fixo
+if aba_atual != t("tab_summary"):
+
+    texto_toggle_cabecalho = (
+        "Mostrar cabeçalho"
+        if st.session_state.esconder_cabecalho_fixo
+        else "Esconder cabeçalho"
+    )
+
+    with st.container(key="toggle_cabecalho_fixo"):
+
+        if st.button(texto_toggle_cabecalho):
+            st.session_state.esconder_cabecalho_fixo = (
+                not st.session_state.esconder_cabecalho_fixo
+            )
+            st.rerun()
+
+
 # =========================
 # HEADER DINÂMICO
 # =========================
@@ -1913,8 +1989,10 @@ if aba_atual == t("tab_summary"):
 
 else:
 
-    st.markdown(
-        f"""
+    if not st.session_state.esconder_cabecalho_fixo:
+
+        st.markdown(
+            f"""
 <div class="fixed-workshop-header">
     <div class="header-foco">
         <div class="header-title">{esc(titulo_header)}</div>
@@ -1923,8 +2001,17 @@ else:
 </div>
 <div class="fixed-workshop-header-spacer"></div>
 """,
-        unsafe_allow_html=True
-    )
+            unsafe_allow_html=True
+        )
+
+    else:
+
+        st.markdown(
+            """
+<div style="height: 42px;"></div>
+""",
+            unsafe_allow_html=True
+        )
 
 if st.session_state.editando_foco:
 
