@@ -2010,17 +2010,25 @@ if aba_atual == t("tab_focus"):
 
     if postits:
 
-        for postit_id, equipe, texto, votos in postits:
+        colunas_postits = (
+            [st.container()]
+            if st.session_state.get("is_mobile", False)
+            else st.columns(3, gap="large")
+        )
 
-            classe_postit = (
-                "postit-votado"
-                if postit_id in st.session_state.postits_votados
-                else "postit"
-            )
+        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
 
-            st.markdown(
-                f"""
-<div class="{classe_postit}">
+            with colunas_postits[i % len(colunas_postits)]:
+
+                classe_postit = (
+                    "postit-votado"
+                    if postit_id in st.session_state.postits_votados
+                    else "postit"
+                )
+
+                st.markdown(
+                    f"""
+<div class="desktop-card-html {classe_postit}">
 <h4>{esc(equipe)}</h4>
 <div class="postit-texto">{esc(texto)}</div>
 <div class="votos">{t("votes")}: {votos}</div>
