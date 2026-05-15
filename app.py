@@ -3165,3 +3165,25 @@ st.markdown("""<style>
     }
 }
 </style>""", unsafe_allow_html=True)
+
+
+st.markdown("""<style>
+/* MOBILE - 5 ABAS */
+@media (max-width: 768px) {
+
+    .fixed-tabs-container {
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:10px !important;
+        align-items:flex-start !important;
+    }
+
+    .fixed-tabs-container button {
+        white-space:nowrap !important;
+        min-width:auto !important;
+        flex:none !important;
+        padding:12px 18px !important;
+        font-size:15px !important;
+    }
+}
+</style>""", unsafe_allow_html=True)
