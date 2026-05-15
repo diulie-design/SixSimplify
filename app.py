@@ -981,8 +981,15 @@ TEXTOS = {
         "tab_summary": "Resumo",
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
+        "tab_solutions": "Hipóteses de Solução",
+        "tab_viability": "Viabilidade e Impacto",
         "focus_subtitle": "Onde queremos chegar",
         "barriers_subtitle": "O que nos impede?",
+        "solutions_subtitle": "Como resolver?",
+        "viability_subtitle": "Por onde já podemos começar?",
+        "under_construction": "Ainda em construção...",
+        "solutions_construction_help": "Essa etapa será utilizada para estruturar hipóteses de solução para os principais entraves identificados.",
+        "viability_construction_help": "Essa etapa será utilizada para avaliar viabilidade, impacto e possíveis quick wins.",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
         "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
@@ -1091,8 +1098,15 @@ TEXTOS = {
         "tab_summary": "Summary",
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
+        "tab_solutions": "Solution Hypotheses",
+        "tab_viability": "Feasibility and Impact",
         "focus_subtitle": "Where we want to go",
         "barriers_subtitle": "What is stopping us?",
+        "solutions_subtitle": "How can we solve it?",
+        "viability_subtitle": "Where can we start already?",
+        "under_construction": "Still under construction...",
+        "solutions_construction_help": "This step will be used to structure solution hypotheses for the main barriers identified.",
+        "viability_construction_help": "This step will be used to assess feasibility, impact, and possible quick wins.",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
@@ -1795,7 +1809,9 @@ aba_atual = st.radio(
     [
         t("tab_summary"),
         t("tab_focus"),
-        t("tab_barriers")
+        t("tab_barriers"),
+        t("tab_solutions"),
+        t("tab_viability")
     ],
     horizontal=True,
     label_visibility="collapsed",
@@ -2958,6 +2974,112 @@ st.markdown("""
         width: min(760px, calc(100vw - 360px)) !important;
         left: calc(50% - 105px) !important;
         transform: translateX(-50%) !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+# =========================
+# ABA 3 - HIPÓTESES DE SOLUÇÃO
+# =========================
+
+if aba_atual == t("tab_solutions"):
+
+    st.title(t("tab_solutions"))
+
+    st.markdown(
+        f"""
+<div style="
+    font-size:24px;
+    font-weight:500;
+    color:#222;
+    margin-top:-18px;
+    margin-bottom:10px;
+    opacity:0.92;
+">
+{t("solutions_subtitle")}
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"""
+<div class="step-card">
+<div class="step-title">{t("under_construction")}</div>
+<div class="step-help">{t("solutions_construction_help")}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+
+# =========================
+# ABA 4 - VIABILIDADE E IMPACTO
+# =========================
+
+if aba_atual == t("tab_viability"):
+
+    st.title(t("tab_viability"))
+
+    st.markdown(
+        f"""
+<div style="
+    font-size:24px;
+    font-weight:500;
+    color:#222;
+    margin-top:-18px;
+    margin-bottom:10px;
+    opacity:0.92;
+">
+{t("viability_subtitle")}
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f"""
+<div class="step-card">
+<div class="step-title">{t("under_construction")}</div>
+<div class="step-help">{t("viability_construction_help")}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+
+
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+    div[role="radiogroup"] label {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    div[role="radiogroup"] label p {
+        font-size: 18px !important;
+        white-space: nowrap !important;
+    }
+}
+
+@media (max-width: 768px) {
+    div[role="radiogroup"] {
+        flex-wrap: wrap !important;
+        justify-content: flex-start !important;
+    }
+
+    div[role="radiogroup"] label {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+    }
+
+    div[role="radiogroup"] label p {
+        font-size: 15px !important;
+        white-space: nowrap !important;
     }
 }
 </style>
