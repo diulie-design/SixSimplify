@@ -90,7 +90,7 @@ h3 {
 /* CABEÇALHO FIXO */
 .fixed-workshop-header {
     position: fixed !important;
-    top: 110px !important;
+    top: 205px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: min(1000px, calc(100vw - 48px)) !important;
@@ -107,7 +107,7 @@ h3 {
 }
 
 .fixed-workshop-header-spacer {
-    height: 285px;
+    height: 390px;
 }
 
 .landing-title {
@@ -526,7 +526,7 @@ textarea::placeholder {
 /* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
 .timer-fixed-pill-global {
     position: fixed !important;
-    top: 345px !important;
+    top: 245px !important;
     right: 22px !important;
     z-index: 2147483647 !important;
     background: rgba(255,255,255,0.98) !important;
@@ -635,14 +635,14 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .fixed-workshop-header {
-        top: 110px !important;
+        top: 205px !important;
         width: calc(100vw - 20px) !important;
         padding: 8px 0 !important;
         border-radius: 26px !important;
     }
 
     .fixed-workshop-header-spacer {
-    height: 190px;
+    height: 390px;
 }
 
     .landing-main {
@@ -878,6 +878,32 @@ div[data-testid="stNumberInput"] > div {
 }
 
     
+
+/* AJUSTE FINAL PARA 5 ABAS FIXAS */
+@media (min-width: 769px) {
+    .fixed-workshop-header {
+        top: 205px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 390px !important;
+    }
+
+    .timer-fixed-pill-global {
+        top: 245px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .fixed-workshop-header {
+        top: 205px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 410px !important;
+    }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -2963,7 +2989,7 @@ st.markdown("""
 <style>
 @media (min-width: 769px) {
     .timer-fixed-pill-global {
-        top: 146px !important;
+        top: 245px !important;
         right: 22px !important;
         bottom: auto !important;
         transform: none !important;
@@ -3080,6 +3106,36 @@ st.markdown("""
     div[role="radiogroup"] label p {
         font-size: 15px !important;
         white-space: nowrap !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""
+<style>
+/* OVERRIDE FINAL — 5 ABAS */
+@media (min-width: 769px) {
+    .fixed-workshop-header {
+        top: 205px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 390px !important;
+    }
+
+    .timer-fixed-pill-global {
+        top: 245px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .fixed-workshop-header {
+        top: 205px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 410px !important;
     }
 }
 </style>
