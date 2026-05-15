@@ -208,7 +208,7 @@ div[role="radiogroup"] {
     z-index: 2147483100 !important;
     display: flex !important;
     flex-wrap: wrap !important;
-    gap: 8px !important;
+    gap: 3px !important;
     margin-bottom: 0 !important;
     background: rgba(247, 249, 252, 0.94) !important;
     backdrop-filter: blur(10px) !important;
@@ -636,7 +636,7 @@ div[data-testid="stNumberInput"] > div {
 
     .fixed-workshop-header {
         top: 160px !important;
-        width: calc(100vw - 20px) !important;
+        width: calc(100vw - 4px) !important;
         padding: 8px 0 !important;
         border-radius: 26px !important;
     }
@@ -671,7 +671,7 @@ div[data-testid="stNumberInput"] > div {
 
     div[role="radiogroup"] {
         top: 8px !important;
-        width: calc(100vw - 20px) !important;
+        width: calc(100vw - 4px) !important;
         gap: 6px !important;
         padding: 8px !important;
         border-radius: 22px !important;
@@ -752,8 +752,8 @@ div[data-testid="stNumberInput"] > div {
         bottom: 105px !important;
         right: 10px !important;
         padding: 9px 12px !important;
-        gap: 8px !important;
-        max-width: calc(100vw - 20px) !important;
+        gap: 3px !important;
+        max-width: calc(100vw - 4px) !important;
     }
 
     .timer-fixed-pill-label {
@@ -3419,12 +3419,12 @@ st.markdown("""
 
     div[role="radiogroup"] {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        column-gap: 8px !important;
-        row-gap: 8px !important;
+        grid-template-columns: 1.35fr 1.35fr !important;
+        column-gap: 3px !important;
+        row-gap: 3px !important;
         align-items: stretch !important;
         justify-items: stretch !important;
-        width: calc(100vw - 20px) !important;
+        width: calc(100vw - 4px) !important;
         padding: 8px !important;
         box-sizing: border-box !important;
     }
@@ -3471,7 +3471,7 @@ st.markdown("""
 
     div[role="radiogroup"] {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
+        grid-template-columns: 1.35fr 1.35fr !important;
         gap: 10px !important;
     }
 
@@ -3521,9 +3521,9 @@ st.markdown("""
     div[role="radiogroup"] {
         display: grid !important;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-        gap: 8px !important;
-        width: calc(100vw - 20px) !important;
-        max-width: calc(100vw - 20px) !important;
+        gap: 3px !important;
+        width: calc(100vw - 4px) !important;
+        max-width: calc(100vw - 4px) !important;
         box-sizing: border-box !important;
         padding: 8px !important;
         align-items: stretch !important;
@@ -3633,8 +3633,8 @@ st.markdown("""
         align-items: center !important;
         justify-content: center !important;
 
-        height: 88px !important;
-        min-height: 88px !important;
+        height: 72px !important;
+        min-height: 72px !important;
 
         border-radius: 24px !important;
 
