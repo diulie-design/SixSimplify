@@ -2008,7 +2008,14 @@ else:
 
         st.markdown(
             """
-<div style="height: 42px;"></div>
+<style>
+/* Esconde também as abas fixas quando o cabeçalho está oculto */
+div[role="radiogroup"]{
+    display:none !important;
+}
+</style>
+
+<div style="height: 20px;"></div>
 """,
             unsafe_allow_html=True
         )
@@ -3882,6 +3889,17 @@ st.markdown("""
     .fixed-workshop-header-spacer {
         height: 330px !important;
     }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* Garante que as abas reapareçam quando o cabeçalho estiver ativo */
+body:not(.hide-fixed-header) div[role="radiogroup"]{
+    visibility: visible !important;
 }
 </style>
 """, unsafe_allow_html=True)
