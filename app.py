@@ -634,7 +634,7 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .fixed-workshop-header-spacer {
-    height: 285px;
+    height: 190px;
 }
 
     .landing-main {
@@ -2539,3 +2539,32 @@ if aba_atual == t("tab_barriers"):
         sala_atual,
         permitir_remover=True
     )
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+
+    .fixed-workshop-header .header-foco {
+        padding: 18px 24px !important;
+        border-radius: 22px !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 42px !important;
+        line-height: 1 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 22px !important;
+        line-height: 1.2 !important;
+    }
+
+    div[data-testid="column"] {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
