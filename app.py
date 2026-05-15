@@ -99,7 +99,7 @@ h3 {
 }
 
 .fixed-workshop-header-spacer {
-    height: 325px;
+    height: 285px;
 }
 
 .landing-title {
@@ -610,16 +610,20 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .header-foco {
-        padding: 28px 20px;
-        border-radius: 24px;
+        padding: 16px 18px !important;
+        border-radius: 22px;
+        min-height: auto !important;
     }
 
     .header-title {
-        font-size: 32px;
+        font-size: 28px !important;
+        line-height: 1.05 !important;
+        margin-bottom: 6px !important;
     }
 
     .header-subtitle {
-        font-size: 19px;
+        font-size: 16px !important;
+        line-height: 1.25 !important;
     }
 
     .fixed-workshop-header {
@@ -630,7 +634,7 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .fixed-workshop-header-spacer {
-    height: 325px;
+    height: 285px;
 }
 
     .landing-main {
@@ -819,16 +823,39 @@ div[data-testid="stNumberInput"] > div {
         max-width: 235px !important;
     }
 
-    /* Relógio de iniciar/parar mais para a esquerda no celular */
+    /* Relógio de iniciar/parar mais para a esquerda e mais para baixo no celular */
     .st-key-timer_area_foco_no_foco .stButton > button,
     .st-key-timer_area_principais_entraves .stButton > button {
-        margin-left: -18px !important;
+        margin-left: -58px !important;
+        margin-top: 22px !important;
         margin-right: auto !important;
     }
 
     /* remove qualquer espaço exagerado entre campo de tempo e relógio */
     div[data-testid="stHorizontalBlock"] {
         gap: 0px !important;
+    }
+
+    /* AJUSTE FINAL MOBILE: header compacto e relógio reposicionado */
+    .fixed-workshop-header .header-foco {
+        padding: 16px 18px !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 28px !important;
+        line-height: 1.05 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 16px !important;
+        line-height: 1.25 !important;
+    }
+
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        margin-left: -58px !important;
+        margin-top: 22px !important;
     }
 
 }
