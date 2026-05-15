@@ -3604,3 +3604,61 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   MOBILE — ABAS MAIS BONITAS + HEADER MAIS BAIXO
+   ========================================================= */
+@media (max-width: 768px) {
+
+    /* desce o bloco azul para não cortar */
+    .fixed-workshop-header {
+        top: 245px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 320px !important;
+    }
+
+    /* botões */
+    div[role="radiogroup"] label:nth-child(3),
+    div[role="radiogroup"] label:nth-child(4),
+    div[role="radiogroup"] label:nth-of-type(3),
+    div[role="radiogroup"] label:nth-of-type(4) {
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        height: 88px !important;
+        min-height: 88px !important;
+
+        border-radius: 24px !important;
+
+        padding: 10px 14px !important;
+
+        overflow: hidden !important;
+    }
+
+    div[role="radiogroup"] label:nth-child(3) p,
+    div[role="radiogroup"] label:nth-child(4) p,
+    div[role="radiogroup"] label:nth-of-type(3) p,
+    div[role="radiogroup"] label:nth-of-type(4) p {
+
+        font-size: 12px !important;
+        line-height: 1.15 !important;
+
+        white-space: normal !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+
+        text-align: center !important;
+
+        max-width: 100% !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
