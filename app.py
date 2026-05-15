@@ -3662,3 +3662,139 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   MOBILE FINAL — ABAS ESTÁVEIS, SEM BUG AO CLICAR
+   ========================================================= */
+@media (max-width: 768px) {
+
+    /* Container geral das abas */
+    div[role="radiogroup"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+
+        width: calc(100vw - 20px) !important;
+        max-width: calc(100vw - 20px) !important;
+
+        padding: 8px !important;
+        box-sizing: border-box !important;
+
+        align-items: stretch !important;
+        justify-items: stretch !important;
+    }
+
+    /* Todos os botões em estado normal e selecionado */
+    div[role="radiogroup"] label,
+    div[role="radiogroup"] label:has(input:checked),
+    div[role="radiogroup"] label:nth-child(3),
+    div[role="radiogroup"] label:nth-child(4),
+    div[role="radiogroup"] label:nth-child(5),
+    div[role="radiogroup"] label:nth-of-type(3),
+    div[role="radiogroup"] label:nth-of-type(4),
+    div[role="radiogroup"] label:nth-of-type(5) {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+
+        height: 74px !important;
+        min-height: 74px !important;
+
+        padding: 10px 8px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+
+        border-radius: 20px !important;
+
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+
+        text-align: center !important;
+        overflow: hidden !important;
+
+        flex: unset !important;
+        grid-column: auto !important;
+    }
+
+    /* A linha que você queria: Entraves + Hipóteses lado a lado */
+    div[role="radiogroup"] label:nth-child(3),
+    div[role="radiogroup"] label:nth-child(4),
+    div[role="radiogroup"] label:nth-of-type(3),
+    div[role="radiogroup"] label:nth-of-type(4) {
+        height: 82px !important;
+        min-height: 82px !important;
+    }
+
+    /* Último botão ocupa a largura inteira */
+    div[role="radiogroup"] label:nth-child(5),
+    div[role="radiogroup"] label:nth-of-type(5) {
+        grid-column: 1 / span 2 !important;
+        height: 66px !important;
+        min-height: 66px !important;
+    }
+
+    /* Texto sempre controlado, inclusive selecionado */
+    div[role="radiogroup"] label p,
+    div[role="radiogroup"] label:has(input:checked) p,
+    div[role="radiogroup"] label:nth-child(3) p,
+    div[role="radiogroup"] label:nth-child(4) p,
+    div[role="radiogroup"] label:nth-child(5) p,
+    div[role="radiogroup"] label:nth-of-type(3) p,
+    div[role="radiogroup"] label:nth-of-type(4) p,
+    div[role="radiogroup"] label:nth-of-type(5) p {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        text-align: center !important;
+
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        hyphens: none !important;
+
+        font-size: 13px !important;
+        line-height: 1.12 !important;
+        font-weight: 850 !important;
+    }
+
+    /* Dá um pouco mais de respiro nos textos longos */
+    div[role="radiogroup"] label:nth-child(3) p,
+    div[role="radiogroup"] label:nth-child(4) p,
+    div[role="radiogroup"] label:nth-of-type(3) p,
+    div[role="radiogroup"] label:nth-of-type(4) p {
+        font-size: 12.5px !important;
+        line-height: 1.12 !important;
+    }
+
+    /* Bolinha do rádio: menor e sem roubar layout */
+    div[role="radiogroup"] label > div:first-child {
+        margin-right: 4px !important;
+        flex: 0 0 auto !important;
+        transform: scale(0.82) !important;
+    }
+
+    /* Evita que Streamlit mude largura quando seleciona */
+    div[role="radiogroup"] label:has(input:checked) {
+        transform: none !important;
+    }
+
+    /* Header azul desce um pouco e não é coberto */
+    .fixed-workshop-header {
+        top: 245px !important;
+        width: calc(100vw - 20px) !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 330px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
