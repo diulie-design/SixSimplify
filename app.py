@@ -1915,6 +1915,28 @@ aba_atual = st.radio(
 )
 
 
+
+# CSS condicional para esconder/mostrar abas junto com o cabeçalho
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+div[role="radiogroup"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
+
+
 # Pílula fixa do cronômetro da aba atual
 if aba_atual == t("tab_focus"):
     mostrar_pilula_timer_fixa(
@@ -2062,6 +2084,15 @@ if aba_atual == t("tab_summary"):
 # =========================
 
 if aba_atual == t("tab_summary"):
+
+    if st.session_state.get("is_mobile", False):
+
+        st.markdown(
+            """
+<div class="summary-mobile-spacer"></div>
+""",
+            unsafe_allow_html=True
+        )
 
     st.title(t("summary_title"))
 
@@ -3905,3 +3936,41 @@ body:not(.hide-fixed-header) div[role="radiogroup"]{
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   MOBILE — RESUMO MAIS BAIXO + ABAS OCULTÁVEIS
+   ========================================================= */
+@media (max-width: 768px) {
+
+    .summary-mobile-spacer {
+        height: 150px !important;
+    }
+
+    /* Cabeçalho normal da aba Resumo mais baixo/sem corte */
+    .header-foco {
+        margin-top: 18px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+@media (max-width: 768px) {
+    .summary-mobile-spacer {
+        height: 16px !important;
+    }
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
