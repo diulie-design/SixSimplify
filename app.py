@@ -227,7 +227,7 @@ div[role="radiogroup"] label {
     color: #002f5f;
     font-weight: 800;
     flex: 1 1 auto !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     white-space: nowrap !important;
 }
 
@@ -462,7 +462,7 @@ textarea::placeholder {
     padding: 0 !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     margin-left: auto !important;
     margin-right: auto !important;
     box-shadow: 0 10px 24px rgba(0,47,95,0.22) !important;
@@ -568,7 +568,7 @@ textarea::placeholder {
     color: white !important;
     display: flex !important;
     align-items: center !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     font-size: 26px !important;
     box-shadow: 0 8px 18px rgba(0,47,95,0.22) !important;
 }
@@ -981,6 +981,7 @@ TEXTOS = {
         "tab_summary": "Resumo",
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
+        "focus_subtitle": "Onde queremos chegar",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
         "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
@@ -1089,6 +1090,7 @@ TEXTOS = {
         "tab_summary": "Summary",
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
+        "focus_subtitle": "Where we want to go",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
@@ -2814,19 +2816,19 @@ st.markdown("""
 
     .timer-desktop-layout {
         display: grid !important;
-        grid-template-columns: 1.2fr 1fr 0.6fr !important;
+        grid-template-columns: 0.85fr 0.55fr 0.35fr 1fr !important;
         align-items: end !important;
-        gap: 34px !important;
+        gap: 10px !important;
         margin-top: 10px !important;
         margin-bottom: 24px !important;
     }
 
     .timer-desktop-layout [data-testid="stNumberInput"] {
-        max-width: 420px !important;
+        max-width: 280px !important;
     }
 
     .timer-desktop-layout [data-testid="stNumberInput"] > div {
-        max-width: 420px !important;
+        max-width: 280px !important;
     }
 
     .timer-desktop-display {
@@ -2847,7 +2849,7 @@ st.markdown("""
     .timer-desktop-button {
         display: flex !important;
         align-items: center !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         padding-bottom: 0 !important;
     }
 
