@@ -1999,6 +1999,15 @@ else:
 
 if aba_atual == t("tab_summary"):
 
+    if st.session_state.get("is_mobile", False):
+
+        st.markdown(
+            """
+<div class="summary-header-mobile-spacer"></div>
+""",
+            unsafe_allow_html=True
+        )
+
     st.markdown(
         f"""
 <div class="header-foco">
@@ -3968,6 +3977,38 @@ if st.session_state.get("esconder_cabecalho_fixo", False):
 @media (max-width: 768px) {
     .summary-mobile-spacer {
         height: 16px !important;
+    }
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   MOBILE — ESPAÇO ANTES DO HEADER DO RESUMO
+   ========================================================= */
+@media (max-width: 768px) {
+    .summary-header-mobile-spacer {
+        height: 165px !important;
+        min-height: 165px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+@media (max-width: 768px) {
+    .summary-header-mobile-spacer {
+        height: 16px !important;
+        min-height: 16px !important;
     }
 }
 </style>
