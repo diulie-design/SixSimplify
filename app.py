@@ -2341,6 +2341,22 @@ if aba_atual == t("tab_barriers"):
 
     st.title(t("barriers_title"))
 
+    st.markdown(
+        f"""
+<div style="
+    font-size:24px;
+    font-weight:500;
+    color:#222;
+    margin-top:-18px;
+    margin-bottom:10px;
+    opacity:0.92;
+">
+{t("barriers_subtitle")}
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
     mostrar_cronometro_compartilhado(
         sala_atual,
         "principais_entraves",
@@ -2920,6 +2936,28 @@ st.markdown("""
     .st-key-tempo_principais_entraves,
     div[data-testid="stNumberInput"] {
         max-width: 320px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+    .timer-fixed-pill-global {
+        top: 146px !important;
+        right: 22px !important;
+        bottom: auto !important;
+        transform: none !important;
+        z-index: 2147483600 !important;
+    }
+
+    .fixed-workshop-header {
+        width: min(760px, calc(100vw - 360px)) !important;
+        left: calc(50% - 105px) !important;
+        transform: translateX(-50%) !important;
     }
 }
 </style>
