@@ -361,7 +361,7 @@ textarea::placeholder {
     background: #fff6b8;
     padding: 26px;
     border-radius: 22px;
-    min-height: 190px;
+    min-height: 260px;
     margin-bottom: 20px;
     color: #1f2937;
     border: 2px solid #f0dc7a;
@@ -2291,7 +2291,12 @@ if aba_atual == t("tab_barriers"):
                 unsafe_allow_html=True
             )
 
-            colunas_mural = st.columns(1)
+            # Desktop: 3 colunas | Mobile: 1 coluna
+            colunas_mural = (
+                st.columns(3)
+                if not st.session_state.get("is_mobile", False)
+                else st.columns(1)
+            )
 
             for _, (entrave_id, texto, votos) in enumerate(lista_entraves):
 
@@ -2307,7 +2312,7 @@ if aba_atual == t("tab_barriers"):
     background:{cor_postit};
     padding:24px;
     border-radius:22px;
-    min-height:130px;
+    min-height:240px;
     margin-bottom:14px;
     color:#111827;
     border:{borda};
@@ -2415,7 +2420,7 @@ if aba_atual == t("tab_barriers"):
     background:{cor_ranking};
     padding:26px;
     border-radius:22px;
-    min-height:130px;
+    min-height:240px;
     margin-bottom:16px;
     color:#111827;
     border:3px solid {borda_ranking};
