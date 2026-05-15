@@ -982,6 +982,7 @@ TEXTOS = {
         "tab_focus": "Foco no Foco",
         "tab_barriers": "Principais Entraves",
         "focus_subtitle": "Onde queremos chegar",
+        "barriers_subtitle": "O que nos impede?",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
         "summary_step_help": "Aqui aparecem os principais resultados consolidados das próximas abas.",
@@ -1091,6 +1092,7 @@ TEXTOS = {
         "tab_focus": "Focus on Focus",
         "tab_barriers": "Main Barriers",
         "focus_subtitle": "Where we want to go",
+        "barriers_subtitle": "What is stopping us?",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
         "summary_step_help": "This page consolidates the key outcomes from the following tabs.",
@@ -1984,11 +1986,12 @@ if aba_atual == t("tab_focus"):
     st.markdown(
         f"""
 <div style="
-    font-size:28px;
-    font-weight:600;
+    font-size:24px;
+    font-weight:500;
     color:#222;
-    margin-top:-18px;
-    margin-bottom:10px;
+    margin-top:-22px;
+    margin-bottom:4px;
+    opacity:0.92;
 ">
 {t("focus_subtitle")}
 </div>
