@@ -1097,7 +1097,7 @@ TEXTOS = {
         "category_created": "Categoria criada!",
         "category_after_top3": "A categorização aparecerá após existirem entraves no Top 3.",
         "created_categories": "Categorias criadas",
-        "category_caps": "CATEGORIA",
+        "category_caps": "O QUE NOS IMPEDE?<br>CATEGORIA",
         "no_categories": "Nenhuma categoria criada ainda.",
         "first_place": "1º lugar",
         "second_place": "2º lugar",
