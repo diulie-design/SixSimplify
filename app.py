@@ -3406,3 +3406,56 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   CORREÇÃO FINAL MOBILE — ABAS EM DUAS COLUNAS
+   Garante Principais Entraves ao lado de Hipóteses de Solução
+   ========================================================= */
+@media (max-width: 768px) {
+
+    div[role="radiogroup"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        column-gap: 8px !important;
+        row-gap: 8px !important;
+        align-items: stretch !important;
+        justify-items: stretch !important;
+        width: calc(100vw - 20px) !important;
+        padding: 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    div[role="radiogroup"] label {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        flex: unset !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 9px 7px !important;
+        box-sizing: border-box !important;
+        white-space: normal !important;
+    }
+
+    div[role="radiogroup"] label p {
+        width: 100% !important;
+        text-align: center !important;
+        white-space: normal !important;
+        font-size: 13px !important;
+        line-height: 1.05 !important;
+        font-weight: 850 !important;
+    }
+
+    /* Último botão ocupa uma linha mais elegante */
+    div[role="radiogroup"] label:nth-of-type(5) {
+        grid-column: 1 / span 2 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
