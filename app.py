@@ -3507,3 +3507,100 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   CORREÇÃO DEFINITIVA MOBILE — ABAS 2x2 LEGÍVEIS
+   ========================================================= */
+@media (max-width: 768px) {
+
+    /* container das abas */
+    div[role="radiogroup"] {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+        gap: 8px !important;
+        width: calc(100vw - 20px) !important;
+        max-width: calc(100vw - 20px) !important;
+        box-sizing: border-box !important;
+        padding: 8px !important;
+        align-items: stretch !important;
+        justify-items: stretch !important;
+    }
+
+    /* cada botão */
+    div[role="radiogroup"] label {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        padding: 8px 6px !important;
+        border-radius: 18px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        overflow: hidden !important;
+        flex: none !important;
+    }
+
+    /* esconde a bolinha do radio no celular para liberar espaço */
+    div[role="radiogroup"] label input,
+    div[role="radiogroup"] label span:first-child,
+    div[role="radiogroup"] label [data-testid="stWidgetLabel"] {
+        display: none !important;
+    }
+
+    /* texto dos botões */
+    div[role="radiogroup"] label p {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        text-align: center !important;
+        white-space: normal !important;
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+        hyphens: none !important;
+        font-size: 13px !important;
+        line-height: 1.08 !important;
+        font-weight: 850 !important;
+    }
+
+    /* deixa a dupla crítica exatamente lado a lado e com altura boa */
+    div[role="radiogroup"] label:nth-child(3),
+    div[role="radiogroup"] label:nth-child(4),
+    div[role="radiogroup"] label:nth-of-type(3),
+    div[role="radiogroup"] label:nth-of-type(4) {
+        height: 70px !important;
+        min-height: 70px !important;
+    }
+
+    div[role="radiogroup"] label:nth-child(3) p,
+    div[role="radiogroup"] label:nth-child(4) p,
+    div[role="radiogroup"] label:nth-of-type(3) p,
+    div[role="radiogroup"] label:nth-of-type(4) p {
+        font-size: 12px !important;
+        line-height: 1.08 !important;
+    }
+
+    /* último botão ocupa a largura toda */
+    div[role="radiogroup"] label:nth-child(5),
+    div[role="radiogroup"] label:nth-of-type(5) {
+        grid-column: 1 / span 2 !important;
+        height: 56px !important;
+        min-height: 56px !important;
+    }
+
+    div[role="radiogroup"] label:nth-child(5) p,
+    div[role="radiogroup"] label:nth-of-type(5) p {
+        font-size: 13px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
