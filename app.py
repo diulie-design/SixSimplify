@@ -1599,7 +1599,7 @@ else:
         else t("focus_default")
     )
 
-if aba_selecionada == t("tab_summary"):
+if aba_atual == t("tab_summary"):
 
     st.markdown(
         f"""
