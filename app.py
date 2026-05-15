@@ -1220,7 +1220,7 @@ TEXTOS = {
         "category_created": "Category created!",
         "category_after_top3": "Categorization will appear after there are barriers in the Top 3.",
         "created_categories": "Created categories",
-        "category_caps": ""WHAT IS BLOCKING US?<br>CATEGORY",
+        "category_caps": "WHAT IS STOPPING US?<br>CATEGORY",
         "no_categories": "No categories created yet.",
         "first_place": "1st place",
         "second_place": "2nd place",
