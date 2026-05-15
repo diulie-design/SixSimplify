@@ -1097,7 +1097,7 @@ TEXTOS = {
         "category_created": "Categoria criada!",
         "category_after_top3": "A categorização aparecerá após existirem entraves no Top 3.",
         "created_categories": "Categorias criadas",
-        "category_caps": "CATEGORIA",
+        "category_caps": "O QUE NOS IMPEDE?<br>CATEGORIA",
         "no_categories": "Nenhuma categoria criada ainda.",
         "first_place": "1º lugar",
         "second_place": "2º lugar",
@@ -1220,7 +1220,7 @@ TEXTOS = {
         "category_created": "Category created!",
         "category_after_top3": "Categorization will appear after there are barriers in the Top 3.",
         "created_categories": "Created categories",
-        "category_caps": "CATEGORY",
+        "category_caps": "WHAT IS STOPPING US?<br>CATEGORY",
         "no_categories": "No categories created yet.",
         "first_place": "1st place",
         "second_place": "2nd place",
@@ -3245,6 +3245,116 @@ st.markdown("""
         min-width:auto !important;
         flex:none !important;
         white-space:nowrap !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   AJUSTE VISUAL FINAL — BLOCO AZUL MAIS COMPACTO
+   ========================================================= */
+
+/* Blocos azuis de resultado, categorias, ranking e resumo */
+.resultado-final-header {
+    padding: 22px 24px !important;
+    border-radius: 22px !important;
+    margin-top: 14px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 8px 22px rgba(0,47,95,0.16) !important;
+}
+
+.resultado-label {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+    letter-spacing: 1.6px !important;
+    margin-bottom: 8px !important;
+}
+
+.resultado-texto {
+    font-size: 30px !important;
+    line-height: 1.12 !important;
+}
+
+/* Header fixo azul menor no desktop */
+@media (min-width: 769px) {
+    .fixed-workshop-header {
+        top: 138px !important;
+        width: min(640px, calc(100vw - 360px)) !important;
+        left: calc(50% - 105px) !important;
+        transform: translateX(-50%) !important;
+        padding: 0 !important;
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .fixed-workshop-header .header-foco {
+        padding: 18px 24px !important;
+        border-radius: 22px !important;
+        margin-bottom: 0 !important;
+        box-shadow: 0 10px 26px rgba(0,47,95,0.17) !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 30px !important;
+        line-height: 1.05 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 17px !important;
+        line-height: 1.25 !important;
+        font-weight: 650 !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 220px !important;
+    }
+
+    .timer-fixed-pill-global {
+        top: 150px !important;
+    }
+}
+
+/* Mobile: mantém legível, mas um pouco mais compacto */
+@media (max-width: 768px) {
+    .resultado-final-header {
+        padding: 18px 16px !important;
+        border-radius: 20px !important;
+        margin-top: 12px !important;
+        margin-bottom: 18px !important;
+    }
+
+    .resultado-label {
+        font-size: 11px !important;
+        letter-spacing: 1.2px !important;
+        margin-bottom: 7px !important;
+    }
+
+    .resultado-texto {
+        font-size: 24px !important;
+        line-height: 1.15 !important;
+    }
+
+    .fixed-workshop-header .header-foco {
+        padding: 14px 16px !important;
+        border-radius: 20px !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 24px !important;
+        line-height: 1.05 !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 15px !important;
+        line-height: 1.2 !important;
     }
 }
 </style>
