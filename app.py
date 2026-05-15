@@ -565,6 +565,29 @@ textarea::placeholder {
     box-shadow: 0 8px 18px rgba(0,47,95,0.22) !important;
 }
 
+
+/* AJUSTES DO CRONÔMETRO */
+.st-key-timer_area_foco_no_foco .stButton > button,
+.st-key-timer_area_principais_entraves .stButton > button {
+    margin-left: 8px !important;
+    margin-right: auto !important;
+}
+
+/* aproxima os botões -/+ do campo de minutos */
+div[data-testid="stNumberInput"] {
+    max-width: 360px !important;
+}
+
+div[data-testid="stNumberInput"] > div {
+    max-width: 360px !important;
+}
+
+/* no cronômetro, deixa o campo mais compacto */
+.st-key-tempo_foco_no_foco,
+.st-key-tempo_principais_entraves {
+    max-width: 360px !important;
+}
+
 /* CELULAR */
 @media (max-width: 768px) {
 
@@ -780,6 +803,32 @@ textarea::placeholder {
     .st-key-timer_area_foco_no_foco .stButton > button p,
     .st-key-timer_area_principais_entraves .stButton > button p {
         font-size: 38px !important;
+    }
+
+    /* Campo de minutos mais compacto no celular */
+    div[data-testid="stNumberInput"] {
+        max-width: 235px !important;
+    }
+
+    div[data-testid="stNumberInput"] > div {
+        max-width: 235px !important;
+    }
+
+    .st-key-tempo_foco_no_foco,
+    .st-key-tempo_principais_entraves {
+        max-width: 235px !important;
+    }
+
+    /* Relógio de iniciar/parar mais para a esquerda no celular */
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        margin-left: -18px !important;
+        margin-right: auto !important;
+    }
+
+    /* remove qualquer espaço exagerado entre campo de tempo e relógio */
+    div[data-testid="stHorizontalBlock"] {
+        gap: 0px !important;
     }
 
 }
@@ -1126,7 +1175,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         unsafe_allow_html=True
     )
 
-    col_tempo, col_relogio = st.columns([7, 1])
+    col_tempo, col_relogio = st.columns([5, 1])
 
     with col_tempo:
 
@@ -1202,7 +1251,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         # Tempo principal, logo abaixo do botão do cronômetro
         st.markdown(
             f"""
-<div class="timer-display">⏱️ {minutos:02d}:{segundos:02d}</div>
+<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
 <div class="timer-status">{t("timer_running")}</div>
 """,
             unsafe_allow_html=True
@@ -1233,7 +1282,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
         st.markdown(
             f"""
-<div class="timer-display">⏱️ {int(minutos_configurados):02d}:00</div>
+<div class="timer-display">{int(minutos_configurados):02d}:00</div>
 <div class="timer-status">{t("timer_click_start")}</div>
 """,
             unsafe_allow_html=True
