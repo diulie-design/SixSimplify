@@ -82,7 +82,7 @@ h3 {
 /* CABEÇALHO FIXO */
 .fixed-workshop-header {
     position: fixed !important;
-    top: 12px !important;
+    top: 110px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: min(1000px, calc(100vw - 48px)) !important;
@@ -99,7 +99,7 @@ h3 {
 }
 
 .fixed-workshop-header-spacer {
-    height: 220px;
+    height: 325px;
 }
 
 .landing-title {
@@ -190,11 +190,23 @@ h3 {
     color: white !important;
 }
 
-/* NAVEGAÇÃO COM BOTÕES */
+/* NAVEGAÇÃO COM BOTÕES FIXA */
 div[role="radiogroup"] {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
+    position: fixed !important;
+    top: 12px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(1000px, calc(100vw - 48px)) !important;
+    z-index: 2147483100 !important;
+    display: flex !important;
+    gap: 8px !important;
+    margin-bottom: 0 !important;
+    background: rgba(247, 249, 252, 0.94) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    padding: 10px !important;
+    border-radius: 28px !important;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.10) !important;
 }
 
 div[role="radiogroup"] label {
@@ -205,6 +217,8 @@ div[role="radiogroup"] label {
     min-height: 54px;
     color: #002f5f;
     font-weight: 800;
+    flex: 1 1 0 !important;
+    justify-content: center !important;
 }
 
 div[role="radiogroup"] label:has(input:checked) {
@@ -501,7 +515,7 @@ textarea::placeholder {
 /* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
 .timer-fixed-pill-global {
     position: fixed !important;
-    top: 235px !important;
+    top: 345px !important;
     right: 22px !important;
     z-index: 2147483647 !important;
     background: rgba(255,255,255,0.98) !important;
@@ -583,15 +597,15 @@ textarea::placeholder {
     }
 
     .fixed-workshop-header {
-        top: 8px !important;
+        top: 110px !important;
         width: calc(100vw - 20px) !important;
         padding: 8px 0 !important;
         border-radius: 26px !important;
     }
 
     .fixed-workshop-header-spacer {
-        height: 205px;
-    }
+    height: 325px;
+}
 
     .landing-main {
         font-size: 40px;
@@ -618,12 +632,16 @@ textarea::placeholder {
     }
 
     div[role="radiogroup"] {
-        gap: 2px;
+        top: 8px !important;
+        width: calc(100vw - 20px) !important;
+        gap: 2px !important;
+        padding: 8px !important;
+        border-radius: 22px !important;
     }
 
     div[role="radiogroup"] label {
-        min-height: 54px;
-        padding: 12px 10px;
+        min-height: 50px;
+        padding: 10px 8px;
         border-radius: 16px;
     }
 
