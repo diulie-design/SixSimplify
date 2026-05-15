@@ -2029,6 +2029,44 @@ if aba_atual == t("tab_summary"):
     )
 
 
+
+    # =========================
+    # HIPÓTESES DE SOLUÇÃO
+    # =========================
+
+    st.markdown("## Hipóteses de Solução")
+
+    st.markdown(
+        """
+<div class="resultado-final-header">
+<div class="resultado-label">COMO RESOLVER?</div>
+<div class="resultado-texto">
+Ainda em construção...
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    # =========================
+    # VIABILIDADE E IMPACTO
+    # =========================
+
+    st.markdown("## Viabilidade e Impacto")
+
+    st.markdown(
+        """
+<div class="resultado-final-header">
+<div class="resultado-label">POR ONDE JÁ PODEMOS COMEÇAR?</div>
+<div class="resultado-texto">
+Ainda em construção...
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+
 # =========================
 # ABA 1 - FOCO NO FOCO
 # =========================
