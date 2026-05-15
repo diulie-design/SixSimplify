@@ -2010,15 +2010,10 @@ if aba_atual == t("tab_focus"):
 
     if postits:
 
-        colunas_postits = (
-            [st.container()]
-            if st.session_state.get("is_mobile", False)
-            else st.columns(3, gap="large")
-        )
+        if st.session_state.get("is_mobile", False):
 
-        for i, (postit_id, equipe, texto, votos) in enumerate(postits):
-
-            with colunas_postits[i % len(colunas_postits)]:
+            # Mobile: mantém 1 post-it por vez
+            for postit_id, equipe, texto, votos in postits:
 
                 classe_postit = (
                     "postit-votado"
@@ -2028,49 +2023,119 @@ if aba_atual == t("tab_focus"):
 
                 st.markdown(
                     f"""
-<div class="desktop-card-html {classe_postit}">
+<div class="{classe_postit}">
 <h4>{esc(equipe)}</h4>
 <div class="postit-texto">{esc(texto)}</div>
 <div class="votos">{t("votes")}: {votos}</div>
 </div>
 """,
-                unsafe_allow_html=True
-            )
+                    unsafe_allow_html=True
+                )
 
-            if postit_id in st.session_state.postits_votados:
+                if postit_id in st.session_state.postits_votados:
 
-                if st.button(
-                    t("undo_vote"),
-                    key=f"desfazer_{postit_id}"
-                ):
-                    cursor.execute("""
-                    UPDATE postits
-                    SET votos = CASE
-                        WHEN votos > 0 THEN votos - 1
-                        ELSE 0
-                    END
-                    WHERE id = ? AND sala = ?
-                    """, (postit_id, sala_atual))
+                    if st.button(
+                        t("undo_vote"),
+                        key=f"desfazer_{postit_id}"
+                    ):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = CASE
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ? AND sala = ?
+                        """, (postit_id, sala_atual))
 
-                    conn.commit()
-                    st.session_state.postits_votados.remove(postit_id)
-                    st.rerun()
+                        conn.commit()
+                        st.session_state.postits_votados.remove(postit_id)
+                        st.rerun()
 
-            else:
+                else:
 
-                if st.button(
-                    t("vote"),
-                    key=f"votar_{postit_id}"
-                ):
-                    cursor.execute("""
-                    UPDATE postits
-                    SET votos = votos + 1
-                    WHERE id = ? AND sala = ?
-                    """, (postit_id, sala_atual))
+                    if st.button(
+                        t("vote"),
+                        key=f"votar_{postit_id}"
+                    ):
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = votos + 1
+                        WHERE id = ? AND sala = ?
+                        """, (postit_id, sala_atual))
 
-                    conn.commit()
-                    st.session_state.postits_votados.add(postit_id)
-                    st.rerun()
+                        conn.commit()
+                        st.session_state.postits_votados.add(postit_id)
+                        st.rerun()
+
+        else:
+
+            # Desktop: post-it + botão ficam dentro da mesma coluna
+            colunas_postits = st.columns(3, gap="large")
+
+            for i, (postit_id, equipe, texto, votos) in enumerate(postits):
+
+                with colunas_postits[i % len(colunas_postits)]:
+
+                    classe_postit = (
+                        "postit-votado"
+                        if postit_id in st.session_state.postits_votados
+                        else "postit"
+                    )
+
+                    st.markdown(
+                        f"""
+<div class="desktop-card-html {classe_postit}" style="
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:260px;
+">
+<div>
+<h4>{esc(equipe)}</h4>
+<div class="postit-texto texto-card">{esc(texto)}</div>
+</div>
+<div class="votos">{t("votes")}: {votos}</div>
+</div>
+""",
+                        unsafe_allow_html=True
+                    )
+
+                    if postit_id in st.session_state.postits_votados:
+
+                        if st.button(
+                            t("undo_vote"),
+                            key=f"desfazer_{postit_id}",
+                            use_container_width=True
+                        ):
+                            cursor.execute("""
+                            UPDATE postits
+                            SET votos = CASE
+                                WHEN votos > 0 THEN votos - 1
+                                ELSE 0
+                            END
+                            WHERE id = ? AND sala = ?
+                            """, (postit_id, sala_atual))
+
+                            conn.commit()
+                            st.session_state.postits_votados.remove(postit_id)
+                            st.rerun()
+
+                    else:
+
+                        if st.button(
+                            t("vote"),
+                            key=f"votar_{postit_id}",
+                            use_container_width=True
+                        ):
+                            cursor.execute("""
+                            UPDATE postits
+                            SET votos = votos + 1
+                            WHERE id = ? AND sala = ?
+                            """, (postit_id, sala_atual))
+
+                            conn.commit()
+                            st.session_state.postits_votados.add(postit_id)
+                            st.rerun()
 
     else:
         st.info(t("no_postit"))
