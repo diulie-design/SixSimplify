@@ -199,6 +199,7 @@ div[role="radiogroup"] {
     width: min(1000px, calc(100vw - 48px)) !important;
     z-index: 2147483100 !important;
     display: flex !important;
+    flex-wrap: wrap !important;
     gap: 8px !important;
     margin-bottom: 0 !important;
     background: rgba(247, 249, 252, 0.94) !important;
@@ -217,8 +218,9 @@ div[role="radiogroup"] label {
     min-height: 54px;
     color: #002f5f;
     font-weight: 800;
-    flex: 1 1 0 !important;
+    flex: 1 1 auto !important;
     justify-content: center !important;
+    white-space: nowrap !important;
 }
 
 div[role="radiogroup"] label:has(input:checked) {
@@ -231,6 +233,7 @@ div[role="radiogroup"] label p {
     font-size: 21px !important;
     font-weight: 800 !important;
     line-height: 1.1 !important;
+    white-space: nowrap !important;
 }
 
 div[role="radiogroup"] label:has(input:checked) p {
@@ -589,11 +592,11 @@ textarea::placeholder {
     }
 
     .header-title {
-        font-size: 36px;
+        font-size: 32px;
     }
 
     .header-subtitle {
-        font-size: 22px;
+        font-size: 19px;
     }
 
     .fixed-workshop-header {
@@ -634,21 +637,28 @@ textarea::placeholder {
     div[role="radiogroup"] {
         top: 8px !important;
         width: calc(100vw - 20px) !important;
-        gap: 2px !important;
+        gap: 6px !important;
         padding: 8px !important;
         border-radius: 22px !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
     }
 
     div[role="radiogroup"] label {
-        min-height: 50px;
-        padding: 10px 8px;
+        min-height: 46px;
+        padding: 9px 10px;
         border-radius: 16px;
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        max-width: 100% !important;
     }
 
     div[role="radiogroup"] label p {
-        font-size: 17px !important;
+        font-size: 16px !important;
         line-height: 1.05 !important;
         font-weight: 800 !important;
+        white-space: nowrap !important;
     }
 
     div[data-testid="stHorizontalBlock"] {
@@ -1589,8 +1599,22 @@ else:
         else t("focus_default")
     )
 
-st.markdown(
-    f"""
+if aba_selecionada == t("tab_summary"):
+
+    st.markdown(
+        f"""
+<div class="header-foco">
+    <div class="header-title">{esc(titulo_header)}</div>
+    <div class="header-subtitle">{esc(subtitulo_header)}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+else:
+
+    st.markdown(
+        f"""
 <div class="fixed-workshop-header">
     <div class="header-foco">
         <div class="header-title">{esc(titulo_header)}</div>
@@ -1599,8 +1623,8 @@ st.markdown(
 </div>
 <div class="fixed-workshop-header-spacer"></div>
 """,
-    unsafe_allow_html=True
-)
+        unsafe_allow_html=True
+    )
 
 if st.session_state.editando_foco:
 
