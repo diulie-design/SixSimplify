@@ -90,7 +90,7 @@ h3 {
 /* CABEÇALHO FIXO */
 .fixed-workshop-header {
     position: fixed !important;
-    top: 110px !important;
+    top: 160px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     width: min(1000px, calc(100vw - 48px)) !important;
@@ -107,7 +107,7 @@ h3 {
 }
 
 .fixed-workshop-header-spacer {
-    height: 285px;
+    height: 300px;
 }
 
 .landing-title {
@@ -526,7 +526,7 @@ textarea::placeholder {
 /* PÍLULA FIXA GLOBAL DO CRONÔMETRO */
 .timer-fixed-pill-global {
     position: fixed !important;
-    top: 345px !important;
+    top: 195px !important;
     right: 22px !important;
     z-index: 2147483647 !important;
     background: rgba(255,255,255,0.98) !important;
@@ -635,14 +635,14 @@ div[data-testid="stNumberInput"] > div {
     }
 
     .fixed-workshop-header {
-        top: 110px !important;
+        top: 160px !important;
         width: calc(100vw - 20px) !important;
         padding: 8px 0 !important;
         border-radius: 26px !important;
     }
 
     .fixed-workshop-header-spacer {
-    height: 190px;
+    height: 300px;
 }
 
     .landing-main {
@@ -878,6 +878,32 @@ div[data-testid="stNumberInput"] > div {
 }
 
     
+
+/* AJUSTE FINAL PARA 5 ABAS FIXAS */
+@media (min-width: 769px) {
+    .fixed-workshop-header {
+        top: 160px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 300px !important;
+    }
+
+    .timer-fixed-pill-global {
+        top: 195px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .fixed-workshop-header {
+        top: 160px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 300px !important;
+    }
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -983,6 +1009,12 @@ TEXTOS = {
         "tab_barriers": "Principais Entraves",
         "tab_solutions": "Hipóteses de Solução",
         "tab_viability": "Viabilidade e Impacto",
+    "summary_solution_label": "COMO RESOLVER?",
+    "summary_solution_text": "Ainda em construção...",
+
+    "summary_viability_label": "POR ONDE JÁ PODEMOS COMEÇAR?",
+    "summary_viability_text": "Ainda em construção...",
+
         "focus_subtitle": "Onde queremos chegar",
         "barriers_subtitle": "O que nos impede?",
         "solutions_subtitle": "Como resolver?",
@@ -1100,6 +1132,12 @@ TEXTOS = {
         "tab_barriers": "Main Barriers",
         "tab_solutions": "Solution Hypotheses",
         "tab_viability": "Feasibility and Impact",
+    "summary_solution_label": "HOW CAN WE SOLVE IT?",
+    "summary_solution_text": "Still under construction...",
+
+    "summary_viability_label": "WHERE CAN WE START?",
+    "summary_viability_text": "Still under construction...",
+
         "focus_subtitle": "Where we want to go",
         "barriers_subtitle": "What is stopping us?",
         "solutions_subtitle": "How can we solve it?",
@@ -1991,6 +2029,44 @@ if aba_atual == t("tab_summary"):
     )
 
 
+
+    # =========================
+    # HIPÓTESES DE SOLUÇÃO
+    # =========================
+
+    st.markdown("## Hipóteses de Solução")
+
+    st.markdown(
+        """
+<div class="resultado-final-header">
+<div class="resultado-label">COMO RESOLVER?</div>
+<div class="resultado-texto">
+Ainda em construção...
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    # =========================
+    # VIABILIDADE E IMPACTO
+    # =========================
+
+    st.markdown("## Viabilidade e Impacto")
+
+    st.markdown(
+        """
+<div class="resultado-final-header">
+<div class="resultado-label">POR ONDE JÁ PODEMOS COMEÇAR?</div>
+<div class="resultado-texto">
+Ainda em construção...
+</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+
 # =========================
 # ABA 1 - FOCO NO FOCO
 # =========================
@@ -2843,7 +2919,7 @@ st.markdown("""
     }
 
     .fixed-workshop-header-spacer {
-        height: 210px !important;
+        height: 300px !important;
     }
 
     div[data-testid="column"] {
@@ -2963,7 +3039,7 @@ st.markdown("""
 <style>
 @media (min-width: 769px) {
     .timer-fixed-pill-global {
-        top: 146px !important;
+        top: 195px !important;
         right: 22px !important;
         bottom: auto !important;
         transform: none !important;
@@ -3080,6 +3156,95 @@ st.markdown("""
     div[role="radiogroup"] label p {
         font-size: 15px !important;
         white-space: nowrap !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+
+
+st.markdown("""
+<style>
+/* AJUSTE FINO — HEADER FIXO COM 5 ABAS */
+@media (min-width: 769px) {
+    .fixed-workshop-header {
+        top: 160px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 300px !important;
+    }
+
+    .timer-fixed-pill-global {
+        top: 195px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .fixed-workshop-header {
+        top: 195px !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 390px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+st.markdown("""<style>
+@media (max-width: 768px) {
+    .fixed-tabs-container button {
+        min-width: 46% !important;
+        flex: 1 1 46% !important;
+    }
+}
+</style>""", unsafe_allow_html=True)
+
+
+st.markdown("""<style>
+/* MOBILE - 5 ABAS */
+@media (max-width: 768px) {
+
+    .fixed-tabs-container {
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:10px !important;
+        align-items:flex-start !important;
+    }
+
+    .fixed-tabs-container button {
+        white-space:nowrap !important;
+        min-width:auto !important;
+        flex:none !important;
+        padding:12px 18px !important;
+        font-size:15px !important;
+    }
+}
+</style>""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+
+/* MOBILE - ORGANIZAÇÃO DAS 5 ABAS */
+@media (max-width: 768px){
+
+    .fixed-tabs-container{
+        display:flex !important;
+        flex-wrap:wrap !important;
+        gap:10px !important;
+    }
+
+    .fixed-tabs-container button{
+        width:auto !important;
+        min-width:auto !important;
+        flex:none !important;
+        white-space:nowrap !important;
     }
 }
 </style>
