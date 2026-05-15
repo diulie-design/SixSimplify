@@ -7,15 +7,6 @@ from streamlit_autorefresh import st_autorefresh
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
 
 # =========================
-# AUTOREFRESH GLOBAL
-# =========================
-
-st_autorefresh(
-    interval=5000,
-    key="refresh_global"
-)
-
-# =========================
 # ESTILO
 # =========================
 
@@ -1042,44 +1033,20 @@ else:
 
 
 # =========================
-# HEADER DINÂMICO
+# FOCO GERAL
 # =========================
 
-vencedores_header, _, empate_header = buscar_mais_votados(
-    sala_atual
+tema_header = (
+    st.session_state.foco_salvo
+    if st.session_state.foco_salvo
+    else t("focus_default")
 )
-
-foco_no_foco_header = ""
-
-if vencedores_header and not empate_header:
-    foco_no_foco_header = vencedores_header[0][2]
-
-# Detecta aba atual
-query_params = st.query_params
-
-aba_atual = query_params.get("tab", "0")
-
-# Aba 2 = Principais Entraves
-if aba_atual == "2" and foco_no_foco_header:
-
-    titulo_header = t("focus_on_focus")
-    subtitulo_header = foco_no_foco_header
-
-else:
-
-    titulo_header = t("focus")
-
-    subtitulo_header = (
-        st.session_state.foco_salvo
-        if st.session_state.foco_salvo
-        else t("focus_default")
-    )
 
 st.markdown(
     f"""
 <div class="header-foco">
-<div class="header-title">{esc(titulo_header)}</div>
-<div class="header-subtitle">{esc(subtitulo_header)}</div>
+<div class="header-title">Foco</div>
+<div class="header-subtitle">{esc(tema_header)}</div>
 </div>
 """,
     unsafe_allow_html=True
@@ -1881,58 +1848,46 @@ with aba2:
 
 st.markdown("""
 <style>
-/* HEADER COMPACTO E MAIS MODERNO */
+/* AJUSTE VISUAL MAIS COMPACTO DO HEADER AZUL */
 @media (min-width: 769px) {
 
     .fixed-workshop-header {
-        top: 135px !important;
-        width: min(620px, calc(100vw - 360px)) !important;
-        left: calc(50% - 110px) !important;
+        top: 145px !important;
+        width: min(760px, calc(100vw - 320px)) !important;
+        left: calc(50% - 95px) !important;
         transform: translateX(-50%) !important;
-        background: transparent !important;
-        backdrop-filter: none !important;
-        padding: 0 !important;
-        box-shadow: none !important;
     }
 
     .fixed-workshop-header .header-foco {
-        padding: 18px 26px !important;
+        padding: 20px 28px !important;
         border-radius: 24px !important;
         min-height: auto !important;
-        box-shadow: 0 14px 34px rgba(0,47,95,0.18) !important;
     }
 
     .fixed-workshop-header .header-title {
-        font-size: 28px !important;
-        margin-bottom: 8px !important;
+        font-size: 32px !important;
         line-height: 1 !important;
+        margin-bottom: 8px !important;
     }
 
     .fixed-workshop-header .header-subtitle {
-        font-size: 17px !important;
+        font-size: 18px !important;
         line-height: 1.25 !important;
-        opacity: 0.92 !important;
     }
 
     .fixed-workshop-header-spacer {
-        height: 190px !important;
-    }
-
-    .timer-fixed-pill-global {
-        top: 150px !important;
+        height: 215px !important;
     }
 }
 
-/* MOBILE */
 @media (max-width: 768px) {
 
     .fixed-workshop-header {
-        top: 180px !important;
-        width: calc(100vw - 22px) !important;
+        top: 185px !important;
     }
 
-    .fixed-workshop-header .header-foco {
-        padding: 16px 18px !important;
+    .fixed-workshop-header-spacer {
+        height: 260px !important;
     }
 
     .fixed-workshop-header .header-title {
@@ -1941,10 +1896,6 @@ st.markdown("""
 
     .fixed-workshop-header .header-subtitle {
         font-size: 15px !important;
-    }
-
-    .fixed-workshop-header-spacer {
-        height: 240px !important;
     }
 }
 </style>
