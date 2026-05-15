@@ -3459,3 +3459,51 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   AJUSTE FINAL MOBILE — BOTÕES SEM QUEBRAR TEXTO
+   ========================================================= */
+@media (max-width: 768px) {
+
+    div[role="radiogroup"] {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+
+    div[role="radiogroup"] label {
+        min-height: 72px !important;
+        border-radius: 22px !important;
+        padding: 10px 12px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    div[role="radiogroup"] label p {
+        font-size: 13px !important;
+        line-height: 1.15 !important;
+        white-space: normal !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+        text-align: center !important;
+    }
+
+    /* Entraves + Hipóteses lado a lado */
+    div[role="radiogroup"] label:nth-of-type(3),
+    div[role="radiogroup"] label:nth-of-type(4) {
+        min-height: 92px !important;
+    }
+
+    /* Viabilidade ocupa largura toda */
+    div[role="radiogroup"] label:nth-of-type(5) {
+        grid-column: 1 / span 2 !important;
+        min-height: 70px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
