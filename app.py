@@ -1219,65 +1219,9 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         unsafe_allow_html=True
     )
 
-    col_tempo, col_relogio = st.columns([5, 1])
-
-    with col_tempo:
-
-        minutos_configurados = st.number_input(
-            t("timer_minutes"),
-            min_value=1,
-            max_value=120,
-            value=max(int(duracao // 60), 1),
-            key=f"tempo_{aba_timer}"
-        )
-
-    with col_relogio:
-
-        with st.container(key=f"timer_area_{aba_timer}"):
-
-            botao_relogio = "⏹️" if ativo else "⏱️"
-
-            if st.button(
-                botao_relogio,
-                key=f"botao_timer_{aba_timer}"
-            ):
-
-                if ativo:
-                    cursor.execute("""
-                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                    VALUES (?, ?, NULL, ?, 0)
-                    ON CONFLICT(sala, aba)
-                    DO UPDATE SET
-                        inicio = NULL,
-                        duracao = excluded.duracao,
-                        ativo = 0
-                    """, (
-                        sala_atual,
-                        aba_timer,
-                        int(minutos_configurados * 60)
-                    ))
-
-                    conn.commit()
-                    st.rerun()
-
-                else:
-                    cursor.execute("""
-                    INSERT INTO timers (sala, aba, inicio, duracao, ativo)
-                    VALUES (?, ?, ?, ?, 1)
-                    ON CONFLICT(sala, aba)
-                    DO UPDATE SET
-                        inicio = excluded.inicio,
-                        duracao = excluded.duracao,
-                        ativo = 1
-                    """, (
-                        sala_atual,
-                        aba_timer,
-                        time.time(),
-                        int(minutos_configurados * 60)
-                    ))
-
-                    conn.commit()
-                    st.rerun()
+    tempo_restante = None
+    minutos = max(int(duracao // 60), 1)
+    segundos = 0
 
     if ativo and inicio:
 
@@ -1292,14 +1236,185 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
         minutos = tempo_restante // 60
         segundos = tempo_restante % 60
 
-        # Tempo principal, logo abaixo do botão do cronômetro
-        st.markdown(
-            f"""
+    if st.session_state.get("is_mobile", False):
+
+        col_tempo, col_relogio = st.columns([5, 1])
+
+        with col_tempo:
+
+            minutos_configurados = st.number_input(
+                t("timer_minutes"),
+                min_value=1,
+                max_value=120,
+                value=max(int(duracao // 60), 1),
+                key=f"tempo_{aba_timer}"
+            )
+
+        with col_relogio:
+
+            with st.container(key=f"timer_area_{aba_timer}"):
+
+                botao_relogio = "⏹️" if ativo else "⏱️"
+
+                if st.button(
+                    botao_relogio,
+                    key=f"botao_timer_{aba_timer}"
+                ):
+
+                    if ativo:
+                        cursor.execute("""
+                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                        VALUES (?, ?, NULL, ?, 0)
+                        ON CONFLICT(sala, aba)
+                        DO UPDATE SET
+                            inicio = NULL,
+                            duracao = excluded.duracao,
+                            ativo = 0
+                        """, (
+                            sala_atual,
+                            aba_timer,
+                            int(minutos_configurados * 60)
+                        ))
+
+                        conn.commit()
+                        st.rerun()
+
+                    else:
+                        cursor.execute("""
+                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                        VALUES (?, ?, ?, ?, 1)
+                        ON CONFLICT(sala, aba)
+                        DO UPDATE SET
+                            inicio = excluded.inicio,
+                            duracao = excluded.duracao,
+                            ativo = 1
+                        """, (
+                            sala_atual,
+                            aba_timer,
+                            time.time(),
+                            int(minutos_configurados * 60)
+                        ))
+
+                        conn.commit()
+                        st.rerun()
+
+        if ativo and inicio:
+
+            st.markdown(
+                f"""
 <div class="timer-display">{minutos:02d}:{segundos:02d}</div>
 <div class="timer-status">{t("timer_running")}</div>
 """,
-            unsafe_allow_html=True
-        )
+                unsafe_allow_html=True
+            )
+
+        else:
+
+            st.markdown(
+                f"""
+<div class="timer-display">{int(minutos_configurados):02d}:00</div>
+<div class="timer-status">{t("timer_click_start")}</div>
+""",
+                unsafe_allow_html=True
+            )
+
+    else:
+
+        st.markdown('<div class="timer-desktop-layout">', unsafe_allow_html=True)
+
+        col_tempo, col_display, col_relogio = st.columns([1.2, 1, 0.6])
+
+        with col_tempo:
+
+            minutos_configurados = st.number_input(
+                t("timer_minutes"),
+                min_value=1,
+                max_value=120,
+                value=max(int(duracao // 60), 1),
+                key=f"tempo_{aba_timer}"
+            )
+
+        with col_display:
+
+            if ativo and inicio:
+
+                st.markdown(
+                    f"""
+<div class="timer-desktop-display">
+<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
+<div class="timer-status">{t("timer_running")}</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+            else:
+
+                st.markdown(
+                    f"""
+<div class="timer-desktop-display">
+<div class="timer-display">{int(minutos_configurados):02d}:00</div>
+<div class="timer-status">{t("timer_click_start")}</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+        with col_relogio:
+
+            st.markdown('<div class="timer-desktop-button">', unsafe_allow_html=True)
+
+            with st.container(key=f"timer_area_{aba_timer}"):
+
+                botao_relogio = "⏹️" if ativo else "⏱️"
+
+                if st.button(
+                    botao_relogio,
+                    key=f"botao_timer_{aba_timer}"
+                ):
+
+                    if ativo:
+                        cursor.execute("""
+                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                        VALUES (?, ?, NULL, ?, 0)
+                        ON CONFLICT(sala, aba)
+                        DO UPDATE SET
+                            inicio = NULL,
+                            duracao = excluded.duracao,
+                            ativo = 0
+                        """, (
+                            sala_atual,
+                            aba_timer,
+                            int(minutos_configurados * 60)
+                        ))
+
+                        conn.commit()
+                        st.rerun()
+
+                    else:
+                        cursor.execute("""
+                        INSERT INTO timers (sala, aba, inicio, duracao, ativo)
+                        VALUES (?, ?, ?, ?, 1)
+                        ON CONFLICT(sala, aba)
+                        DO UPDATE SET
+                            inicio = excluded.inicio,
+                            duracao = excluded.duracao,
+                            ativo = 1
+                        """, (
+                            sala_atual,
+                            aba_timer,
+                            time.time(),
+                            int(minutos_configurados * 60)
+                        ))
+
+                        conn.commit()
+                        st.rerun()
+
+            st.markdown("</div>", unsafe_allow_html=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    if ativo and inicio:
 
         st.progress(
             tempo_restante / int(duracao)
@@ -1321,17 +1436,6 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
             conn.commit()
             st.error(t("timer_finished"))
             st.rerun()
-
-    else:
-
-        st.markdown(
-            f"""
-<div class="timer-display">{int(minutos_configurados):02d}:00</div>
-<div class="timer-status">{t("timer_click_start")}</div>
-""",
-            unsafe_allow_html=True
-        )
-
 
 
 def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
@@ -2697,6 +2801,69 @@ st.markdown("""
     div[data-testid="column"] {
         padding-left: 10px !important;
         padding-right: 10px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+
+    .timer-desktop-layout {
+        display: grid !important;
+        grid-template-columns: 1.2fr 1fr 0.6fr !important;
+        align-items: end !important;
+        gap: 34px !important;
+        margin-top: 10px !important;
+        margin-bottom: 24px !important;
+    }
+
+    .timer-desktop-layout [data-testid="stNumberInput"] {
+        max-width: 420px !important;
+    }
+
+    .timer-desktop-layout [data-testid="stNumberInput"] > div {
+        max-width: 420px !important;
+    }
+
+    .timer-desktop-display {
+        text-align: center !important;
+        padding-bottom: 4px !important;
+    }
+
+    .timer-desktop-display .timer-display {
+        font-size: 52px !important;
+        margin-top: 0 !important;
+    }
+
+    .timer-desktop-display .timer-status {
+        font-size: 17px !important;
+        margin-top: 8px !important;
+    }
+
+    .timer-desktop-button {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding-bottom: 0 !important;
+    }
+
+    .timer-desktop-button .stButton > button {
+        min-height: 118px !important;
+        height: 118px !important;
+        width: 118px !important;
+        border-radius: 999px !important;
+        font-size: 54px !important;
+        padding: 0 !important;
+        box-shadow: 0 14px 32px rgba(0,47,95,0.26) !important;
+    }
+
+    .timer-desktop-button .stButton > button p {
+        font-size: 54px !important;
+        line-height: 1 !important;
     }
 }
 </style>
