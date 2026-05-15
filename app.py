@@ -1009,6 +1009,12 @@ TEXTOS = {
         "tab_barriers": "Principais Entraves",
         "tab_solutions": "Hipóteses de Solução",
         "tab_viability": "Viabilidade e Impacto",
+    "summary_solution_label": "COMO RESOLVER?",
+    "summary_solution_text": "Ainda em construção...",
+
+    "summary_viability_label": "POR ONDE JÁ PODEMOS COMEÇAR?",
+    "summary_viability_text": "Ainda em construção...",
+
         "focus_subtitle": "Onde queremos chegar",
         "barriers_subtitle": "O que nos impede?",
         "solutions_subtitle": "Como resolver?",
@@ -1126,6 +1132,12 @@ TEXTOS = {
         "tab_barriers": "Main Barriers",
         "tab_solutions": "Solution Hypotheses",
         "tab_viability": "Feasibility and Impact",
+    "summary_solution_label": "HOW CAN WE SOLVE IT?",
+    "summary_solution_text": "Still under construction...",
+
+    "summary_viability_label": "WHERE CAN WE START?",
+    "summary_viability_text": "Still under construction...",
+
         "focus_subtitle": "Where we want to go",
         "barriers_subtitle": "What is stopping us?",
         "solutions_subtitle": "How can we solve it?",
@@ -3143,3 +3155,13 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+st.markdown("""<style>
+@media (max-width: 768px) {
+    .fixed-tabs-container button {
+        min-width: 46% !important;
+        flex: 1 1 46% !important;
+    }
+}
+</style>""", unsafe_allow_html=True)
