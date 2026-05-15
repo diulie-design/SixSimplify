@@ -1322,9 +1322,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
     else:
 
-        st.markdown('<div class="timer-desktop-layout">', unsafe_allow_html=True)
-
-        col_tempo, col_display, col_relogio = st.columns([1.2, 1, 0.6])
+        col_tempo, col_display, col_relogio, col_espaco = st.columns([1.05, 0.58, 0.32, 1.55])
 
         with col_tempo:
 
@@ -1413,8 +1411,6 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
                         st.rerun()
 
             st.markdown("</div>", unsafe_allow_html=True)
-
-        st.markdown("</div>", unsafe_allow_html=True)
 
     if ativo and inicio:
 
@@ -1984,6 +1980,21 @@ if aba_atual == t("tab_summary"):
 if aba_atual == t("tab_focus"):
 
     st.title(t("focus_on_focus"))
+
+    st.markdown(
+        f"""
+<div style="
+    font-size:28px;
+    font-weight:600;
+    color:#222;
+    margin-top:-18px;
+    margin-bottom:10px;
+">
+{t("focus_subtitle")}
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     st.caption(f"{t('current_room')}: {sala_atual}")
 
@@ -2866,6 +2877,46 @@ st.markdown("""
     .timer-desktop-button .stButton > button p {
         font-size: 54px !important;
         line-height: 1 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+    .timer-desktop-display {
+        text-align: left !important;
+        padding-top: 12px !important;
+    }
+
+    .timer-desktop-display .timer-display {
+        text-align: left !important;
+        font-size: 52px !important;
+    }
+
+    .timer-desktop-display .timer-status {
+        text-align: left !important;
+        font-size: 17px !important;
+        white-space: nowrap !important;
+    }
+
+    .timer-desktop-button {
+        justify-content: flex-start !important;
+        padding-top: 0 !important;
+    }
+
+    .timer-desktop-button .stButton > button {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
+
+    .st-key-tempo_foco_no_foco,
+    .st-key-tempo_principais_entraves,
+    div[data-testid="stNumberInput"] {
+        max-width: 320px !important;
     }
 }
 </style>
