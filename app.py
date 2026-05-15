@@ -741,7 +741,7 @@ div[data-testid="stNumberInput"] > div {
 
     .timer-fixed-pill-global {
         top: auto !important;
-        bottom: 18px !important;
+        bottom: 105px !important;
         right: 10px !important;
         padding: 9px 12px !important;
         gap: 8px !important;
@@ -775,7 +775,7 @@ div[data-testid="stNumberInput"] > div {
     }
     .timer-floating-pill {
         top: auto;
-        bottom: 18px;
+        bottom: 105px;
         right: 10px;
         padding: 9px 12px 9px 12px;
         gap: 8px;
@@ -856,6 +856,15 @@ div[data-testid="stNumberInput"] > div {
     .st-key-timer_area_principais_entraves .stButton > button {
         margin-left: -58px !important;
         margin-top: 22px !important;
+    }
+
+    /* Mantém a pílula do cronômetro acima dos ícones flutuantes do Streamlit */
+    .timer-fixed-pill-global {
+        bottom: 105px !important;
+    }
+
+    .timer-floating-pill {
+        bottom: 105px !important;
     }
 
 }
@@ -2092,6 +2101,13 @@ if aba_atual == t("tab_barriers"):
 
     equipe_entrave = st.session_state.nome_equipe_salvo
 
+    if "limpar_campo_entrave" not in st.session_state:
+        st.session_state["limpar_campo_entrave"] = False
+
+    if st.session_state["limpar_campo_entrave"]:
+        st.session_state["campo_entrave"] = ""
+        st.session_state["limpar_campo_entrave"] = False
+
     novo_entrave = st.text_area(
         t("new_barrier"),
         placeholder=t("barrier_placeholder"),
@@ -2117,6 +2133,7 @@ if aba_atual == t("tab_barriers"):
             ))
 
             conn.commit()
+            st.session_state["limpar_campo_entrave"] = True
             st.success(t("barrier_added"))
             st.rerun()
 
