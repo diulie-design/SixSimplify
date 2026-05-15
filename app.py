@@ -2020,39 +2020,41 @@ div[role="radiogroup"]{
             unsafe_allow_html=True
         )
 
-if st.session_state.editando_foco:
+if aba_atual == t("tab_summary"):
 
-    foco_digitado = st.text_input(
-        label="campo_foco",
-        value=st.session_state.foco_salvo,
-        placeholder=t("focus_default"),
-        key="campo_foco",
-        label_visibility="collapsed"
-    )
+    if st.session_state.editando_foco:
 
-    if st.button(t("save_focus")):
+        foco_digitado = st.text_input(
+            label="campo_foco",
+            value=st.session_state.foco_salvo,
+            placeholder=t("focus_default"),
+            key="campo_foco",
+            label_visibility="collapsed"
+        )
 
-        if foco_digitado.strip():
-            st.session_state.foco_salvo = foco_digitado.strip()
+        if st.button(t("save_focus")):
 
-            cursor.execute("""
-            INSERT INTO salas (sala, foco)
-            VALUES (?, ?)
-            ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
-            """, (sala_atual, st.session_state.foco_salvo))
+            if foco_digitado.strip():
+                st.session_state.foco_salvo = foco_digitado.strip()
 
-            conn.commit()
+                cursor.execute("""
+                INSERT INTO salas (sala, foco)
+                VALUES (?, ?)
+                ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
+                """, (sala_atual, st.session_state.foco_salvo))
 
-            st.session_state.editando_foco = False
+                conn.commit()
+
+                st.session_state.editando_foco = False
+                st.rerun()
+            else:
+                st.warning(t("focus_required"))
+
+    else:
+
+        if st.button(t("edit_focus")):
+            st.session_state.editando_foco = True
             st.rerun()
-        else:
-            st.warning(t("focus_required"))
-
-else:
-
-    if st.button(t("edit_focus")):
-        st.session_state.editando_foco = True
-        st.rerun()
 
 
 # =========================
