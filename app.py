@@ -1600,11 +1600,55 @@ if st.session_state.sala is None:
         placeholder=t("room_placeholder")
     )
 
+    equipe_url = st.query_params.get("equipe", "")
+    lider_url = st.query_params.get("lider", "")
+
+    equipe_login = ""
+    lider_login = ""
+
+    if equipe_url:
+
+        st.markdown(
+            """
+<div class="step-card">
+<div class="step-title">Equipe já identificada</div>
+<div class="step-help">Confirme ou edite sua equipe antes de entrar novamente.</div>
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+        equipe_login = st.text_input(
+            t("team_name"),
+            value=equipe_url,
+            placeholder=t("team_placeholder"),
+            key="equipe_login"
+        )
+
+        lider_login = st.text_input(
+            t("leader_name"),
+            value=lider_url,
+            placeholder=t("leader_placeholder"),
+            key="lider_login"
+        )
+
     if st.button(t("enter_button")):
         if senha_sala.strip():
             st.session_state.sala = senha_sala.strip()
             st.session_state.postits_votados = set()
             st.session_state.entraves_votados = set()
+
+            if equipe_url:
+                st.session_state.nome_equipe_salvo = equipe_login.strip()
+                st.session_state.lider_equipe_salvo = lider_login.strip()
+                st.session_state.editando_equipe = False
+
+                if equipe_login.strip():
+                    st.query_params["equipe"] = equipe_login.strip()
+
+                if lider_login.strip():
+                    st.query_params["lider"] = lider_login.strip()
+
             st.rerun()
         else:
             st.warning(t("password_required"))
@@ -1612,6 +1656,13 @@ if st.session_state.sala is None:
     st.stop()
 
 sala_atual = st.session_state.sala
+
+if st.query_params.get("equipe", "") and not st.session_state.get("nome_equipe_salvo", ""):
+    st.session_state.nome_equipe_salvo = st.query_params.get("equipe", "")
+    st.session_state.editando_equipe = False
+
+if st.query_params.get("lider", "") and not st.session_state.get("lider_equipe_salvo", ""):
+    st.session_state.lider_equipe_salvo = st.query_params.get("lider", "")
 
 cursor.execute(
     "SELECT foco FROM salas WHERE sala = ?",
@@ -1864,9 +1915,16 @@ if aba_atual == t("tab_focus"):
 
         if st.button(t("save_team")):
 
-            st.session_state.nome_equipe_salvo = nome_equipe_digitado
-            st.session_state.lider_equipe_salvo = lider_equipe_digitado
+            st.session_state.nome_equipe_salvo = nome_equipe_digitado.strip()
+            st.session_state.lider_equipe_salvo = lider_equipe_digitado.strip()
             st.session_state.editando_equipe = False
+
+            if nome_equipe_digitado.strip():
+                st.query_params["equipe"] = nome_equipe_digitado.strip()
+
+            if lider_equipe_digitado.strip():
+                st.query_params["lider"] = lider_equipe_digitado.strip()
+
             st.rerun()
 
     else:
