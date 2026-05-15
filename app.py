@@ -6,6 +6,14 @@ from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
 
+# Detecta dispositivo mobile
+user_agent = st.context.headers.get("User-Agent", "")
+st.session_state["is_mobile"] = any(
+    termo in user_agent.lower()
+    for termo in ["iphone", "android", "mobile"]
+)
+
+
 # =========================
 # AUTOREFRESH GLOBAL
 # =========================
@@ -1471,24 +1479,24 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
             unsafe_allow_html=True
         )
 
-        for item_categoria in itens_categoria:
+        colunas_categoria = (
+            [st.container()]
+            if st.session_state.get("is_mobile", False)
+            else st.columns(3, gap="large")
+        )
+
+        for i, item_categoria in enumerate(itens_categoria):
 
             categoria_id = item_categoria[0]
             equipe_cat = item_categoria[1]
             texto_cat = item_categoria[2]
             votos_cat = item_categoria[3]
 
-            if permitir_remover:
-                col_categoria1, col_categoria2 = st.columns([9, 1])
-            else:
-                col_categoria1 = st.container()
-                col_categoria2 = None
-
-            with col_categoria1:
+            with colunas_categoria[i % len(colunas_categoria)]:
 
                 st.markdown(
                     f"""
-<div style="
+<div class="desktop-card-html" style="
     background:#eaf2fb;
     padding:24px;
     border-radius:22px;
@@ -1504,7 +1512,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
 ">
 {t("team_label")}: {esc(equipe_cat)} • {votos_cat} {t("votes").lower()}
 </div>
-<div style="
+<div class="texto-card" style="
     color:#111827;
     font-size:22px;
     line-height:1.45;
@@ -1517,9 +1525,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
                     unsafe_allow_html=True
                 )
 
-            if permitir_remover and col_categoria2 is not None:
-
-                with col_categoria2:
+                if permitir_remover:
 
                     if st.button(
                         "✕",
@@ -2291,16 +2297,15 @@ if aba_atual == t("tab_barriers"):
                 unsafe_allow_html=True
             )
 
-            # Desktop: 3 colunas | Mobile: 1 coluna
-            colunas_mural = (
-                st.columns(3)
-                if not st.session_state.get("is_mobile", False)
-                else st.columns(1)
-            )
+            # Desktop: 3 colunas lado a lado | Mobile: 1 coluna
+            if st.session_state.get("is_mobile", False):
+                colunas_mural = st.columns(1)
+            else:
+                colunas_mural = st.columns(3, gap="large")
 
-            for _, (entrave_id, texto, votos) in enumerate(lista_entraves):
+            for i, (entrave_id, texto, votos) in enumerate(lista_entraves):
 
-                with colunas_mural[0]:
+                with colunas_mural[i % len(colunas_mural)]:
 
                     foi_votado = entrave_id in st.session_state.entraves_votados
 
@@ -2308,7 +2313,7 @@ if aba_atual == t("tab_barriers"):
                     borda = "3px solid #ec4899" if foi_votado else "2px solid rgba(0,47,95,0.18)"
 
                     html_postit = f"""
-<div style="
+<div class="desktop-card-html" style="
     background:{cor_postit};
     padding:24px;
     border-radius:22px;
@@ -2318,7 +2323,7 @@ if aba_atual == t("tab_barriers"):
     border:{borda};
     box-shadow:0 6px 16px rgba(15,23,42,0.08);
 ">
-<div style="
+<div class="texto-card" style="
     color:#111827;
     font-size:23px;
     line-height:1.45;
@@ -2399,24 +2404,32 @@ if aba_atual == t("tab_barriers"):
                 unsafe_allow_html=True
             )
 
-            for posicao, (equipe_top, texto_top, votos_top, _) in rankings:
+            colunas_ranking = (
+                [st.container()]
+                if st.session_state.get("is_mobile", False)
+                else st.columns(3, gap="large")
+            )
 
-                if posicao == 1:
-                    titulo_ranking = t("first_place")
-                    cor_ranking = "#e79eff"
-                    borda_ranking = "#8f7193"
-                elif posicao == 2:
-                    titulo_ranking = t("second_place")
-                    cor_ranking = "#dbeafe"
-                    borda_ranking = "#2563eb"
-                else:
-                    titulo_ranking = t("third_place")
-                    cor_ranking = "#c7f7f7"
-                    borda_ranking = "#96c4c4"
+            for i, (posicao, (equipe_top, texto_top, votos_top, _)) in enumerate(rankings):
 
-                st.markdown(
-                    f"""
-<div style="
+                with colunas_ranking[i % len(colunas_ranking)]:
+
+                    if posicao == 1:
+                        titulo_ranking = t("first_place")
+                        cor_ranking = "#e79eff"
+                        borda_ranking = "#8f7193"
+                    elif posicao == 2:
+                        titulo_ranking = t("second_place")
+                        cor_ranking = "#dbeafe"
+                        borda_ranking = "#2563eb"
+                    else:
+                        titulo_ranking = t("third_place")
+                        cor_ranking = "#c7f7f7"
+                        borda_ranking = "#96c4c4"
+
+                    st.markdown(
+                        f"""
+<div class="desktop-card-html" style="
     background:{cor_ranking};
     padding:26px;
     border-radius:22px;
@@ -2442,7 +2455,7 @@ if aba_atual == t("tab_barriers"):
 ">
 {t("team_label")}: {esc(equipe_top)}
 </div>
-<div style="
+<div class="texto-card" style="
     color:#111827;
     font-size:24px;
     line-height:1.45;
@@ -2452,8 +2465,8 @@ if aba_atual == t("tab_barriers"):
 </div>
 </div>
 """,
-                    unsafe_allow_html=True
-                )
+                        unsafe_allow_html=True
+                    )
 
         else:
             st.info(t("ranking_empty"))
@@ -2568,3 +2581,50 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
+
+
+st.markdown("""
+<style>
+@media (min-width: 769px) {
+
+    .desktop-card-html {
+        min-height: 260px !important;
+        height: 260px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .desktop-card-html .texto-card {
+        max-height: 145px !important;
+        overflow: hidden !important;
+    }
+
+    .fixed-workshop-header .header-foco {
+        padding: 18px 24px !important;
+        border-radius: 22px !important;
+    }
+
+    .fixed-workshop-header .header-title {
+        font-size: 42px !important;
+        line-height: 1 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .fixed-workshop-header .header-subtitle {
+        font-size: 22px !important;
+        line-height: 1.2 !important;
+    }
+
+    .fixed-workshop-header-spacer {
+        height: 210px !important;
+    }
+
+    div[data-testid="column"] {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
