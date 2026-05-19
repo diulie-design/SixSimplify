@@ -574,10 +574,19 @@ textarea::placeholder {
 }
 
 
-/* AJUSTES DO CRONÔMETRO */
-.st-key-timer_area_foco_no_foco .stButton > button,
-.st-key-timer_area_principais_entraves .stButton > button {
-    transform: translateX(-12px) !important;
+/* AJUSTES DO CRONÔMETRO MOBILE */
+@media (max-width: 768px) {
+
+    /* move conjunto inteiro um pouco para esquerda */
+    .timer-mobile-center{
+        transform: translateX(-22px) !important;
+    }
+
+    /* relógio acompanha o movimento */
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        transform: translateX(-22px) !important;
+    }
 }
 
 /* aproxima os botões -/+ do campo de minutos */
