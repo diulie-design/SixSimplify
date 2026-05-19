@@ -1412,8 +1412,10 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
             st.markdown(
                 f"""
-<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
-<div class="timer-status">{t("timer_running")}</div>
+<div class="timer-mobile-stack">
+    <div class="timer-status timer-status-top">{t("timer_running")}</div>
+    <div class="timer-display timer-display-mobile">{minutos:02d}:{segundos:02d}</div>
+</div>
 """,
                 unsafe_allow_html=True
             )
@@ -1422,8 +1424,10 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
             st.markdown(
                 f"""
-<div class="timer-display">{int(minutos_configurados):02d}:00</div>
-<div class="timer-status">{t("timer_click_start")}</div>
+<div class="timer-mobile-stack">
+    <div class="timer-status timer-status-top">{t("timer_click_start")}</div>
+    <div class="timer-display timer-display-mobile">{int(minutos_configurados):02d}:00</div>
+</div>
 """,
                 unsafe_allow_html=True
             )
@@ -1930,6 +1934,50 @@ div[role="radiogroup"] {
     padding: 0 !important;
     margin: 0 !important;
     overflow: hidden !important;
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
+
+
+
+# CSS CONDICIONAL PROVA DE STREAMLIT — ESCONDE CABEÇALHO E ABAS
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+@media (max-width: 768px) {
+    div[role="radiogroup"],
+    .fixed-workshop-header,
+    .fixed-workshop-header-spacer {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        width: 0 !important;
+        max-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+
+    .summary-header-mobile-spacer,
+    .summary-mobile-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 }
 </style>
 """,
@@ -4015,3 +4063,57 @@ if st.session_state.get("esconder_cabecalho_fixo", False):
 """,
         unsafe_allow_html=True
     )
+
+
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   PROVA DE STREAMLIT — TIMER MOBILE CENTRALIZADO
+   ========================================================= */
+@media (max-width: 768px) {
+    .timer-mobile-stack {
+        margin-top: -52px !important;
+        margin-bottom: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .timer-mobile-stack .timer-status-top {
+        order: 1 !important;
+        color: #24476b !important;
+        font-size: 17px !important;
+        line-height: 1.15 !important;
+        font-weight: 850 !important;
+        text-align: center !important;
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .timer-mobile-stack .timer-display-mobile {
+        order: 2 !important;
+        color: #002f5f !important;
+        font-size: 52px !important;
+        line-height: 0.95 !important;
+        font-weight: 950 !important;
+        text-align: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    /* reduz espaço depois do relógio para o conjunto parecer centralizado */
+    .st-key-timer_area_foco_no_foco,
+    .st-key-timer_area_principais_entraves {
+        margin-bottom: -10px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
