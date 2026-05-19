@@ -4015,3 +4015,45 @@ if st.session_state.get("esconder_cabecalho_fixo", False):
 """,
         unsafe_allow_html=True
     )
+
+
+
+st.markdown("""
+<style>
+@media (max-width: 768px){
+
+    .fixed-workshop-header,
+    .fixed-workshop-header-spacer{
+        display:none !important;
+        height:0 !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+    }
+
+    .timer-mobile-center{
+        margin-top:-45px !important;
+        text-align:center !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+    }
+
+    .timer-mobile-center .timer-label{
+        font-size:18px !important;
+        font-weight:700 !important;
+        color:#143d73 !important;
+        margin-bottom:10px !important;
+    }
+
+    .timer-mobile-center .timer-time{
+        font-size:62px !important;
+        font-weight:900 !important;
+        color:#003b7a !important;
+        line-height:1 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
