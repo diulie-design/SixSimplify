@@ -4034,8 +4034,6 @@ st.markdown("""
 
     .timer-mobile-center{
         margin-top:-45px !important;
-        margin-left:-70px !important;
-        width:calc(100vw - 150px) !important;
         text-align:center !important;
         display:flex !important;
         flex-direction:column !important;
@@ -4055,6 +4053,23 @@ st.markdown("""
         font-weight:900 !important;
         color:#003b7a !important;
         line-height:1 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* MOBILE — DESLOCAR SOMENTE O RELÓGIO, SEM ALTERAR A FONTE */
+@media (max-width: 768px) {
+
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        margin-left: -118px !important;
+        margin-right: auto !important;
+        margin-top: 22px !important;
     }
 }
 </style>
