@@ -577,8 +577,7 @@ textarea::placeholder {
 /* AJUSTES DO CRONÔMETRO */
 .st-key-timer_area_foco_no_foco .stButton > button,
 .st-key-timer_area_principais_entraves .stButton > button {
-    margin-left: -12px !important;
-    margin-right: auto !important;
+    transform: translateX(-12px) !important;
 }
 
 /* aproxima os botões -/+ do campo de minutos */
