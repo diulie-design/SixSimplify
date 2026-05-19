@@ -1348,19 +1348,45 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
     if st.session_state.get("is_mobile", False):
 
-        col_tempo, col_relogio = st.columns([5, 1])
+        minutos_configurados = st.number_input(
+            t("timer_minutes"),
+            min_value=1,
+            max_value=120,
+            value=max(int(duracao // 60), 1),
+            key=f"tempo_{aba_timer}"
+        )
 
-        with col_tempo:
+        st.markdown('<div class="timer-mobile-row">', unsafe_allow_html=True)
 
-            minutos_configurados = st.number_input(
-                t("timer_minutes"),
-                min_value=1,
-                max_value=120,
-                value=max(int(duracao // 60), 1),
-                key=f"tempo_{aba_timer}"
-            )
+        col_info_mobile, col_relogio_mobile = st.columns([1.55, 1])
 
-        with col_relogio:
+        with col_info_mobile:
+
+            if ativo and inicio:
+
+                st.markdown(
+                    f"""
+<div class="timer-mobile-info">
+    <div class="timer-mobile-label">{t("timer_running")}</div>
+    <div class="timer-mobile-time">{minutos:02d}:{segundos:02d}</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+            else:
+
+                st.markdown(
+                    f"""
+<div class="timer-mobile-info">
+    <div class="timer-mobile-label">{t("timer_click_start")}</div>
+    <div class="timer-mobile-time">{int(minutos_configurados):02d}:00</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+        with col_relogio_mobile:
 
             with st.container(key=f"timer_area_{aba_timer}"):
 
@@ -1408,25 +1434,7 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
                         conn.commit()
                         st.rerun()
 
-        if ativo and inicio:
-
-            st.markdown(
-                f"""
-<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
-<div class="timer-status">{t("timer_running")}</div>
-""",
-                unsafe_allow_html=True
-            )
-
-        else:
-
-            st.markdown(
-                f"""
-<div class="timer-display">{int(minutos_configurados):02d}:00</div>
-<div class="timer-status">{t("timer_click_start")}</div>
-""",
-                unsafe_allow_html=True
-            )
+        st.markdown('</div>', unsafe_allow_html=True)
 
     else:
 
@@ -1937,6 +1945,50 @@ div[role="radiogroup"] {
     )
 
 
+
+# CSS CONDICIONAL PROVA DE STREAMLIT — ESCONDE CABEÇALHO E ABAS
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+@media (max-width: 768px) {
+    div[role="radiogroup"],
+    .fixed-workshop-header,
+    .fixed-workshop-header-spacer {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        width: 0 !important;
+        max-width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+
+    .summary-header-mobile-spacer,
+    .summary-mobile-spacer {
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
+
+
 # Pílula fixa do cronômetro da aba atual
 if aba_atual == t("tab_focus"):
     mostrar_pilula_timer_fixa(
@@ -1967,6 +2019,38 @@ if aba_atual != t("tab_summary"):
                 not st.session_state.esconder_cabecalho_fixo
             )
             st.rerun()
+
+
+
+# Correção real: esconder cabeçalho e abas sem deixar sobra no mobile
+if st.session_state.get("esconder_cabecalho_fixo", False):
+
+    st.markdown(
+        """
+<style>
+@media (max-width: 768px) {
+    div[role="radiogroup"],
+    .fixed-workshop-header,
+    .fixed-workshop-header-spacer {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+    }
+}
+</style>
+""",
+        unsafe_allow_html=True
+    )
 
 
 # =========================
@@ -4018,41 +4102,113 @@ if st.session_state.get("esconder_cabecalho_fixo", False):
 
 
 
+
+
 st.markdown("""
 <style>
-@media (max-width: 768px){
-
-    .fixed-workshop-header,
-    .fixed-workshop-header-spacer{
-        display:none !important;
-        height:0 !important;
-        min-height:0 !important;
-        margin:0 !important;
-        padding:0 !important;
-        overflow:hidden !important;
+/* =========================================================
+   PROVA DE STREAMLIT — TIMER MOBILE CENTRALIZADO
+   ========================================================= */
+@media (max-width: 768px) {
+    .timer-mobile-stack {
+        margin-top: -52px !important;
+        margin-bottom: 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        width: 100% !important;
     }
 
-    .timer-mobile-center{
-        margin-top:-45px !important;
-        text-align:center !important;
-        display:flex !important;
-        flex-direction:column !important;
-        align-items:center !important;
-        justify-content:center !important;
+    .timer-mobile-stack .timer-status-top {
+        order: 1 !important;
+        color: #24476b !important;
+        font-size: 17px !important;
+        line-height: 1.15 !important;
+        font-weight: 850 !important;
+        text-align: center !important;
+        margin: 0 0 8px 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
-    .timer-mobile-center .timer-label{
-        font-size:18px !important;
-        font-weight:700 !important;
-        color:#143d73 !important;
-        margin-bottom:10px !important;
+    .timer-mobile-stack .timer-display-mobile {
+        order: 2 !important;
+        color: #002f5f !important;
+        font-size: 52px !important;
+        line-height: 0.95 !important;
+        font-weight: 950 !important;
+        text-align: center !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
-    .timer-mobile-center .timer-time{
-        font-size:62px !important;
-        font-weight:900 !important;
-        color:#003b7a !important;
-        line-height:1 !important;
+    /* reduz espaço depois do relógio para o conjunto parecer centralizado */
+    .st-key-timer_area_foco_no_foco,
+    .st-key-timer_area_principais_entraves {
+        margin-bottom: -10px !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   CORREÇÃO REAL MOBILE — CRONÔMETRO E CABEÇALHO
+   ========================================================= */
+@media (max-width: 768px) {
+
+    .timer-mobile-row {
+        margin-top: -18px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .timer-mobile-info {
+        min-height: 108px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+        padding-top: 0 !important;
+    }
+
+    .timer-mobile-label {
+        color: #24476b !important;
+        font-size: 17px !important;
+        line-height: 1.15 !important;
+        font-weight: 850 !important;
+        margin-bottom: 8px !important;
+        text-align: center !important;
+    }
+
+    .timer-mobile-time {
+        color: #002f5f !important;
+        font-size: 54px !important;
+        line-height: 0.95 !important;
+        font-weight: 950 !important;
+        text-align: center !important;
+    }
+
+    /* relógio alinhado ao centro do bloco */
+    .st-key-timer_area_foco_no_foco .stButton > button,
+    .st-key-timer_area_principais_entraves .stButton > button {
+        margin-left: 0 !important;
+        margin-top: 6px !important;
+        margin-right: auto !important;
+    }
+}
+
+/* Quando esconder cabeçalho, mata qualquer sobra visual das abas/header */
+@media (max-width: 768px) {
+    div[role="radiogroup"][style*="display: none"],
+    .fixed-workshop-header[style*="display: none"] {
+        display: none !important;
     }
 }
 </style>
