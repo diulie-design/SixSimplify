@@ -4057,20 +4057,3 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-/* MOBILE — DESLOCAR SOMENTE O RELÓGIO, SEM ALTERAR A FONTE */
-@media (max-width: 768px) {
-
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        margin-left: -118px !important;
-        margin-right: auto !important;
-        margin-top: 22px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
