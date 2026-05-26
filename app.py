@@ -574,19 +574,11 @@ textarea::placeholder {
 }
 
 
-/* AJUSTES DO CRONÔMETRO MOBILE */
-@media (max-width: 768px) {
-
-    /* move conjunto inteiro um pouco para esquerda */
-    .timer-mobile-center{
-        transform: translateX(-22px) !important;
-    }
-
-    /* relógio acompanha o movimento */
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        transform: translateX(-22px) !important;
-    }
+/* AJUSTES DO CRONÔMETRO */
+.st-key-timer_area_foco_no_foco .stButton > button,
+.st-key-timer_area_principais_entraves .stButton > button {
+    margin-left: 8px !important;
+    margin-right: auto !important;
 }
 
 /* aproxima os botões -/+ do campo de minutos */
@@ -1356,45 +1348,19 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
 
     if st.session_state.get("is_mobile", False):
 
-        minutos_configurados = st.number_input(
-            t("timer_minutes"),
-            min_value=1,
-            max_value=120,
-            value=max(int(duracao // 60), 1),
-            key=f"tempo_{aba_timer}"
-        )
+        col_tempo, col_relogio = st.columns([5, 1])
 
-        st.markdown('<div class="timer-mobile-row">', unsafe_allow_html=True)
+        with col_tempo:
 
-        col_info_mobile, col_relogio_mobile = st.columns([1.55, 1])
+            minutos_configurados = st.number_input(
+                t("timer_minutes"),
+                min_value=1,
+                max_value=120,
+                value=max(int(duracao // 60), 1),
+                key=f"tempo_{aba_timer}"
+            )
 
-        with col_info_mobile:
-
-            if ativo and inicio:
-
-                st.markdown(
-                    f"""
-<div class="timer-mobile-info">
-    <div class="timer-mobile-label">{t("timer_running")}</div>
-    <div class="timer-mobile-time">{minutos:02d}:{segundos:02d}</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-            else:
-
-                st.markdown(
-                    f"""
-<div class="timer-mobile-info">
-    <div class="timer-mobile-label">{t("timer_click_start")}</div>
-    <div class="timer-mobile-time">{int(minutos_configurados):02d}:00</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-        with col_relogio_mobile:
+        with col_relogio:
 
             with st.container(key=f"timer_area_{aba_timer}"):
 
@@ -1442,7 +1408,25 @@ def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
                         conn.commit()
                         st.rerun()
 
-        st.markdown('</div>', unsafe_allow_html=True)
+        if ativo and inicio:
+
+            st.markdown(
+                f"""
+<div class="timer-display">{minutos:02d}:{segundos:02d}</div>
+<div class="timer-status">{t("timer_running")}</div>
+""",
+                unsafe_allow_html=True
+            )
+
+        else:
+
+            st.markdown(
+                f"""
+<div class="timer-display">{int(minutos_configurados):02d}:00</div>
+<div class="timer-status">{t("timer_click_start")}</div>
+""",
+                unsafe_allow_html=True
+            )
 
     else:
 
@@ -1953,50 +1937,6 @@ div[role="radiogroup"] {
     )
 
 
-
-# CSS CONDICIONAL PROVA DE STREAMLIT — ESCONDE CABEÇALHO E ABAS
-if st.session_state.get("esconder_cabecalho_fixo", False):
-
-    st.markdown(
-        """
-<style>
-@media (max-width: 768px) {
-    div[role="radiogroup"],
-    .fixed-workshop-header,
-    .fixed-workshop-header-spacer {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        height: 0 !important;
-        min-height: 0 !important;
-        max-height: 0 !important;
-        width: 0 !important;
-        max-width: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: 0 !important;
-        overflow: hidden !important;
-        pointer-events: none !important;
-        position: absolute !important;
-        top: -9999px !important;
-        left: -9999px !important;
-    }
-
-    .summary-header-mobile-spacer,
-    .summary-mobile-spacer {
-        height: 0 !important;
-        min-height: 0 !important;
-        max-height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-}
-</style>
-""",
-        unsafe_allow_html=True
-    )
-
-
 # Pílula fixa do cronômetro da aba atual
 if aba_atual == t("tab_focus"):
     mostrar_pilula_timer_fixa(
@@ -2027,38 +1967,6 @@ if aba_atual != t("tab_summary"):
                 not st.session_state.esconder_cabecalho_fixo
             )
             st.rerun()
-
-
-
-# Correção real: esconder cabeçalho e abas sem deixar sobra no mobile
-if st.session_state.get("esconder_cabecalho_fixo", False):
-
-    st.markdown(
-        """
-<style>
-@media (max-width: 768px) {
-    div[role="radiogroup"],
-    .fixed-workshop-header,
-    .fixed-workshop-header-spacer {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-        height: 0 !important;
-        min-height: 0 !important;
-        max-height: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border: 0 !important;
-        overflow: hidden !important;
-        position: absolute !important;
-        top: -9999px !important;
-        left: -9999px !important;
-    }
-}
-</style>
-""",
-        unsafe_allow_html=True
-    )
 
 
 # =========================
@@ -2142,43 +2050,6 @@ div[role="radiogroup"]{
 """,
             unsafe_allow_html=True
         )
-
-if aba_atual == t("tab_summary"):
-
-    if st.session_state.editando_foco:
-
-        foco_digitado = st.text_input(
-            label="campo_foco",
-            value=st.session_state.foco_salvo,
-            placeholder=t("focus_default"),
-            key="campo_foco",
-            label_visibility="collapsed"
-        )
-
-        if st.button(t("save_focus")):
-
-            if foco_digitado.strip():
-                st.session_state.foco_salvo = foco_digitado.strip()
-
-                cursor.execute("""
-                INSERT INTO salas (sala, foco)
-                VALUES (?, ?)
-                ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
-                """, (sala_atual, st.session_state.foco_salvo))
-
-                conn.commit()
-
-                st.session_state.editando_foco = False
-                st.rerun()
-            else:
-                st.warning(t("focus_required"))
-
-    else:
-
-        if st.button(t("edit_focus")):
-            st.session_state.editando_foco = True
-            st.rerun()
-
 
 # =========================
 # ABA 0 - SUMMARY
@@ -2321,6 +2192,68 @@ if aba_atual == t("tab_focus"):
 
     st.caption(f"{t('current_room')}: {sala_atual}")
 
+    # =========================
+    # FOCO DO WORKSHOP
+    # =========================
+
+    st.markdown(
+        f"""
+<div class="step-card">
+<div class="step-title">{t("meeting_focus")}</div>
+<div class="step-help">{t("focus_default")}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    if st.session_state.editando_foco:
+
+        foco_digitado = st.text_input(
+            label="campo_foco",
+            value=st.session_state.foco_salvo,
+            placeholder=t("focus_default"),
+            key="campo_foco",
+            label_visibility="collapsed"
+        )
+
+        if st.button(t("save_focus")):
+
+            if foco_digitado.strip():
+                st.session_state.foco_salvo = foco_digitado.strip()
+
+                cursor.execute("""
+                INSERT INTO salas (sala, foco)
+                VALUES (?, ?)
+                ON CONFLICT(sala) DO UPDATE SET foco = excluded.foco
+                """, (
+                    sala_atual,
+                    st.session_state.foco_salvo
+                ))
+
+                conn.commit()
+
+                st.session_state.editando_foco = False
+                st.rerun()
+
+            else:
+                st.warning(t("focus_required"))
+
+    else:
+
+        st.markdown(
+            f"""
+<div class="bloco-azul info-equipe">
+<strong>{t("meeting_focus")}:</strong><br>
+{esc(st.session_state.foco_salvo)}
+</div>
+""",
+            unsafe_allow_html=True
+        )
+
+        if st.button(t("edit_focus")):
+            st.session_state.editando_foco = True
+            st.rerun()
+
     mostrar_cronometro_compartilhado(
         sala_atual,
         "foco_no_foco",
@@ -2399,9 +2332,17 @@ if aba_atual == t("tab_focus"):
         unsafe_allow_html=True
     )
 
+    if "limpar_campo_postit" not in st.session_state:
+        st.session_state["limpar_campo_postit"] = False
+
+    if st.session_state["limpar_campo_postit"]:
+        st.session_state["campo_postit"] = ""
+        st.session_state["limpar_campo_postit"] = False
+
     novo_postit = st.text_area(
         t("add_postit"),
-        placeholder=t("postit_placeholder")
+        placeholder=t("postit_placeholder"),
+        key="campo_postit"
     )
 
     qtd_palavras = contar_palavras(novo_postit)
@@ -2427,6 +2368,7 @@ if aba_atual == t("tab_focus"):
             """, (nome_equipe, novo_postit, sala_atual))
 
             conn.commit()
+            st.session_state["limpar_campo_postit"] = True
             st.success(t("postit_added"))
             st.rerun()
 
@@ -4110,113 +4052,41 @@ if st.session_state.get("esconder_cabecalho_fixo", False):
 
 
 
-
-
 st.markdown("""
 <style>
-/* =========================================================
-   PROVA DE STREAMLIT — TIMER MOBILE CENTRALIZADO
-   ========================================================= */
-@media (max-width: 768px) {
-    .timer-mobile-stack {
-        margin-top: -52px !important;
-        margin-bottom: 8px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        width: 100% !important;
+@media (max-width: 768px){
+
+    .fixed-workshop-header,
+    .fixed-workshop-header-spacer{
+        display:none !important;
+        height:0 !important;
+        min-height:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
     }
 
-    .timer-mobile-stack .timer-status-top {
-        order: 1 !important;
-        color: #24476b !important;
-        font-size: 17px !important;
-        line-height: 1.15 !important;
-        font-weight: 850 !important;
-        text-align: center !important;
-        margin: 0 0 8px 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
+    .timer-mobile-center{
+        margin-top:-45px !important;
+        text-align:center !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
     }
 
-    .timer-mobile-stack .timer-display-mobile {
-        order: 2 !important;
-        color: #002f5f !important;
-        font-size: 52px !important;
-        line-height: 0.95 !important;
-        font-weight: 950 !important;
-        text-align: center !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        width: 100% !important;
+    .timer-mobile-center .timer-label{
+        font-size:18px !important;
+        font-weight:700 !important;
+        color:#143d73 !important;
+        margin-bottom:10px !important;
     }
 
-    /* reduz espaço depois do relógio para o conjunto parecer centralizado */
-    .st-key-timer_area_foco_no_foco,
-    .st-key-timer_area_principais_entraves {
-        margin-bottom: -10px !important;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-
-st.markdown("""
-<style>
-/* =========================================================
-   CORREÇÃO REAL MOBILE — CRONÔMETRO E CABEÇALHO
-   ========================================================= */
-@media (max-width: 768px) {
-
-    .timer-mobile-row {
-        margin-top: -18px !important;
-        margin-bottom: 10px !important;
-    }
-
-    .timer-mobile-info {
-        min-height: 108px !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        justify-content: center !important;
-        text-align: center !important;
-        padding-top: 0 !important;
-    }
-
-    .timer-mobile-label {
-        color: #24476b !important;
-        font-size: 17px !important;
-        line-height: 1.15 !important;
-        font-weight: 850 !important;
-        margin-bottom: 8px !important;
-        text-align: center !important;
-    }
-
-    .timer-mobile-time {
-        color: #002f5f !important;
-        font-size: 54px !important;
-        line-height: 0.95 !important;
-        font-weight: 950 !important;
-        text-align: center !important;
-    }
-
-    /* relógio alinhado ao centro do bloco */
-    .st-key-timer_area_foco_no_foco .stButton > button,
-    .st-key-timer_area_principais_entraves .stButton > button {
-        margin-left: 0 !important;
-        margin-top: 6px !important;
-        margin-right: auto !important;
-    }
-}
-
-/* Quando esconder cabeçalho, mata qualquer sobra visual das abas/header */
-@media (max-width: 768px) {
-    div[role="radiogroup"][style*="display: none"],
-    .fixed-workshop-header[style*="display: none"] {
-        display: none !important;
+    .timer-mobile-center .timer-time{
+        font-size:62px !important;
+        font-weight:900 !important;
+        color:#003b7a !important;
+        line-height:1 !important;
     }
 }
 </style>
