@@ -3631,7 +3631,7 @@ if aba_atual == t("tab_solutions"):
     st.markdown(
         f"""
 <div class="step-card">
-<div class="step-title">{t("selected_solution_hypotheses")}</div>
+<div class="step-title">{"Soluções priorizadas"}</div>
 <div class="step-help">{t("selected_solution_help")}</div>
 </div>
 """,
@@ -3673,12 +3673,15 @@ if aba_atual == t("tab_solutions"):
 
             st.markdown(
                 f"""
-<div class="resultado-final-header">
-<div class="resultado-label">{t("selection_threshold")}</div>
-<div class="resultado-texto">
-Média + desvio padrão • {len(hipoteses_selecionadas)} post-it(s)
-</div>
-</div>
+<h3 style="
+margin-top:20px;
+margin-bottom:10px;
+color:#0B3B75;
+font-size:1.5rem;
+font-weight:700;
+">
+{len(hipoteses_selecionadas)} solução(ões) priorizada(s)
+</h3>
 """,
                 unsafe_allow_html=True
             )
@@ -3691,9 +3694,10 @@ Média + desvio padrão • {len(hipoteses_selecionadas)} post-it(s)
 
 
             st.info(
-                "Como funciona: o sistema calcula a média de votos de todas as hipóteses "
-                "e adiciona o desvio padrão. Assim, apenas as ideias que realmente se "
-                "destacaram em relação ao grupo aparecem como selecionadas."
+                "Como funciona: o sistema compara todas as hipóteses entre si e identifica "
+                "quais receberam uma quantidade de votos significativamente maior que a média do grupo. "
+                "Na prática, isso ajuda a destacar automaticamente as soluções que mais se sobressaíram "
+                "durante a votação coletiva."
             )
 
 
