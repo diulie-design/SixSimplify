@@ -1625,6 +1625,136 @@ def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
     )
 
 
+
+def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True):
+
+    cursor.execute("""
+    SELECT categoria, texto, votos, id
+    FROM hipoteses_solucao
+    WHERE sala = ?
+    ORDER BY votos DESC, id ASC
+    """, (sala_atual,))
+
+    todas_hipoteses = cursor.fetchall()
+
+    if not todas_hipoteses:
+
+        st.info(t("no_selected_solutions"))
+        return
+
+    lista_votos = [item[2] for item in todas_hipoteses]
+
+    maior_voto_hipotese = max(lista_votos)
+
+    if maior_voto_hipotese <= 0:
+
+        st.info(t("no_selected_solutions"))
+        return
+
+    media_votos = sum(lista_votos) / len(lista_votos)
+
+    variancia = sum(
+        (v - media_votos) ** 2 for v in lista_votos
+    ) / len(lista_votos)
+
+    desvio_padrao = variancia ** 0.5
+
+    limite_votos_hipotese = media_votos + desvio_padrao
+
+    hipoteses_selecionadas = [
+        item for item in todas_hipoteses
+        if item[2] >= limite_votos_hipotese
+    ]
+
+    if not hipoteses_selecionadas:
+
+        st.info(t("no_selected_solutions"))
+        return
+
+    qtd_solucoes_priorizadas = len(hipoteses_selecionadas)
+
+    texto_solucoes_priorizadas = (
+        "1 solução priorizada"
+        if qtd_solucoes_priorizadas == 1
+        else f"{qtd_solucoes_priorizadas} soluções priorizadas"
+    )
+
+    st.markdown(
+        f"""
+<div class="step-card">
+<div class="step-title">{texto_solucoes_priorizadas}</div>
+<div class="step-help">Selecionadas automaticamente a partir da votação coletiva.</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    if mostrar_explicacao:
+
+        st.info(
+            "Como funciona: o sistema calcula a média de votos das hipóteses e observa "
+            "o quanto os votos estão espalhados entre elas, usando o desvio padrão. "
+            "Quanto maior essa diferença, mais claro fica quais ideias realmente se destacaram. "
+            "Na prática, essa é uma seleção mais rigorosa, que ajuda a evidenciar as soluções "
+            "mais fortes para uma priorização estratégica."
+        )
+
+        if st.button("Exemplo", key="abrir_exemplo_priorizacao"):
+            st.session_state.mostrar_exemplo_priorizacao = True
+
+        if st.session_state.mostrar_exemplo_priorizacao:
+
+            st.markdown(
+                """
+<div class="step-card">
+<div class="step-title">Exemplo simples</div>
+<div class="step-help">
+<strong>Caso 1 — votos equilibrados</strong><br>
+Hipótese A: 8 votos • Hipótese B: 7 votos • Hipótese C: 7 votos • Hipótese D: 6 votos • Hipótese E: 5 votos<br><br>
+Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os votos estão pouco espalhados.
+Não existe uma ideia que tenha se destacado muito das demais.<br><br>
+<strong>Caso 2 — uma hipótese se destaca</strong><br>
+Hipótese A: 20 votos • Hipótese B: 5 votos • Hipótese C: 4 votos • Hipótese D: 3 votos • Hipótese E: 2 votos<br><br>
+Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipótese recebeu muito mais votos que as outras.
+Esse método ajuda a responder: quais hipóteses realmente se destacaram do comportamento normal?
+</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            if st.button("Fechar exemplo", key="fechar_exemplo_priorizacao"):
+                st.session_state.mostrar_exemplo_priorizacao = False
+                st.rerun()
+
+    colunas_resultado_hipoteses = (
+        [st.container()]
+        if st.session_state.get("is_mobile", False)
+        else st.columns(3, gap="large")
+    )
+
+    for i, (categoria_sel, texto_sel, votos_sel, hipotese_id_sel) in enumerate(hipoteses_selecionadas):
+
+        with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
+
+            st.markdown(
+                f"""
+<div class="desktop-card-html postit-votado" style="
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:240px;
+">
+<div>
+<h4>{esc(categoria_sel)}</h4>
+<div class="postit-texto texto-card">{esc(texto_sel)}</div>
+</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+
 def buscar_mais_votados(sala_atual):
 
     cursor.execute("""
@@ -2162,39 +2292,14 @@ if aba_atual == t("tab_summary"):
 
 
     # =========================
-    # HIPÓTESES DE SOLUÇÃO
+    # SOLUÇÕES PRIORIZADAS
     # =========================
 
-    st.markdown("## Hipóteses de Solução")
+    st.markdown("## Soluções priorizadas")
 
-    st.markdown(
-        """
-<div class="resultado-final-header">
-<div class="resultado-label">COMO RESOLVER?</div>
-<div class="resultado-texto">
-Ainda em construção...
-</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    # =========================
-    # VIABILIDADE E IMPACTO
-    # =========================
-
-    st.markdown("## Viabilidade e Impacto")
-
-    st.markdown(
-        """
-<div class="resultado-final-header">
-<div class="resultado-label">POR ONDE JÁ PODEMOS COMEÇAR?</div>
-<div class="resultado-texto">
-Ainda em construção...
-</div>
-</div>
-""",
-        unsafe_allow_html=True
+    mostrar_solucoes_priorizadas(
+        sala_atual,
+        mostrar_explicacao=False
     )
 
 
@@ -3626,136 +3731,15 @@ if aba_atual == t("tab_solutions"):
 
 
     # =========================
-    # RESULTADO — HIPÓTESES SELECIONADAS
+    # RESULTADO — SOLUÇÕES PRIORIZADAS
     # =========================
 
-    st.markdown(f"## {t('selected_solution_hypotheses')}")
+    st.markdown("## Soluções priorizadas")
 
-    st.markdown(
-        f"""
-<div class="step-card">
-<div class="step-title">{"Soluções priorizadas"}</div>
-<div class="step-help">{t("selected_solution_help")}</div>
-</div>
-""",
-        unsafe_allow_html=True
+    mostrar_solucoes_priorizadas(
+        sala_atual,
+        mostrar_explicacao=True
     )
-
-    cursor.execute("""
-    SELECT categoria, texto, votos, id
-    FROM hipoteses_solucao
-    WHERE sala = ?
-    ORDER BY votos DESC, id ASC
-    """, (sala_atual,))
-
-    todas_hipoteses = cursor.fetchall()
-
-    if todas_hipoteses:
-
-        lista_votos = [item[2] for item in todas_hipoteses]
-
-        maior_voto_hipotese = max(lista_votos)
-        menor_voto_hipotese = min(lista_votos)
-
-        media_votos = sum(lista_votos) / len(lista_votos)
-
-        variancia = sum(
-            (v - media_votos) ** 2 for v in lista_votos
-        ) / len(lista_votos)
-
-        desvio_padrao = variancia ** 0.5
-
-        limite_votos_hipotese = media_votos + desvio_padrao
-
-        hipoteses_selecionadas = [
-            item for item in todas_hipoteses
-            if item[2] >= limite_votos_hipotese
-        ]
-
-        if hipoteses_selecionadas:
-
-            qtd_solucoes_priorizadas = len(hipoteses_selecionadas)
-
-            texto_solucoes_priorizadas = (
-                "1 solução priorizada"
-                if qtd_solucoes_priorizadas == 1
-                else f"{qtd_solucoes_priorizadas} soluções priorizadas"
-            )
-
-            st.markdown(
-                f"""
-<div class="step-card">
-<div class="step-title">Soluções priorizadas</div>
-<div class="step-help">{texto_solucoes_priorizadas}</div>
-</div>
-""",
-                unsafe_allow_html=True
-            )
-
-            st.info(
-                "Como funciona: o sistema olha para a votação de todas as hipóteses e identifica "
-                "quais ficaram claramente acima do padrão geral do grupo. Ou seja: não escolhe um Top 3 fixo; "
-                "ele seleciona automaticamente as soluções que realmente se destacaram na votação."
-            )
-
-            if st.button("Exemplo", key="abrir_exemplo_priorizacao"):
-                st.session_state.mostrar_exemplo_priorizacao = True
-
-            if st.session_state.mostrar_exemplo_priorizacao:
-
-                st.markdown(
-                    """
-<div class="step-card">
-<div class="step-title">Exemplo simples</div>
-<div class="step-help">
-Imagine 5 hipóteses com estes votos: 10, 8, 7, 2 e 1.<br><br>
-O sistema percebe que 10, 8 e 7 ficaram bem acima do comportamento geral do grupo.
-Por isso, essas ideias aparecem como soluções priorizadas.<br><br>
-Já as hipóteses com 2 e 1 voto ficam de fora, porque tiveram pouca força na votação coletiva.
-</div>
-</div>
-""",
-                    unsafe_allow_html=True
-                )
-
-                if st.button("Fechar exemplo", key="fechar_exemplo_priorizacao"):
-                    st.session_state.mostrar_exemplo_priorizacao = False
-                    st.rerun()
-
-
-            colunas_resultado_hipoteses = (
-                [st.container()]
-                if st.session_state.get("is_mobile", False)
-                else st.columns(3, gap="large")
-            )
-
-            for i, (categoria_sel, texto_sel, votos_sel, hipotese_id_sel) in enumerate(hipoteses_selecionadas):
-                with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
-
-                    st.markdown(
-                        f"""
-<div class="desktop-card-html postit-votado" style="
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    min-height:240px;
-">
-<div>
-<h4>{esc(categoria_sel)}</h4>
-<div class="postit-texto texto-card">{esc(texto_sel)}</div>
-</div></div>
-""",
-                        unsafe_allow_html=True
-                    )
-
-        else:
-
-            st.info(t("no_selected_solutions"))
-
-    else:
-
-        st.info(t("no_selected_solutions"))
-
 
 
 
