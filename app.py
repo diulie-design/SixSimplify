@@ -1102,7 +1102,7 @@ TEXTOS = {
         "postit_step_title": "2. Six Simplify",
         "postit_step_help": "Escreva uma frase com exatamente 6 palavras. Depois clique em adicionar.",
         "time_postits_minutes": "Tempo para escrever os post-its em minutos",
-        "add_postit": "Adicionar post-it",
+        "add_postit": "Submeter Frase",
         "postit_placeholder": "Exemplo: Reduzir retrabalho entre áreas de engenharia",
         "words": "palavras",
         "missing_words": "Faltam palavras. O post-it precisa ter exatamente 6.",
@@ -1110,6 +1110,8 @@ TEXTOS = {
         "save_team_before_postit": "Salve o nome da equipe antes de adicionar um post-it.",
         "exact_words": "O post-it precisa ter exatamente 6 palavras.",
         "postit_added": "Post-it adicionado!",
+        "remove_postit": "Remover post-it",
+        "postit_removed": "Post-it removido!",
         "vote_step_title": "3. Vote nos post-its",
         "vote_step_help": "Leia os post-its e clique em votar. Se errar, clique em desfazer voto.",
         "votes": "Votos",
@@ -1225,7 +1227,7 @@ TEXTOS = {
         "postit_step_title": "2. Six Simplify",
         "postit_step_help": "Write a sentence with exactly 6 words. Then click add.",
         "time_postits_minutes": "Time to write post-its in minutes",
-        "add_postit": "Add post-it",
+        "add_postit": "Submit Sentence",
         "postit_placeholder": "Example: Improve communication between critical internal areas",
         "words": "words",
         "missing_words": "You need more words. The post-it must have exactly 6.",
@@ -1233,6 +1235,8 @@ TEXTOS = {
         "save_team_before_postit": "Save the team name before adding a post-it.",
         "exact_words": "The post-it must have exactly 6 words.",
         "postit_added": "Post-it added!",
+        "remove_postit": "Remove post-it",
+        "postit_removed": "Post-it removed!",
         "vote_step_title": "3. Vote on post-its",
         "vote_step_help": "Read the post-its and click vote. If you make a mistake, click undo vote.",
         "votes": "Votes",
@@ -2449,6 +2453,27 @@ if aba_atual == t("tab_focus"):
                         st.session_state.postits_votados.add(postit_id)
                         st.rerun()
 
+                if st.button(
+                    t("remove_postit"),
+                    key=f"remover_postit_{postit_id}"
+                ):
+                    cursor.execute("""
+                    DELETE FROM postits
+                    WHERE id = ?
+                    AND sala = ?
+                    """, (
+                        postit_id,
+                        sala_atual
+                    ))
+
+                    conn.commit()
+
+                    if postit_id in st.session_state.postits_votados:
+                        st.session_state.postits_votados.remove(postit_id)
+
+                    st.success(t("postit_removed"))
+                    st.rerun()
+
         else:
 
             # Desktop: post-it + botão ficam dentro da mesma coluna
@@ -2518,6 +2543,28 @@ if aba_atual == t("tab_focus"):
                             conn.commit()
                             st.session_state.postits_votados.add(postit_id)
                             st.rerun()
+
+                    if st.button(
+                        t("remove_postit"),
+                        key=f"remover_postit_{postit_id}",
+                        use_container_width=True
+                    ):
+                        cursor.execute("""
+                        DELETE FROM postits
+                        WHERE id = ?
+                        AND sala = ?
+                        """, (
+                            postit_id,
+                            sala_atual
+                        ))
+
+                        conn.commit()
+
+                        if postit_id in st.session_state.postits_votados:
+                            st.session_state.postits_votados.remove(postit_id)
+
+                        st.success(t("postit_removed"))
+                        st.rerun()
 
     else:
         st.info(t("no_postit"))
