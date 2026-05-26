@@ -1813,6 +1813,9 @@ if "entraves_votados" not in st.session_state:
 if "hipoteses_votadas" not in st.session_state:
     st.session_state.hipoteses_votadas = set()
 
+if "mostrar_exemplo_priorizacao" not in st.session_state:
+    st.session_state.mostrar_exemplo_priorizacao = False
+
 if "foco_salvo" not in st.session_state:
     st.session_state.foco_salvo = ""
 
@@ -3671,34 +3674,53 @@ if aba_atual == t("tab_solutions"):
 
         if hipoteses_selecionadas:
 
+            qtd_solucoes_priorizadas = len(hipoteses_selecionadas)
+
+            texto_solucoes_priorizadas = (
+                "1 solução priorizada"
+                if qtd_solucoes_priorizadas == 1
+                else f"{qtd_solucoes_priorizadas} soluções priorizadas"
+            )
+
             st.markdown(
                 f"""
-<h3 style="
-margin-top:20px;
-margin-bottom:10px;
-color:#0B3B75;
-font-size:1.5rem;
-font-weight:700;
-">
-{len(hipoteses_selecionadas)} solução(ões) priorizada(s)
-</h3>
+<div class="step-card">
+<div class="step-title">Soluções priorizadas</div>
+<div class="step-help">{texto_solucoes_priorizadas}</div>
+</div>
 """,
                 unsafe_allow_html=True
             )
 
-            st.caption(
-                f"Média de votos: {media_votos:.1f} | "
-                f"Desvio padrão: {desvio_padrao:.1f} | "
-                f"Corte mínimo para seleção: {limite_votos_hipotese:.1f} voto(s)"
-            )
-
-
             st.info(
-                "Como funciona: o sistema compara todas as hipóteses entre si e identifica "
-                "quais receberam uma quantidade de votos significativamente maior que a média do grupo. "
-                "Na prática, isso ajuda a destacar automaticamente as soluções que mais se sobressaíram "
-                "durante a votação coletiva."
+                "Como funciona: o sistema olha para a votação de todas as hipóteses e identifica "
+                "quais ficaram claramente acima do padrão geral do grupo. Ou seja: não escolhe um Top 3 fixo; "
+                "ele seleciona automaticamente as soluções que realmente se destacaram na votação."
             )
+
+            if st.button("Exemplo", key="abrir_exemplo_priorizacao"):
+                st.session_state.mostrar_exemplo_priorizacao = True
+
+            if st.session_state.mostrar_exemplo_priorizacao:
+
+                st.markdown(
+                    """
+<div class="step-card">
+<div class="step-title">Exemplo simples</div>
+<div class="step-help">
+Imagine 5 hipóteses com estes votos: 10, 8, 7, 2 e 1.<br><br>
+O sistema percebe que 10, 8 e 7 ficaram bem acima do comportamento geral do grupo.
+Por isso, essas ideias aparecem como soluções priorizadas.<br><br>
+Já as hipóteses com 2 e 1 voto ficam de fora, porque tiveram pouca força na votação coletiva.
+</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
+
+                if st.button("Fechar exemplo", key="fechar_exemplo_priorizacao"):
+                    st.session_state.mostrar_exemplo_priorizacao = False
+                    st.rerun()
 
 
             colunas_resultado_hipoteses = (
@@ -3708,13 +3730,6 @@ font-weight:700;
             )
 
             for i, (categoria_sel, texto_sel, votos_sel, hipotese_id_sel) in enumerate(hipoteses_selecionadas):
-
-                percentual_sel = (
-                    (votos_sel / maior_voto_hipotese) * 100
-                    if maior_voto_hipotese > 0
-                    else 0
-                )
-
                 with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
 
                     st.markdown(
@@ -3728,9 +3743,7 @@ font-weight:700;
 <div>
 <h4>{esc(categoria_sel)}</h4>
 <div class="postit-texto texto-card">{esc(texto_sel)}</div>
-</div>
-<div class="votos">{t("votes")}: {votos_sel} • {percentual_sel:.0f}%</div>
-</div>
+</div></div>
 """,
                         unsafe_allow_html=True
                     )
