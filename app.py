@@ -1098,8 +1098,8 @@ TEXTOS = {
         "solution_deleted": "Hipótese excluída!",
         "no_categorized_barriers_solutions": "Categorize os entraves na aba Principais Entraves para levantar hipóteses de solução.",
         "selected_solution_hypotheses": "Hipóteses de solução selecionadas",
-        "selected_solution_help": "Aparecem aqui as hipóteses com desempenho igual ou superior a 70% da hipótese mais votada.",
-        "selection_threshold": "Critério de seleção",
+        "selected_solution_help": "As hipóteses abaixo foram selecionadas com base na média de votos do grupo e no desvio padrão. Isso permite destacar ideias que realmente se sobressaíram em relação às demais.",
+        "selection_threshold": "Critério de seleção estatística",
         "no_selected_solutions": "As hipóteses selecionadas aparecerão aqui após a votação.",
         "viability_construction_help": "Essa etapa será utilizada para avaliar viabilidade, impacto e possíveis quick wins.",
         "summary_title": "Resumo",
@@ -1236,8 +1236,8 @@ TEXTOS = {
         "solution_deleted": "Hypothesis deleted!",
         "no_categorized_barriers_solutions": "Categorize barriers in the Main Barriers tab to create solution hypotheses.",
         "selected_solution_hypotheses": "Selected solution hypotheses",
-        "selected_solution_help": "This section shows hypotheses with performance equal to or above 70% of the most voted hypothesis.",
-        "selection_threshold": "Selection criterion",
+        "selected_solution_help": "The hypotheses below were selected based on the group average votes and standard deviation. This helps identify ideas that truly stood out compared to the others.",
+        "selection_threshold": "Statistical selection criterion",
         "no_selected_solutions": "Selected hypotheses will appear here after voting.",
         "viability_construction_help": "This step will be used to assess feasibility, impact, and possible quick wins.",
         "summary_title": "Summary",
@@ -3649,13 +3649,24 @@ if aba_atual == t("tab_solutions"):
 
     if todas_hipoteses:
 
-        maior_voto_hipotese = max([item[2] for item in todas_hipoteses])
-        menor_voto_hipotese = min([item[2] for item in todas_hipoteses])
-        limite_votos_hipotese = maior_voto_hipotese * 0.70
+        lista_votos = [item[2] for item in todas_hipoteses]
+
+        maior_voto_hipotese = max(lista_votos)
+        menor_voto_hipotese = min(lista_votos)
+
+        media_votos = sum(lista_votos) / len(lista_votos)
+
+        variancia = sum(
+            (v - media_votos) ** 2 for v in lista_votos
+        ) / len(lista_votos)
+
+        desvio_padrao = variancia ** 0.5
+
+        limite_votos_hipotese = media_votos + desvio_padrao
 
         hipoteses_selecionadas = [
             item for item in todas_hipoteses
-            if maior_voto_hipotese > 0 and item[2] >= limite_votos_hipotese
+            if item[2] >= limite_votos_hipotese
         ]
 
         if hipoteses_selecionadas:
@@ -3664,17 +3675,27 @@ if aba_atual == t("tab_solutions"):
                 f"""
 <div class="resultado-final-header">
 <div class="resultado-label">{t("selection_threshold")}</div>
-<div class="resultado-texto">≥ 70% • {len(hipoteses_selecionadas)} post-it(s)</div>
+<div class="resultado-texto">
+Média + desvio padrão • {len(hipoteses_selecionadas)} post-it(s)
+</div>
 </div>
 """,
                 unsafe_allow_html=True
             )
 
             st.caption(
-                f"Maior votação: {maior_voto_hipotese} voto(s) | "
-                f"Menor votação: {menor_voto_hipotese} voto(s) | "
-                f"Corte mínimo: {limite_votos_hipotese:.1f} voto(s)"
+                f"Média de votos: {media_votos:.1f} | "
+                f"Desvio padrão: {desvio_padrao:.1f} | "
+                f"Corte mínimo para seleção: {limite_votos_hipotese:.1f} voto(s)"
             )
+
+
+            st.info(
+                "Como funciona: o sistema calcula a média de votos de todas as hipóteses "
+                "e adiciona o desvio padrão. Assim, apenas as ideias que realmente se "
+                "destacaram em relação ao grupo aparecem como selecionadas."
+            )
+
 
             colunas_resultado_hipoteses = (
                 [st.container()]
