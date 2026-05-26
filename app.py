@@ -1626,7 +1626,7 @@ def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
 
 
 
-def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True):
+def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resumo=False):
 
     cursor.execute("""
     SELECT categoria, texto, votos, id
@@ -1707,16 +1707,41 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True):
             st.markdown(
                 """
 <div class="step-card">
-<div class="step-title">Exemplo simples</div>
+<div class="step-title">Exemplo</div>
 <div class="step-help">
+
 <strong>Caso 1 — votos equilibrados</strong><br>
-Hipótese A: 8 votos • Hipótese B: 7 votos • Hipótese C: 7 votos • Hipótese D: 6 votos • Hipótese E: 5 votos<br><br>
 Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os votos estão pouco espalhados.
-Não existe uma ideia que tenha se destacado muito das demais.<br><br>
+
+<table style="width:100%; border-collapse:collapse; margin:14px 0 22px 0; font-size:17px;">
+    <tr>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hipótese</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votos</th>
+    </tr>
+    <tr><td style="padding:8px;">A</td><td style="padding:8px;">8</td></tr>
+    <tr><td style="padding:8px;">B</td><td style="padding:8px;">7</td></tr>
+    <tr><td style="padding:8px;">C</td><td style="padding:8px;">7</td></tr>
+    <tr><td style="padding:8px;">D</td><td style="padding:8px;">6</td></tr>
+    <tr><td style="padding:8px;">E</td><td style="padding:8px;">5</td></tr>
+</table>
+
 <strong>Caso 2 — uma hipótese se destaca</strong><br>
-Hipótese A: 20 votos • Hipótese B: 5 votos • Hipótese C: 4 votos • Hipótese D: 3 votos • Hipótese E: 2 votos<br><br>
 Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipótese recebeu muito mais votos que as outras.
+
+<table style="width:100%; border-collapse:collapse; margin:14px 0 22px 0; font-size:17px;">
+    <tr>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hipótese</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votos</th>
+    </tr>
+    <tr><td style="padding:8px;">A</td><td style="padding:8px;">20</td></tr>
+    <tr><td style="padding:8px;">B</td><td style="padding:8px;">5</td></tr>
+    <tr><td style="padding:8px;">C</td><td style="padding:8px;">4</td></tr>
+    <tr><td style="padding:8px;">D</td><td style="padding:8px;">3</td></tr>
+    <tr><td style="padding:8px;">E</td><td style="padding:8px;">2</td></tr>
+</table>
+
 Esse método ajuda a responder: quais hipóteses realmente se destacaram do comportamento normal?
+
 </div>
 </div>
 """,
@@ -1737,6 +1762,16 @@ Esse método ajuda a responder: quais hipóteses realmente se destacaram do comp
 
         with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
 
+            estilo_card_resumo = (
+                """
+                background:#eaf2fb !important;
+                border:2px solid #c9d9ea !important;
+                border-left:8px solid #002f5f !important;
+                """
+                if modo_resumo
+                else ""
+            )
+
             st.markdown(
                 f"""
 <div class="desktop-card-html postit-votado" style="
@@ -1744,6 +1779,7 @@ Esse método ajuda a responder: quais hipóteses realmente se destacaram do comp
     flex-direction:column;
     justify-content:space-between;
     min-height:240px;
+    {estilo_card_resumo}
 ">
 <div>
 <h4>{esc(categoria_sel)}</h4>
@@ -2299,7 +2335,20 @@ if aba_atual == t("tab_summary"):
 
     mostrar_solucoes_priorizadas(
         sala_atual,
-        mostrar_explicacao=False
+        mostrar_explicacao=False,
+        modo_resumo=True
+    )
+
+    st.markdown(f"## {t('tab_viability')}")
+
+    st.markdown(
+        f"""
+<div class="resultado-final-header">
+<div class="resultado-label">{t("viability_subtitle")}</div>
+<div class="resultado-texto">{t("under_construction")}</div>
+</div>
+""",
+        unsafe_allow_html=True
     )
 
 
