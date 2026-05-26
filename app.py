@@ -1035,6 +1035,18 @@ CREATE TABLE IF NOT EXISTS timers (
 conn.commit()
 
 
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS hipoteses_solucao (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    sala TEXT,
+    categoria TEXT,
+    texto TEXT,
+    votos INTEGER DEFAULT 0
+)
+""")
+conn.commit()
+
 # =========================
 # FUNÇÕES
 # =========================
@@ -1075,6 +1087,15 @@ TEXTOS = {
         "viability_subtitle": "Por onde já podemos começar?",
         "under_construction": "Ainda em construção...",
         "solutions_construction_help": "Essa etapa será utilizada para estruturar hipóteses de solução para os principais entraves identificados.",
+        "solution_hypotheses_board": "Hipóteses de solução por categoria",
+        "solution_hypothesis": "Hipótese de solução",
+        "solution_placeholder": "Digite uma hipótese de solução para essa categoria",
+        "submit_solution": "Submeter hipótese",
+        "solution_added": "Hipótese de solução adicionada!",
+        "solution_required": "Digite uma hipótese de solução antes de submeter.",
+        "delete_solution": "Excluir hipótese",
+        "solution_deleted": "Hipótese excluída!",
+        "no_categorized_barriers_solutions": "Categorize os entraves na aba Principais Entraves para levantar hipóteses de solução.",
         "viability_construction_help": "Essa etapa será utilizada para avaliar viabilidade, impacto e possíveis quick wins.",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
@@ -1200,6 +1221,15 @@ TEXTOS = {
         "viability_subtitle": "Where can we start already?",
         "under_construction": "Still under construction...",
         "solutions_construction_help": "This step will be used to structure solution hypotheses for the main barriers identified.",
+        "solution_hypotheses_board": "Solution hypotheses by category",
+        "solution_hypothesis": "Solution hypothesis",
+        "solution_placeholder": "Enter a solution hypothesis for this category",
+        "submit_solution": "Submit hypothesis",
+        "solution_added": "Solution hypothesis added!",
+        "solution_required": "Enter a solution hypothesis before submitting.",
+        "delete_solution": "Delete hypothesis",
+        "solution_deleted": "Hypothesis deleted!",
+        "no_categorized_barriers_solutions": "Categorize barriers in the Main Barriers tab to create solution hypotheses.",
         "viability_construction_help": "This step will be used to assess feasibility, impact, and possible quick wins.",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
@@ -1742,7 +1772,7 @@ def mostrar_categorias(sala_atual, permitir_remover=False):
                 if permitir_remover:
 
                     if st.button(
-                        "✕",
+                        t("remove_postit"),
                         key=f"remover_categoria_{categoria_id}"
                     ):
 
@@ -1770,6 +1800,9 @@ if "postits_votados" not in st.session_state:
 
 if "entraves_votados" not in st.session_state:
     st.session_state.entraves_votados = set()
+
+if "hipoteses_votadas" not in st.session_state:
+    st.session_state.hipoteses_votadas = set()
 
 if "foco_salvo" not in st.session_state:
     st.session_state.foco_salvo = ""
@@ -2879,6 +2912,36 @@ if aba_atual == t("tab_barriers"):
                             st.session_state.entraves_votados.add(entrave_id)
                             st.rerun()
 
+                    if st.button(
+                        t("remove_postit"),
+                        key=f"excluir_entrave_{entrave_id}"
+                    ):
+                        cursor.execute("""
+                        DELETE FROM categorias_entraves
+                        WHERE entrave_id = ?
+                        AND sala = ?
+                        """, (
+                            entrave_id,
+                            sala_atual
+                        ))
+
+                        cursor.execute("""
+                        DELETE FROM entraves
+                        WHERE id = ?
+                        AND sala = ?
+                        """, (
+                            entrave_id,
+                            sala_atual
+                        ))
+
+                        conn.commit()
+
+                        if entrave_id in st.session_state.entraves_votados:
+                            st.session_state.entraves_votados.remove(entrave_id)
+
+                        st.success(t("postit_removed"))
+                        st.rerun()
+
         st.markdown(f"## {t('ranking_barriers')}")
 
         rankings = buscar_rankings_entraves(
@@ -3274,12 +3337,271 @@ if aba_atual == t("tab_solutions"):
     st.markdown(
         f"""
 <div class="step-card">
-<div class="step-title">{t("under_construction")}</div>
+<div class="step-title">{t("solution_hypotheses_board")}</div>
 <div class="step-help">{t("solutions_construction_help")}</div>
 </div>
 """,
         unsafe_allow_html=True
     )
+
+    cursor.execute("""
+    SELECT 
+        c.categoria,
+        e.equipe,
+        e.texto,
+        e.votos,
+        e.id
+    FROM categorias_entraves c
+    JOIN entraves e ON c.entrave_id = e.id
+    WHERE c.sala = ?
+    ORDER BY c.categoria, e.votos DESC, e.id ASC
+    """, (sala_atual,))
+
+    entraves_categorizados = cursor.fetchall()
+
+    if not entraves_categorizados:
+
+        st.info(t("no_categorized_barriers_solutions"))
+
+    else:
+
+        categorias_solucoes = {}
+
+        for categoria, equipe_ent, texto_ent, votos_ent, entrave_id in entraves_categorizados:
+
+            if categoria not in categorias_solucoes:
+                categorias_solucoes[categoria] = []
+
+            categorias_solucoes[categoria].append(
+                (
+                    equipe_ent,
+                    texto_ent,
+                    votos_ent,
+                    entrave_id
+                )
+            )
+
+        for categoria, entraves_da_categoria in categorias_solucoes.items():
+
+            st.markdown(
+                f"""
+<div class="resultado-final-header">
+<div class="resultado-label">{t("category_caps")}</div>
+<div class="resultado-texto">{esc(categoria)}</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            st.markdown(f"### {t('categorized_barriers')}")
+
+            colunas_entraves_cat = (
+                [st.container()]
+                if st.session_state.get("is_mobile", False)
+                else st.columns(3, gap="large")
+            )
+
+            for i, (equipe_ent, texto_ent, votos_ent, entrave_id) in enumerate(entraves_da_categoria):
+
+                with colunas_entraves_cat[i % len(colunas_entraves_cat)]:
+
+                    st.markdown(
+                        f"""
+<div class="desktop-card-html" style="
+    background:#eaf2fb;
+    padding:24px;
+    border-radius:22px;
+    margin-bottom:14px;
+    border:2px solid #c9d9ea;
+    border-left:8px solid #002f5f;
+">
+<div style="
+    color:#002f5f;
+    font-size:17px;
+    font-weight:900;
+    margin-bottom:8px;
+">
+{t("team_label")}: {esc(equipe_ent)} • {votos_ent} {t("votes").lower()}
+</div>
+<div class="texto-card" style="
+    color:#111827;
+    font-size:22px;
+    line-height:1.45;
+    font-weight:800;
+">
+{esc(texto_ent)}
+</div>
+</div>
+""",
+                        unsafe_allow_html=True
+                    )
+
+            chave_categoria = re.sub(r"[^a-zA-Z0-9_]+", "_", categoria).strip("_").lower()
+
+            if f"limpar_solucao_{chave_categoria}" not in st.session_state:
+                st.session_state[f"limpar_solucao_{chave_categoria}"] = False
+
+            if st.session_state[f"limpar_solucao_{chave_categoria}"]:
+                st.session_state[f"campo_solucao_{chave_categoria}"] = ""
+                st.session_state[f"limpar_solucao_{chave_categoria}"] = False
+
+            nova_hipotese = st.text_area(
+                f"{t('solution_hypothesis')} — {categoria}",
+                placeholder=t("solution_placeholder"),
+                key=f"campo_solucao_{chave_categoria}"
+            )
+
+            if st.button(
+                t("submit_solution"),
+                key=f"submeter_solucao_{chave_categoria}"
+            ):
+
+                if not nova_hipotese.strip():
+
+                    st.warning(t("solution_required"))
+
+                else:
+
+                    cursor.execute("""
+                    INSERT INTO hipoteses_solucao (
+                        sala,
+                        categoria,
+                        texto,
+                        votos
+                    )
+                    VALUES (?, ?, ?, 0)
+                    """, (
+                        sala_atual,
+                        categoria,
+                        nova_hipotese.strip()
+                    ))
+
+                    conn.commit()
+
+                    st.session_state[f"limpar_solucao_{chave_categoria}"] = True
+
+                    st.success(t("solution_added"))
+                    st.rerun()
+
+            cursor.execute("""
+            SELECT id, texto, votos
+            FROM hipoteses_solucao
+            WHERE sala = ?
+            AND categoria = ?
+            ORDER BY id DESC
+            """, (
+                sala_atual,
+                categoria
+            ))
+
+            hipoteses_categoria = cursor.fetchall()
+
+            if hipoteses_categoria:
+
+                st.markdown(f"### {t('solution_hypothesis')}")
+
+                colunas_hipoteses = (
+                    [st.container()]
+                    if st.session_state.get("is_mobile", False)
+                    else st.columns(3, gap="large")
+                )
+
+                for i, (hipotese_id, texto_hipotese, votos_hipotese) in enumerate(hipoteses_categoria):
+
+                    with colunas_hipoteses[i % len(colunas_hipoteses)]:
+
+                        foi_votada = hipotese_id in st.session_state.hipoteses_votadas
+
+                        classe_solucao = (
+                            "postit-votado"
+                            if foi_votada
+                            else "postit"
+                        )
+
+                        st.markdown(
+                            f"""
+<div class="desktop-card-html {classe_solucao}" style="
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:240px;
+">
+<div>
+<h4>{esc(categoria)}</h4>
+<div class="postit-texto texto-card">{esc(texto_hipotese)}</div>
+</div>
+<div class="votos">{t("votes")}: {votos_hipotese}</div>
+</div>
+""",
+                            unsafe_allow_html=True
+                        )
+
+                        if foi_votada:
+
+                            if st.button(
+                                t("undo_vote"),
+                                key=f"desfazer_hipotese_{hipotese_id}",
+                                use_container_width=True
+                            ):
+                                cursor.execute("""
+                                UPDATE hipoteses_solucao
+                                SET votos = CASE
+                                    WHEN votos > 0 THEN votos - 1
+                                    ELSE 0
+                                END
+                                WHERE id = ?
+                                AND sala = ?
+                                """, (
+                                    hipotese_id,
+                                    sala_atual
+                                ))
+
+                                conn.commit()
+                                st.session_state.hipoteses_votadas.remove(hipotese_id)
+                                st.rerun()
+
+                        else:
+
+                            if st.button(
+                                t("vote"),
+                                key=f"votar_hipotese_{hipotese_id}",
+                                use_container_width=True
+                            ):
+                                cursor.execute("""
+                                UPDATE hipoteses_solucao
+                                SET votos = votos + 1
+                                WHERE id = ?
+                                AND sala = ?
+                                """, (
+                                    hipotese_id,
+                                    sala_atual
+                                ))
+
+                                conn.commit()
+                                st.session_state.hipoteses_votadas.add(hipotese_id)
+                                st.rerun()
+
+                        if st.button(
+                            t("delete_solution"),
+                            key=f"excluir_hipotese_{hipotese_id}",
+                            use_container_width=True
+                        ):
+                            cursor.execute("""
+                            DELETE FROM hipoteses_solucao
+                            WHERE id = ?
+                            AND sala = ?
+                            """, (
+                                hipotese_id,
+                                sala_atual
+                            ))
+
+                            conn.commit()
+
+                            if hipotese_id in st.session_state.hipoteses_votadas:
+                                st.session_state.hipoteses_votadas.remove(hipotese_id)
+
+                            st.success(t("solution_deleted"))
+                            st.rerun()
 
 
 # =========================
