@@ -2,6 +2,7 @@ import streamlit as st
 import time
 import sqlite3
 import html
+import re
 from streamlit_autorefresh import st_autorefresh
 
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
@@ -2040,7 +2041,16 @@ if aba_atual == t("tab_summary"):
 
 else:
 
-    if not st.session_state.esconder_cabecalho_fixo:
+    if aba_atual == t("tab_solutions"):
+
+        st.markdown(
+            """
+<div style="height: 120px;"></div>
+""",
+            unsafe_allow_html=True
+        )
+
+    elif not st.session_state.esconder_cabecalho_fixo:
 
         st.markdown(
             f"""
