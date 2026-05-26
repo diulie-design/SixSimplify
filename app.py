@@ -1768,26 +1768,51 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
 
         with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
 
-            classe_card_solucao = "" if modo_resumo else "postit-votado"
+            if modo_resumo:
 
-            estilo_card_resumo = (
-                "background:#eaf2fb !important;"
-                "padding:24px !important;"
-                "border-radius:22px !important;"
-                "margin-bottom:14px !important;"
-                "border:2px solid #c9d9ea !important;"
-                "border-left:8px solid #002f5f !important;"
-                "color:#111827 !important;"
-            ) if modo_resumo else ""
+                st.markdown(
+                    f"""
+<div class="desktop-card-html" style="
+    background:#eaf2fb;
+    padding:24px;
+    border-radius:22px;
+    min-height:240px;
+    margin-bottom:14px;
+    border:2px solid #c9d9ea;
+    border-left:8px solid #002f5f;
+    color:#111827;
+    box-sizing:border-box;
+">
+<div style="
+    color:#002f5f;
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:12px;
+">
+{esc(categoria_sel)}
+</div>
+<div class="texto-card" style="
+    color:#111827;
+    font-size:24px;
+    line-height:1.45;
+    font-weight:850;
+">
+{esc(texto_sel)}
+</div>
+</div>
+""",
+                    unsafe_allow_html=True
+                )
 
-            st.markdown(
-                f"""
-<div class="desktop-card-html {classe_card_solucao}" style="
+            else:
+
+                st.markdown(
+                    f"""
+<div class="desktop-card-html postit-votado" style="
     display:flex;
     flex-direction:column;
     justify-content:space-between;
     min-height:240px;
-    {estilo_card_resumo}
 ">
 <div>
 <h4>{esc(categoria_sel)}</h4>
@@ -1795,8 +1820,8 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
 </div>
 </div>
 """,
-                unsafe_allow_html=True
-            )
+                    unsafe_allow_html=True
+                )
 
 
 def buscar_mais_votados(sala_atual):
