@@ -1713,7 +1713,7 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
 <strong>Caso 1 — votos equilibrados</strong><br>
 Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os votos estão pouco espalhados.
 
-<table style="width:100%; border-collapse:collapse; margin:14px 0 22px 0; font-size:17px;">
+<table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
         <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hipótese</th>
         <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votos</th>
@@ -1725,10 +1725,14 @@ Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os voto
     <tr><td style="padding:8px;">E</td><td style="padding:8px;">5</td></tr>
 </table>
 
+<div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px; margin-bottom:24px;">
+<strong>Resultado:</strong> nenhuma hipótese fica muito distante das demais. A seleção tende a ser mais conservadora, porque não há uma ideia claramente dominante.
+</div>
+
 <strong>Caso 2 — uma hipótese se destaca</strong><br>
 Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipótese recebeu muito mais votos que as outras.
 
-<table style="width:100%; border-collapse:collapse; margin:14px 0 22px 0; font-size:17px;">
+<table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
         <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hipótese</th>
         <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votos</th>
@@ -1740,7 +1744,9 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
     <tr><td style="padding:8px;">E</td><td style="padding:8px;">2</td></tr>
 </table>
 
-Esse método ajuda a responder: quais hipóteses realmente se destacaram do comportamento normal?
+<div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px;">
+<strong>Resultado:</strong> a hipótese A seria selecionada, porque ficou claramente acima do comportamento normal do grupo.
+</div>
 
 </div>
 </div>
@@ -1762,11 +1768,17 @@ Esse método ajuda a responder: quais hipóteses realmente se destacaram do comp
 
         with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
 
+            classe_card_solucao = "" if modo_resumo else "postit-votado"
+
             estilo_card_resumo = (
                 """
                 background:#eaf2fb !important;
+                padding:24px !important;
+                border-radius:22px !important;
+                margin-bottom:14px !important;
                 border:2px solid #c9d9ea !important;
                 border-left:8px solid #002f5f !important;
+                color:#111827 !important;
                 """
                 if modo_resumo
                 else ""
@@ -1774,7 +1786,7 @@ Esse método ajuda a responder: quais hipóteses realmente se destacaram do comp
 
             st.markdown(
                 f"""
-<div class="desktop-card-html postit-votado" style="
+<div class="desktop-card-html {classe_card_solucao}" style="
     display:flex;
     flex-direction:column;
     justify-content:space-between;
