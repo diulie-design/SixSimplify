@@ -1110,7 +1110,7 @@ TEXTOS = {
         "save_team_before_postit": "Salve o nome da equipe antes de adicionar um post-it.",
         "exact_words": "O post-it precisa ter exatamente 6 palavras.",
         "postit_added": "Post-it adicionado!",
-        "remove_postit": "Remover post-it",
+        "remove_postit": "Excluir post-it",
         "postit_removed": "Post-it removido!",
         "vote_step_title": "3. Vote nos post-its",
         "vote_step_help": "Leia os post-its e clique em votar. Se errar, clique em desfazer voto.",
@@ -1235,7 +1235,7 @@ TEXTOS = {
         "save_team_before_postit": "Save the team name before adding a post-it.",
         "exact_words": "The post-it must have exactly 6 words.",
         "postit_added": "Post-it added!",
-        "remove_postit": "Remove post-it",
+        "remove_postit": "Delete post-it",
         "postit_removed": "Post-it removed!",
         "vote_step_title": "3. Vote on post-its",
         "vote_step_help": "Read the post-its and click vote. If you make a mistake, click undo vote.",
@@ -2003,24 +2003,7 @@ else:
 
 if aba_atual == t("tab_summary"):
 
-    if st.session_state.get("is_mobile", False):
-
-        st.markdown(
-            """
-<div class="summary-header-mobile-spacer"></div>
-""",
-            unsafe_allow_html=True
-        )
-
-    st.markdown(
-        f"""
-<div class="header-foco">
-    <div class="header-title">{esc(titulo_header)}</div>
-    <div class="header-subtitle">{esc(subtitulo_header)}</div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+    pass
 
 else:
 
@@ -2060,15 +2043,6 @@ div[role="radiogroup"]{
 # =========================
 
 if aba_atual == t("tab_summary"):
-
-    if st.session_state.get("is_mobile", False):
-
-        st.markdown(
-            """
-<div class="summary-mobile-spacer"></div>
-""",
-            unsafe_allow_html=True
-        )
 
     st.title(t("summary_title"))
 
@@ -2176,26 +2150,6 @@ Ainda em construção...
 
 if aba_atual == t("tab_focus"):
 
-    st.title(t("focus_on_focus"))
-
-    st.markdown(
-        f"""
-<div style="
-    font-size:24px;
-    font-weight:500;
-    color:#222;
-    margin-top:-22px;
-    margin-bottom:4px;
-    opacity:0.92;
-">
-{t("focus_subtitle")}
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-    st.caption(f"{t('current_room')}: {sala_atual}")
-
     # =========================
     # FOCO DO WORKSHOP
     # =========================
@@ -2257,6 +2211,26 @@ if aba_atual == t("tab_focus"):
         if st.button(t("edit_focus")):
             st.session_state.editando_foco = True
             st.rerun()
+
+    st.title(t("focus_on_focus"))
+
+    st.markdown(
+        f"""
+<div style="
+    font-size:24px;
+    font-weight:500;
+    color:#222;
+    margin-top:-22px;
+    margin-bottom:4px;
+    opacity:0.92;
+">
+{t("focus_subtitle")}
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    st.caption(f"{t('current_room')}: {sala_atual}")
 
     mostrar_cronometro_compartilhado(
         sala_atual,
