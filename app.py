@@ -1771,18 +1771,14 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
             classe_card_solucao = "" if modo_resumo else "postit-votado"
 
             estilo_card_resumo = (
-                """
-                background:#eaf2fb !important;
-                padding:24px !important;
-                border-radius:22px !important;
-                margin-bottom:14px !important;
-                border:2px solid #c9d9ea !important;
-                border-left:8px solid #002f5f !important;
-                color:#111827 !important;
-                """
-                if modo_resumo
-                else ""
-            )
+                "background:#eaf2fb !important;"
+                "padding:24px !important;"
+                "border-radius:22px !important;"
+                "margin-bottom:14px !important;"
+                "border:2px solid #c9d9ea !important;"
+                "border-left:8px solid #002f5f !important;"
+                "color:#111827 !important;"
+            ) if modo_resumo else ""
 
             st.markdown(
                 f"""
