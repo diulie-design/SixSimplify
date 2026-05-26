@@ -1089,7 +1089,7 @@ TEXTOS = {
         "under_construction": "Ainda em construção...",
         "solutions_construction_help": "Essa etapa será utilizada para estruturar hipóteses de solução para os principais entraves identificados.",
         "solution_hypotheses_board": "Hipóteses de solução por categoria",
-        "solution_hypothesis": "Hipótese de solução",
+        "solution_hypothesis": "Hipóteses de solução",
         "solution_placeholder": "Digite uma hipótese de solução para essa categoria",
         "submit_solution": "Submeter hipótese",
         "solution_added": "Hipótese de solução adicionada!",
@@ -1097,6 +1097,10 @@ TEXTOS = {
         "delete_solution": "Excluir hipótese",
         "solution_deleted": "Hipótese excluída!",
         "no_categorized_barriers_solutions": "Categorize os entraves na aba Principais Entraves para levantar hipóteses de solução.",
+        "selected_solution_hypotheses": "Hipóteses de solução selecionadas",
+        "selected_solution_help": "Aparecem aqui as hipóteses com desempenho igual ou superior a 70% da hipótese mais votada.",
+        "selection_threshold": "Critério de seleção",
+        "no_selected_solutions": "As hipóteses selecionadas aparecerão aqui após a votação.",
         "viability_construction_help": "Essa etapa será utilizada para avaliar viabilidade, impacto e possíveis quick wins.",
         "summary_title": "Resumo",
         "summary_step_title": "Resumo do workshop",
@@ -1223,7 +1227,7 @@ TEXTOS = {
         "under_construction": "Still under construction...",
         "solutions_construction_help": "This step will be used to structure solution hypotheses for the main barriers identified.",
         "solution_hypotheses_board": "Solution hypotheses by category",
-        "solution_hypothesis": "Solution hypothesis",
+        "solution_hypothesis": "Solution hypotheses",
         "solution_placeholder": "Enter a solution hypothesis for this category",
         "submit_solution": "Submit hypothesis",
         "solution_added": "Solution hypothesis added!",
@@ -1231,6 +1235,10 @@ TEXTOS = {
         "delete_solution": "Delete hypothesis",
         "solution_deleted": "Hypothesis deleted!",
         "no_categorized_barriers_solutions": "Categorize barriers in the Main Barriers tab to create solution hypotheses.",
+        "selected_solution_hypotheses": "Selected solution hypotheses",
+        "selected_solution_help": "This section shows hypotheses with performance equal to or above 70% of the most voted hypothesis.",
+        "selection_threshold": "Selection criterion",
+        "no_selected_solutions": "Selected hypotheses will appear here after voting.",
         "viability_construction_help": "This step will be used to assess feasibility, impact, and possible quick wins.",
         "summary_title": "Summary",
         "summary_step_title": "Workshop summary",
@@ -3612,6 +3620,105 @@ if aba_atual == t("tab_solutions"):
 
                             st.success(t("solution_deleted"))
                             st.rerun()
+
+
+    # =========================
+    # RESULTADO — HIPÓTESES SELECIONADAS
+    # =========================
+
+    st.markdown(f"## {t('selected_solution_hypotheses')}")
+
+    st.markdown(
+        f"""
+<div class="step-card">
+<div class="step-title">{t("selected_solution_hypotheses")}</div>
+<div class="step-help">{t("selected_solution_help")}</div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
+
+    cursor.execute("""
+    SELECT categoria, texto, votos, id
+    FROM hipoteses_solucao
+    WHERE sala = ?
+    ORDER BY votos DESC, id ASC
+    """, (sala_atual,))
+
+    todas_hipoteses = cursor.fetchall()
+
+    if todas_hipoteses:
+
+        maior_voto_hipotese = max([item[2] for item in todas_hipoteses])
+        menor_voto_hipotese = min([item[2] for item in todas_hipoteses])
+        limite_votos_hipotese = maior_voto_hipotese * 0.70
+
+        hipoteses_selecionadas = [
+            item for item in todas_hipoteses
+            if maior_voto_hipotese > 0 and item[2] >= limite_votos_hipotese
+        ]
+
+        if hipoteses_selecionadas:
+
+            st.markdown(
+                f"""
+<div class="resultado-final-header">
+<div class="resultado-label">{t("selection_threshold")}</div>
+<div class="resultado-texto">≥ 70% • {len(hipoteses_selecionadas)} post-it(s)</div>
+</div>
+""",
+                unsafe_allow_html=True
+            )
+
+            st.caption(
+                f"Maior votação: {maior_voto_hipotese} voto(s) | "
+                f"Menor votação: {menor_voto_hipotese} voto(s) | "
+                f"Corte mínimo: {limite_votos_hipotese:.1f} voto(s)"
+            )
+
+            colunas_resultado_hipoteses = (
+                [st.container()]
+                if st.session_state.get("is_mobile", False)
+                else st.columns(3, gap="large")
+            )
+
+            for i, (categoria_sel, texto_sel, votos_sel, hipotese_id_sel) in enumerate(hipoteses_selecionadas):
+
+                percentual_sel = (
+                    (votos_sel / maior_voto_hipotese) * 100
+                    if maior_voto_hipotese > 0
+                    else 0
+                )
+
+                with colunas_resultado_hipoteses[i % len(colunas_resultado_hipoteses)]:
+
+                    st.markdown(
+                        f"""
+<div class="desktop-card-html postit-votado" style="
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    min-height:240px;
+">
+<div>
+<h4>{esc(categoria_sel)}</h4>
+<div class="postit-texto texto-card">{esc(texto_sel)}</div>
+</div>
+<div class="votos">{t("votes")}: {votos_sel} • {percentual_sel:.0f}%</div>
+</div>
+""",
+                        unsafe_allow_html=True
+                    )
+
+        else:
+
+            st.info(t("no_selected_solutions"))
+
+    else:
+
+        st.info(t("no_selected_solutions"))
+
+
 
 
 # =========================
