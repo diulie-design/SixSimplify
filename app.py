@@ -1637,6 +1637,7 @@ def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
 
 
 
+
 def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resumo=False):
 
     cursor.execute("""
@@ -1654,7 +1655,6 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
         return
 
     lista_votos = [item[2] for item in todas_hipoteses]
-
     maior_voto_hipotese = max(lista_votos)
 
     if maior_voto_hipotese <= 0:
@@ -1662,15 +1662,7 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
         st.info(t("no_selected_solutions"))
         return
 
-    media_votos = sum(lista_votos) / len(lista_votos)
-
-    variancia = sum(
-        (v - media_votos) ** 2 for v in lista_votos
-    ) / len(lista_votos)
-
-    desvio_padrao = variancia ** 0.5
-
-    limite_votos_hipotese = media_votos + desvio_padrao
+    limite_votos_hipotese = maior_voto_hipotese * 0.70
 
     hipoteses_selecionadas = [
         item for item in todas_hipoteses
@@ -1715,20 +1707,17 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
         if st.session_state.get("idioma", "pt") == "en":
 
             texto_como_funciona = (
-                "How it works: the system calculates the average number of votes across all hypotheses "
-                "and also checks how spread out those votes are using standard deviation. "
-                "When the votes are very spread out, it becomes clearer which ideas truly stood out. "
-                "In practice, this creates a more rigorous selection process and helps highlight the strongest "
-                "solutions for strategic prioritization."
+                "How it works: the system identifies the most voted hypothesis and uses it as the reference. "
+                "Then, it selects every hypothesis that reached at least 70% of the leader's votes. "
+                "This avoids choosing only a fixed Top 3 and keeps all ideas that performed close to the strongest one."
             )
 
         else:
 
             texto_como_funciona = (
-                "Como funciona: o sistema calcula a média de votos das hipóteses e observa o quanto "
-                "os votos estão espalhados entre elas, usando o desvio padrão. Quanto maior essa diferença, "
-                "mais claro fica quais ideias realmente se destacaram. Na prática, essa é uma seleção mais "
-                "rigorosa, que ajuda a evidenciar as soluções mais fortes para uma priorização estratégica."
+                "Como funciona: o sistema identifica a hipótese mais votada e usa ela como referência. "
+                "Depois, seleciona todas as hipóteses que alcançaram pelo menos 70% dos votos da líder. "
+                "Assim, não ficamos presos a um Top 3 fixo e mantemos todas as ideias que chegaram perto da mais forte."
             )
 
         st.info(texto_como_funciona)
@@ -1746,7 +1735,7 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
 <div class="step-help">
 
 <strong>Case 1 — balanced votes</strong><br>
-In this case, all hypotheses performed similarly. Standard deviation is low because the votes are not very spread out.
+The leader has 8 votes. The selection threshold is 70% of 8, which equals 5.6 votes.
 
 <table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
@@ -1761,11 +1750,11 @@ In this case, all hypotheses performed similarly. Standard deviation is low beca
 </table>
 
 <div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px; margin-bottom:24px;">
-<strong>Result:</strong> no hypothesis is very far from the others. The selection tends to be more conservative because there is no clearly dominant idea.
+<strong>Result:</strong> hypotheses A, B, C and D would be selected, because they reached at least 5.6 votes. Hypothesis E would stay out.
 </div>
 
 <strong>Case 2 — one hypothesis stands out</strong><br>
-Here, votes are much more spread out. Standard deviation is high because one hypothesis received many more votes than the others.
+The leader has 20 votes. The selection threshold is 70% of 20, which equals 14 votes.
 
 <table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
@@ -1780,7 +1769,7 @@ Here, votes are much more spread out. Standard deviation is high because one hyp
 </table>
 
 <div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px;">
-<strong>Result:</strong> hypothesis A would be selected because it clearly stands out from the group’s normal voting behavior.
+<strong>Result:</strong> only hypothesis A would be selected, because only it reached at least 14 votes.
 </div>
 
 </div>
@@ -1795,7 +1784,7 @@ Here, votes are much more spread out. Standard deviation is high because one hyp
 <div class="step-help">
 
 <strong>Caso 1 — votos equilibrados</strong><br>
-Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os votos estão pouco espalhados.
+A hipótese líder tem 8 votos. O corte de seleção é 70% de 8, ou seja, 5,6 votos.
 
 <table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
@@ -1810,11 +1799,11 @@ Nesse caso, todo mundo ficou parecido. O desvio padrão é baixo, porque os voto
 </table>
 
 <div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px; margin-bottom:24px;">
-<strong>Resultado:</strong> nenhuma hipótese fica muito distante das demais. A seleção tende a ser mais conservadora, porque não há uma ideia claramente dominante.
+<strong>Resultado:</strong> as hipóteses A, B, C e D seriam selecionadas, porque alcançaram pelo menos 5,6 votos. A hipótese E ficaria de fora.
 </div>
 
 <strong>Caso 2 — uma hipótese se destaca</strong><br>
-Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipótese recebeu muito mais votos que as outras.
+A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 votos.
 
 <table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
     <tr>
@@ -1829,7 +1818,7 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
 </table>
 
 <div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px;">
-<strong>Resultado:</strong> a hipótese A seria selecionada, porque ficou claramente acima do comportamento normal do grupo.
+<strong>Resultado:</strong> apenas a hipótese A seria selecionada, porque só ela alcançou pelo menos 14 votos.
 </div>
 
 </div>
