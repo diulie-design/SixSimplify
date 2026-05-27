@@ -1098,6 +1098,11 @@ TEXTOS = {
         "solution_deleted": "Hipótese excluída!",
         "no_categorized_barriers_solutions": "Categorize os entraves na aba Principais Entraves para levantar hipóteses de solução.",
         "selected_solution_hypotheses": "Hipóteses de solução selecionadas",
+        "prioritized_solutions": "Soluções priorizadas",
+        "auto_selected_collective_vote": "Selecionadas automaticamente a partir da votação coletiva.",
+        "how_it_works_button": "Exemplo",
+        "close_example": "Fechar exemplo",
+        "example_title": "Exemplo",
         "selected_solution_help": "As hipóteses abaixo foram selecionadas com base na média de votos do grupo e no desvio padrão. Isso permite destacar ideias que realmente se sobressaíram em relação às demais.",
         "selection_threshold": "Critério de seleção estatística",
         "no_selected_solutions": "As hipóteses selecionadas aparecerão aqui após a votação.",
@@ -1236,6 +1241,11 @@ TEXTOS = {
         "solution_deleted": "Hypothesis deleted!",
         "no_categorized_barriers_solutions": "Categorize barriers in the Main Barriers tab to create solution hypotheses.",
         "selected_solution_hypotheses": "Selected solution hypotheses",
+        "prioritized_solutions": "Prioritized solutions",
+        "auto_selected_collective_vote": "Automatically selected from the collective voting.",
+        "how_it_works_button": "Example",
+        "close_example": "Close example",
+        "example_title": "Example",
         "selected_solution_help": "The hypotheses below were selected based on the group average votes and standard deviation. This helps identify ideas that truly stood out compared to the others.",
         "selection_threshold": "Statistical selection criterion",
         "no_selected_solutions": "Selected hypotheses will appear here after voting.",
@@ -1626,6 +1636,7 @@ def mostrar_pilula_timer_fixa(sala_atual, aba_timer):
 
 
 
+
 def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resumo=False):
 
     cursor.execute("""
@@ -1673,17 +1684,27 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
 
     qtd_solucoes_priorizadas = len(hipoteses_selecionadas)
 
-    texto_solucoes_priorizadas = (
-        "1 solução priorizada"
-        if qtd_solucoes_priorizadas == 1
-        else f"{qtd_solucoes_priorizadas} soluções priorizadas"
-    )
+    if st.session_state.get("idioma", "pt") == "en":
+
+        texto_solucoes_priorizadas = (
+            "1 prioritized solution"
+            if qtd_solucoes_priorizadas == 1
+            else f"{qtd_solucoes_priorizadas} prioritized solutions"
+        )
+
+    else:
+
+        texto_solucoes_priorizadas = (
+            "1 solução priorizada"
+            if qtd_solucoes_priorizadas == 1
+            else f"{qtd_solucoes_priorizadas} soluções priorizadas"
+        )
 
     st.markdown(
         f"""
 <div class="step-card">
 <div class="step-title">{texto_solucoes_priorizadas}</div>
-<div class="step-help">Selecionadas automaticamente a partir da votação coletiva.</div>
+<div class="step-help">{t("auto_selected_collective_vote")}</div>
 </div>
 """,
         unsafe_allow_html=True
@@ -1691,21 +1712,84 @@ def mostrar_solucoes_priorizadas(sala_atual, mostrar_explicacao=True, modo_resum
 
     if mostrar_explicacao:
 
-        st.info(
-            "Como funciona: o sistema calcula a média de votos das hipóteses e observa "
-            "o quanto os votos estão espalhados entre elas, usando o desvio padrão. "
-            "Quanto maior essa diferença, mais claro fica quais ideias realmente se destacaram. "
-            "Na prática, essa é uma seleção mais rigorosa, que ajuda a evidenciar as soluções "
-            "mais fortes para uma priorização estratégica."
-        )
+        if st.session_state.get("idioma", "pt") == "en":
 
-        if st.button("Exemplo", key="abrir_exemplo_priorizacao"):
+            texto_como_funciona = (
+                "How it works: the system calculates the average number of votes across all hypotheses "
+                "and also checks how spread out those votes are using standard deviation. "
+                "When the votes are very spread out, it becomes clearer which ideas truly stood out. "
+                "In practice, this creates a more rigorous selection process and helps highlight the strongest "
+                "solutions for strategic prioritization."
+            )
+
+        else:
+
+            texto_como_funciona = (
+                "Como funciona: o sistema calcula a média de votos das hipóteses e observa o quanto "
+                "os votos estão espalhados entre elas, usando o desvio padrão. Quanto maior essa diferença, "
+                "mais claro fica quais ideias realmente se destacaram. Na prática, essa é uma seleção mais "
+                "rigorosa, que ajuda a evidenciar as soluções mais fortes para uma priorização estratégica."
+            )
+
+        st.info(texto_como_funciona)
+
+        if st.button(t("how_it_works_button"), key="abrir_exemplo_priorizacao"):
             st.session_state.mostrar_exemplo_priorizacao = True
 
         if st.session_state.mostrar_exemplo_priorizacao:
 
-            st.markdown(
-                """
+            if st.session_state.get("idioma", "pt") == "en":
+
+                exemplo_html = """
+<div class="step-card">
+<div class="step-title">Example</div>
+<div class="step-help">
+
+<strong>Case 1 — balanced votes</strong><br>
+In this case, all hypotheses performed similarly. Standard deviation is low because the votes are not very spread out.
+
+<table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
+    <tr>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hypothesis</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votes</th>
+    </tr>
+    <tr><td style="padding:8px;">A</td><td style="padding:8px;">8</td></tr>
+    <tr><td style="padding:8px;">B</td><td style="padding:8px;">7</td></tr>
+    <tr><td style="padding:8px;">C</td><td style="padding:8px;">7</td></tr>
+    <tr><td style="padding:8px;">D</td><td style="padding:8px;">6</td></tr>
+    <tr><td style="padding:8px;">E</td><td style="padding:8px;">5</td></tr>
+</table>
+
+<div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px; margin-bottom:24px;">
+<strong>Result:</strong> no hypothesis is very far from the others. The selection tends to be more conservative because there is no clearly dominant idea.
+</div>
+
+<strong>Case 2 — one hypothesis stands out</strong><br>
+Here, votes are much more spread out. Standard deviation is high because one hypothesis received many more votes than the others.
+
+<table style="width:100%; border-collapse:collapse; margin:14px 0 12px 0; font-size:17px;">
+    <tr>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Hypothesis</th>
+        <th style="text-align:left; padding:8px; border-bottom:2px solid #c9d9ea;">Votes</th>
+    </tr>
+    <tr><td style="padding:8px;">A</td><td style="padding:8px;">20</td></tr>
+    <tr><td style="padding:8px;">B</td><td style="padding:8px;">5</td></tr>
+    <tr><td style="padding:8px;">C</td><td style="padding:8px;">4</td></tr>
+    <tr><td style="padding:8px;">D</td><td style="padding:8px;">3</td></tr>
+    <tr><td style="padding:8px;">E</td><td style="padding:8px;">2</td></tr>
+</table>
+
+<div style="background:#eaf2fb; border-left:6px solid #002f5f; padding:12px 14px; border-radius:14px;">
+<strong>Result:</strong> hypothesis A would be selected because it clearly stands out from the group’s normal voting behavior.
+</div>
+
+</div>
+</div>
+"""
+
+            else:
+
+                exemplo_html = """
 <div class="step-card">
 <div class="step-title">Exemplo</div>
 <div class="step-help">
@@ -1750,11 +1834,11 @@ Aqui os votos estão bem espalhados. O desvio padrão é alto, porque uma hipót
 
 </div>
 </div>
-""",
-                unsafe_allow_html=True
-            )
+"""
 
-            if st.button("Fechar exemplo", key="fechar_exemplo_priorizacao"):
+            st.markdown(exemplo_html, unsafe_allow_html=True)
+
+            if st.button(t("close_example"), key="fechar_exemplo_priorizacao"):
                 st.session_state.mostrar_exemplo_priorizacao = False
                 st.rerun()
 
@@ -2076,11 +2160,23 @@ if st.session_state.sala is None:
 
     if equipe_url:
 
+        titulo_equipe_identificada = (
+            "Team already identified"
+            if st.session_state.get("idioma", "pt") == "en"
+            else "Equipe já identificada"
+        )
+
+        ajuda_equipe_identificada = (
+            "Confirm or edit your team before entering again."
+            if st.session_state.get("idioma", "pt") == "en"
+            else "Confirme ou edite sua equipe antes de entrar novamente."
+        )
+
         st.markdown(
-            """
+            f"""
 <div class="step-card">
-<div class="step-title">Equipe já identificada</div>
-<div class="step-help">Confirme ou edite sua equipe antes de entrar novamente.</div>
+<div class="step-title">{titulo_equipe_identificada}</div>
+<div class="step-help">{ajuda_equipe_identificada}</div>
 </div>
 """,
             unsafe_allow_html=True
