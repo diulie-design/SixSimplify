@@ -2460,7 +2460,11 @@ if aba_atual == t("tab_summary"):
     # SOLUÇÕES PRIORIZADAS
     # =========================
 
-    st.markdown("## Soluções priorizadas")
+    st.markdown(
+    "## Prioritized solutions"
+    if st.session_state.get("idioma", "pt") == "en"
+    else "## Soluções priorizadas"
+)
 
     mostrar_solucoes_priorizadas(
         sala_atual,
@@ -3912,7 +3916,11 @@ if aba_atual == t("tab_solutions"):
     # RESULTADO — SOLUÇÕES PRIORIZADAS
     # =========================
 
-    st.markdown("## Soluções priorizadas")
+    st.markdown(
+    "## Prioritized solutions"
+    if st.session_state.get("idioma", "pt") == "en"
+    else "## Soluções priorizadas"
+)
 
     mostrar_solucoes_priorizadas(
         sala_atual,
