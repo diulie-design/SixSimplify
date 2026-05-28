@@ -1897,6 +1897,58 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
                 )
 
 
+
+def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior=True, mostrar_proximo=True, chave_base="nav"):
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    col_nav_1, col_nav_2 = st.columns([1, 1])
+
+    if mostrar_anterior:
+
+        with col_nav_1:
+
+            texto_anterior = (
+                "⬅ Previous"
+                if st.session_state.get("idioma", "pt") == "en"
+                else "⬅ Anterior"
+            )
+
+            if st.button(
+                texto_anterior,
+                use_container_width=True,
+                key=f"anterior_{chave_base}"
+            ):
+
+                st.session_state.aba_atual = abas_ordem[
+                    indice_aba_atual - 1
+                ]
+
+                st.rerun()
+
+    if mostrar_proximo:
+
+        with col_nav_2:
+
+            texto_proximo = (
+                "Next ➜"
+                if st.session_state.get("idioma", "pt") == "en"
+                else "Próximo ➜"
+            )
+
+            if st.button(
+                texto_proximo,
+                use_container_width=True,
+                key=f"proximo_{chave_base}"
+            ):
+
+                st.session_state.aba_atual = abas_ordem[
+                    indice_aba_atual + 1
+                ]
+
+                st.rerun()
+
+
 def buscar_mais_votados(sala_atual):
 
     cursor.execute("""
@@ -2233,19 +2285,23 @@ else:
 # NAVEGAÇÃO
 # =========================
 
+abas_ordem = [
+    t("tab_summary"),
+    t("tab_focus"),
+    t("tab_barriers"),
+    t("tab_solutions"),
+    t("tab_viability")
+]
+
 aba_atual = st.radio(
     "Navegação",
-    [
-        t("tab_summary"),
-        t("tab_focus"),
-        t("tab_barriers"),
-        t("tab_solutions"),
-        t("tab_viability")
-    ],
+    abas_ordem,
     horizontal=True,
     label_visibility="collapsed",
     key="aba_atual"
 )
+
+indice_aba_atual = abas_ordem.index(aba_atual)
 
 
 
@@ -2472,6 +2528,16 @@ if aba_atual == t("tab_summary"):
 """,
         unsafe_allow_html=True
     )
+
+
+    mostrar_botoes_navegacao_abas(
+        abas_ordem,
+        indice_aba_atual,
+        mostrar_anterior=False,
+        mostrar_proximo=True,
+        chave_base="resumo"
+    )
+
 
 
 # =========================
@@ -2946,6 +3012,16 @@ if aba_atual == t("tab_focus"):
         st.rerun()
 
 
+    mostrar_botoes_navegacao_abas(
+        abas_ordem,
+        indice_aba_atual,
+        mostrar_anterior=True,
+        mostrar_proximo=True,
+        chave_base="foco"
+    )
+
+
+
 # =========================
 # ABA 2 - PRINCIPAIS ENTRAVES
 # =========================
@@ -3404,6 +3480,16 @@ if aba_atual == t("tab_barriers"):
         sala_atual,
         permitir_remover=True
     )
+
+
+    mostrar_botoes_navegacao_abas(
+        abas_ordem,
+        indice_aba_atual,
+        mostrar_anterior=True,
+        mostrar_proximo=True,
+        chave_base="entraves"
+    )
+
 
 st.markdown("""
 <style>
@@ -3918,6 +4004,16 @@ if aba_atual == t("tab_solutions"):
 
 
 
+    mostrar_botoes_navegacao_abas(
+        abas_ordem,
+        indice_aba_atual,
+        mostrar_anterior=True,
+        mostrar_proximo=True,
+        chave_base="hipoteses"
+    )
+
+
+
 # =========================
 # ABA 4 - VIABILIDADE E IMPACTO
 # =========================
@@ -3950,6 +4046,14 @@ if aba_atual == t("tab_viability"):
 </div>
 """,
         unsafe_allow_html=True
+    )
+
+    mostrar_botoes_navegacao_abas(
+        abas_ordem,
+        indice_aba_atual,
+        mostrar_anterior=True,
+        mostrar_proximo=False,
+        chave_base="viabilidade"
     )
 
 
