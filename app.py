@@ -2332,33 +2332,48 @@ st.session_state.aba_atual_valor = aba_atual
 indice_aba_atual = abas_ordem.index(aba_atual)
 
 
-# Ao navegar pelos botões Anterior/Próximo, começa a nova aba no topo.
+# Ao navegar pelos botões Anterior/Próximo, força a página para o topo.
 if st.session_state.get("rolar_para_topo", False):
 
-    components.html(
+    st.markdown(
         """
 <script>
-const scrollToTop = () => {
-    try {
-        window.parent.scrollTo({ top: 0, behavior: "smooth" });
-        const main = window.parent.document.querySelector("section.main");
-        if (main) {
-            main.scrollTo({ top: 0, behavior: "smooth" });
-        }
-    } catch (e) {
-        window.parent.scrollTo(0, 0);
-    }
-};
+function forceScrollTop() {
 
-setTimeout(scrollToTop, 80);
-setTimeout(scrollToTop, 250);
-setTimeout(scrollToTop, 500);
+    // janela principal
+    window.parent.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+
+    // streamlit main
+    const main = window.parent.document.querySelector("section.main");
+
+    if (main) {
+        main.scrollTop = 0;
+    }
+
+    // todos containers scrolláveis
+    const elements = window.parent.document.querySelectorAll("*");
+
+    elements.forEach((el) => {
+        if (el.scrollTop > 0) {
+            el.scrollTop = 0;
+        }
+    });
+}
+
+setTimeout(forceScrollTop, 50);
+setTimeout(forceScrollTop, 150);
+setTimeout(forceScrollTop, 350);
+setTimeout(forceScrollTop, 700);
 </script>
 """,
-        height=0
+        unsafe_allow_html=True
     )
 
     st.session_state.rolar_para_topo = False
+
+
+
 
 
 
