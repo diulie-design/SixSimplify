@@ -1899,6 +1899,7 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
+
 def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior=True, mostrar_proximo=True, chave_base="nav"):
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -1921,11 +1922,12 @@ def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior
                 key=f"anterior_{chave_base}"
             ):
 
-                st.session_state.indice_aba_atual = max(
+                novo_indice = max(
                     0,
                     indice_aba_atual - 1
                 )
 
+                st.session_state.aba_atual = abas_ordem[novo_indice]
                 st.rerun()
 
     if mostrar_proximo:
@@ -1944,11 +1946,12 @@ def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior
                 key=f"proximo_{chave_base}"
             ):
 
-                st.session_state.indice_aba_atual = min(
+                novo_indice = min(
                     len(abas_ordem) - 1,
                     indice_aba_atual + 1
                 )
 
+                st.session_state.aba_atual = abas_ordem[novo_indice]
                 st.rerun()
 
 
@@ -2296,30 +2299,21 @@ abas_ordem = [
     t("tab_viability")
 ]
 
-if "indice_aba_atual" not in st.session_state:
-    st.session_state.indice_aba_atual = 0
+if "aba_atual" not in st.session_state:
+    st.session_state.aba_atual = abas_ordem[0]
 
-st.session_state.indice_aba_atual = max(
-    0,
-    min(
-        st.session_state.indice_aba_atual,
-        len(abas_ordem) - 1
-    )
-)
+if st.session_state.aba_atual not in abas_ordem:
+    st.session_state.aba_atual = abas_ordem[0]
 
-aba_radio = st.radio(
+aba_atual = st.radio(
     "Navegação",
     abas_ordem,
-    index=st.session_state.indice_aba_atual,
     horizontal=True,
     label_visibility="collapsed",
-    key="aba_radio"
+    key="aba_atual"
 )
 
-st.session_state.indice_aba_atual = abas_ordem.index(aba_radio)
-
-aba_atual = abas_ordem[st.session_state.indice_aba_atual]
-indice_aba_atual = st.session_state.indice_aba_atual
+indice_aba_atual = abas_ordem.index(aba_atual)
 
 
 
