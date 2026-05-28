@@ -4,6 +4,7 @@ import sqlite3
 import html
 import re
 from streamlit_autorefresh import st_autorefresh
+import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Six Simplify Workshop", layout="wide")
 
@@ -2310,6 +2311,7 @@ if "aba_pendente" in st.session_state:
     st.session_state.aba_atual_valor = st.session_state.aba_pendente
     del st.session_state["aba_pendente"]
     st.session_state.aba_radio_versao += 1
+    st.session_state.rolar_para_topo = True
 
 if st.session_state.aba_atual_valor not in abas_ordem:
     st.session_state.aba_atual_valor = abas_ordem[0]
@@ -2328,6 +2330,36 @@ aba_atual = st.radio(
 st.session_state.aba_atual_valor = aba_atual
 
 indice_aba_atual = abas_ordem.index(aba_atual)
+
+
+# Ao navegar pelos botões Anterior/Próximo, começa a nova aba no topo.
+if st.session_state.get("rolar_para_topo", False):
+
+    components.html(
+        """
+<script>
+const scrollToTop = () => {
+    try {
+        window.parent.scrollTo({ top: 0, behavior: "smooth" });
+        const main = window.parent.document.querySelector("section.main");
+        if (main) {
+            main.scrollTo({ top: 0, behavior: "smooth" });
+        }
+    } catch (e) {
+        window.parent.scrollTo(0, 0);
+    }
+};
+
+setTimeout(scrollToTop, 80);
+setTimeout(scrollToTop, 250);
+setTimeout(scrollToTop, 500);
+</script>
+""",
+        height=0
+    )
+
+    st.session_state.rolar_para_topo = False
+
 
 
 
