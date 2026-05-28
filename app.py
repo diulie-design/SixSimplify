@@ -2332,52 +2332,6 @@ st.session_state.aba_atual_valor = aba_atual
 indice_aba_atual = abas_ordem.index(aba_atual)
 
 
-# Ao navegar pelos botões Anterior/Próximo, força a página para o topo.
-if st.session_state.get("rolar_para_topo", False):
-
-    st.markdown(
-        """
-<script>
-function forceScrollTop() {
-
-    // janela principal
-    window.parent.scrollTo(0, 0);
-    window.scrollTo(0, 0);
-
-    // streamlit main
-    const main = window.parent.document.querySelector("section.main");
-
-    if (main) {
-        main.scrollTop = 0;
-    }
-
-    // todos containers scrolláveis
-    const elements = window.parent.document.querySelectorAll("*");
-
-    elements.forEach((el) => {
-        if (el.scrollTop > 0) {
-            el.scrollTop = 0;
-        }
-    });
-}
-
-setTimeout(forceScrollTop, 50);
-setTimeout(forceScrollTop, 150);
-setTimeout(forceScrollTop, 350);
-setTimeout(forceScrollTop, 700);
-</script>
-""",
-        unsafe_allow_html=True
-    )
-
-    st.session_state.rolar_para_topo = False
-
-
-
-
-
-
-
 # CSS condicional para esconder/mostrar abas junto com o cabeçalho
 if st.session_state.get("esconder_cabecalho_fixo", False):
 
@@ -4925,3 +4879,73 @@ st.markdown("""
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+
+# =========================
+# SCROLL PARA O TOPO APÓS TROCAR DE ABA
+# =========================
+# Executa no final da renderização, quando a nova aba já foi carregada.
+if st.session_state.get("rolar_para_topo", False):
+
+    components.html(
+        """
+<script>
+(function () {
+    function scrollEverythingToTop() {
+        try {
+            const doc = window.parent.document;
+
+            // Janela principal
+            window.parent.scrollTo(0, 0);
+
+            // Containers comuns do Streamlit
+            const selectors = [
+                "section.main",
+                "[data-testid='stAppViewContainer']",
+                "[data-testid='stVerticalBlock']",
+                ".main",
+                "body",
+                "html"
+            ];
+
+            selectors.forEach((selector) => {
+                const el = doc.querySelector(selector);
+                if (el) {
+                    el.scrollTop = 0;
+                }
+            });
+
+            // Qualquer elemento scrollável que tenha ficado para baixo
+            doc.querySelectorAll("*").forEach((el) => {
+                try {
+                    if (el.scrollTop && el.scrollTop > 0) {
+                        el.scrollTop = 0;
+                    }
+                } catch (e) {}
+            });
+
+        } catch (e) {
+            try {
+                window.parent.scrollTo(0, 0);
+            } catch (err) {}
+        }
+    }
+
+    scrollEverythingToTop();
+
+    // Repetições para pegar o momento depois que o Streamlit terminar de redesenhar
+    setTimeout(scrollEverythingToTop, 100);
+    setTimeout(scrollEverythingToTop, 300);
+    setTimeout(scrollEverythingToTop, 700);
+    setTimeout(scrollEverythingToTop, 1200);
+    setTimeout(scrollEverythingToTop, 1800);
+})();
+</script>
+""",
+        height=0,
+        width=0
+    )
+
+    st.session_state.rolar_para_topo = False
+
