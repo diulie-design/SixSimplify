@@ -1184,6 +1184,15 @@ st.markdown("""
     word-spacing: normal !important;
 }
 
+
+/* PRESERVA QUEBRAS DE LINHA REAIS NOS BOTÕES-CARD */
+[class*="st-key-votar_card_"] .stButton > button,
+[class*="st-key-votar_card_"] .stButton > button p {
+    white-space: pre-wrap !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -2188,40 +2197,12 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
-def limpar_html_para_botao(html_card):
-
-    texto = str(html_card)
-
-    # Converte fechamentos de blocos em quebras de linha sem mexer nas palavras.
-    texto = re.sub(r"(?i)<br\\s*/?>", "\\n", texto)
-    texto = re.sub(r"(?i)</div>", "\\n", texto)
-    texto = re.sub(r"(?i)</h4>", "\\n", texto)
-    texto = re.sub(r"(?i)</p>", "\\n", texto)
-
-    # Remove tags HTML preservando o conteúdo interno exatamente como está.
-    texto = re.sub(r"(?s)<[^>]*>", "", texto)
-
-    # Decodifica entidades HTML, como &amp;, &lt;, etc.
-    texto = html.unescape(texto)
-
-    # Limpa apenas excesso de espaços e linhas vazias, sem separar ou remover letras.
-    linhas_limpas = []
-    for linha in texto.splitlines():
-        linha_limpa = re.sub(r"[ \\t]+", " ", linha).strip()
-        if linha_limpa:
-            linhas_limpas.append(linha_limpa)
-
-    return "\\n\\n".join(linhas_limpas)
-
-
-def renderizar_postit_clicavel(html_card, chave):
-
-    texto_botao = limpar_html_para_botao(html_card)
+def renderizar_postit_clicavel(texto_card, chave):
 
     with st.container(key=f"votar_card_{chave}"):
 
         return st.button(
-            texto_botao,
+            texto_card,
             key=f"botao_votar_card_{chave}",
             use_container_width=True
         )
@@ -3300,8 +3281,23 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
+                texto_card_voto = (
+                    f"{equipe}\n\n"
+                    f"{texto}\n\n"
+                    f"{t('votes')}: {votos}\n\n"
+                    + (
+                        "✓ Voto registrado — toque novamente para desfazer"
+                        if st.session_state.get("idioma", "pt") == "pt" and foi_votado
+                        else "✓ Vote registered — tap again to undo"
+                        if foi_votado
+                        else "Toque no post-it para votar"
+                        if st.session_state.get("idioma", "pt") == "pt"
+                        else "Tap the post-it to vote"
+                    )
+                )
+
                 if renderizar_postit_clicavel(
-                    html_card_voto,
+                    texto_card_voto,
                     f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
                 ):
 
@@ -3389,8 +3385,23 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
+                    texto_card_voto = (
+                        f"{equipe}\n\n"
+                        f"{texto}\n\n"
+                        f"{t('votes')}: {votos}\n\n"
+                        + (
+                            "✓ Voto registrado — toque novamente para desfazer"
+                            if st.session_state.get("idioma", "pt") == "pt" and foi_votado
+                            else "✓ Vote registered — tap again to undo"
+                            if foi_votado
+                            else "Toque no post-it para votar"
+                            if st.session_state.get("idioma", "pt") == "pt"
+                            else "Tap the post-it to vote"
+                        )
+                    )
+
                     if renderizar_postit_clicavel(
-                        html_card_voto,
+                        texto_card_voto,
                         f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
                     ):
 
@@ -3760,8 +3771,22 @@ if aba_atual == t("tab_barriers"):
                         1
                     )
 
+                    texto_card_voto = (
+                        f"{texto}\n\n"
+                        f"{t('votes')}: {votos}\n\n"
+                        + (
+                            "✓ Voto registrado — toque novamente para desfazer"
+                            if st.session_state.get("idioma", "pt") == "pt" and foi_votado
+                            else "✓ Vote registered — tap again to undo"
+                            if foi_votado
+                            else "Toque no post-it para votar"
+                            if st.session_state.get("idioma", "pt") == "pt"
+                            else "Tap the post-it to vote"
+                        )
+                    )
+
                     if renderizar_postit_clicavel(
-                        html_postit,
+                        texto_card_voto,
                         f"entrave_votado_{entrave_id}" if foi_votado else f"entrave_{entrave_id}"
                     ):
 
@@ -4459,8 +4484,23 @@ if aba_atual == t("tab_solutions"):
 </div>
 """
 
+                        texto_card_voto = (
+                            f"{categoria}\n\n"
+                            f"{texto_hipotese}\n\n"
+                            f"{t('votes')}: {votos_hipotese}\n\n"
+                            + (
+                                "✓ Voto registrado — toque novamente para desfazer"
+                                if st.session_state.get("idioma", "pt") == "pt" and foi_votada
+                                else "✓ Vote registered — tap again to undo"
+                                if foi_votada
+                                else "Toque no post-it para votar"
+                                if st.session_state.get("idioma", "pt") == "pt"
+                                else "Tap the post-it to vote"
+                            )
+                        )
+
                         if renderizar_postit_clicavel(
-                            html_card_voto,
+                            texto_card_voto,
                             f"hipotese_votado_{hipotese_id}" if foi_votada else f"hipotese_{hipotese_id}"
                         ):
 
