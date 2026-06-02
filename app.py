@@ -454,7 +454,8 @@ textarea::placeholder {
 
 /* BOTÃO DO RELÓGIO DO CRONÔMETRO */
 .st-key-timer_area_foco_no_foco .stButton > button,
-.st-key-timer_area_principais_entraves .stButton > button {
+.st-key-timer_area_principais_entraves .stButton > button,
+.st-key-timer_area_hipoteses_solucao .stButton > button {
     min-height: 104px !important;
     height: 104px !important;
     width: 104px !important;
@@ -471,7 +472,8 @@ textarea::placeholder {
 }
 
 .st-key-timer_area_foco_no_foco .stButton > button p,
-.st-key-timer_area_principais_entraves .stButton > button p {
+.st-key-timer_area_principais_entraves .stButton > button p,
+.st-key-timer_area_hipoteses_solucao .stButton > button p {
     font-size: 46px !important;
     line-height: 1 !important;
 }
@@ -578,7 +580,8 @@ textarea::placeholder {
 
 /* AJUSTES DO CRONÔMETRO */
 .st-key-timer_area_foco_no_foco .stButton > button,
-.st-key-timer_area_principais_entraves .stButton > button {
+.st-key-timer_area_principais_entraves .stButton > button,
+.st-key-timer_area_hipoteses_solucao .stButton > button {
     margin-left: 8px !important;
     margin-right: auto !important;
 }
@@ -594,7 +597,8 @@ div[data-testid="stNumberInput"] > div {
 
 /* no cronômetro, deixa o campo mais compacto */
 .st-key-tempo_foco_no_foco,
-.st-key-tempo_principais_entraves {
+.st-key-tempo_principais_entraves,
+.st-key-tempo_hipoteses_solucao {
     max-width: 360px !important;
 }
 
@@ -2366,6 +2370,12 @@ if aba_atual == t("tab_barriers"):
         "principais_entraves"
     )
 
+if aba_atual == t("tab_solutions"):
+    mostrar_pilula_timer_fixa(
+        sala_atual,
+        "hipoteses_solucao"
+    )
+
 
 # Botão flutuante para esconder/mostrar cabeçalho fixo
 if aba_atual != t("tab_summary"):
@@ -3742,6 +3752,12 @@ if aba_atual == t("tab_solutions"):
 </div>
 """,
         unsafe_allow_html=True
+    )
+
+    mostrar_cronometro_compartilhado(
+        sala_atual,
+        "hipoteses_solucao",
+        valor_padrao=10
     )
 
     st.markdown(
