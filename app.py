@@ -1193,6 +1193,34 @@ st.markdown("""
     word-spacing: normal !important;
 }
 
+
+/* =========================================================
+   RODAPÉ PROFISSIONAL DOS BOTÕES-CARD
+   ========================================================= */
+
+[class*="st-key-votar_card_"] .stButton > button {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    white-space: pre-wrap !important;
+    padding: 26px 26px 22px 26px !important;
+}
+
+[class*="st-key-votar_card_"] .stButton > button p {
+    white-space: pre-wrap !important;
+    line-height: 1.42 !important;
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
+[class*="st-key-votar_card_postit_votado_"] .stButton > button,
+[class*="st-key-votar_card_entrave_votado_"] .stButton > button,
+[class*="st-key-votar_card_hipotese_votado_"] .stButton > button {
+    background: #d9fbe3 !important;
+    border: 3px solid #16a34a !important;
+    color: #111827 !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -1382,6 +1410,8 @@ TEXTOS = {
         "votes": "Votos",
         "undo_vote": "Desfazer voto",
         "vote": "Votar",
+        "vote_footer_pending": "TOQUE PARA VOTAR",
+        "vote_footer_voted": "VOTO REGISTRADO — TOQUE NOVAMENTE PARA DESFAZER",
         "no_postit": "Nenhum post-it disponível ainda nesta sala.",
         "result_step_title": "4. Veja o resultado",
         "result_step_help": "O post-it mais votado aparece abaixo. Se empatar, faça uma nova votação apenas com os empatados.",
@@ -1533,6 +1563,8 @@ TEXTOS = {
         "votes": "Votes",
         "undo_vote": "Undo vote",
         "vote": "Vote",
+        "vote_footer_pending": "TAP TO VOTE",
+        "vote_footer_voted": "VOTE REGISTERED — TAP AGAIN TO UNDO",
         "no_postit": "No post-its available in this room yet.",
         "result_step_title": "4. See the result",
         "result_step_help": "The most voted post-it appears below. If there is a tie, run a new vote only with tied post-its.",
@@ -2197,12 +2229,35 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
-def renderizar_postit_clicavel(texto_card, chave):
+def renderizar_postit_clicavel(titulo_card, texto_card, votos_card, chave, votado=False):
+
+    texto_rodape = (
+        t("vote_footer_voted")
+        if votado
+        else t("vote_footer_pending")
+    )
+
+    titulo_card = str(titulo_card).strip()
+    texto_card = str(texto_card).strip()
+
+    partes_card = []
+
+    if titulo_card:
+        partes_card.append(titulo_card)
+
+    if texto_card:
+        partes_card.append(texto_card)
+
+    partes_card.append(f"{t('votes')}: {votos_card}")
+    partes_card.append("────────────────────────")
+    partes_card.append(texto_rodape)
+
+    texto_botao = "\n\n".join(partes_card)
 
     with st.container(key=f"votar_card_{chave}"):
 
         return st.button(
-            texto_card,
+            texto_botao,
             key=f"botao_votar_card_{chave}",
             use_container_width=True
         )
@@ -3281,24 +3336,12 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                texto_card_voto = (
-                    f"{equipe}\n\n"
-                    f"{texto}\n\n"
-                    f"{t('votes')}: {votos}\n\n"
-                    + (
-                        "✓ Voto registrado — toque novamente para desfazer"
-                        if st.session_state.get("idioma", "pt") == "pt" and foi_votado
-                        else "✓ Vote registered — tap again to undo"
-                        if foi_votado
-                        else "Toque no post-it para votar"
-                        if st.session_state.get("idioma", "pt") == "pt"
-                        else "Tap the post-it to vote"
-                    )
-                )
-
                 if renderizar_postit_clicavel(
-                    texto_card_voto,
-                    f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
+                    equipe,
+                    texto,
+                    votos,
+                    f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}",
+                    votado=foi_votado
                 ):
 
                     if foi_votado:
@@ -3385,24 +3428,12 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                    texto_card_voto = (
-                        f"{equipe}\n\n"
-                        f"{texto}\n\n"
-                        f"{t('votes')}: {votos}\n\n"
-                        + (
-                            "✓ Voto registrado — toque novamente para desfazer"
-                            if st.session_state.get("idioma", "pt") == "pt" and foi_votado
-                            else "✓ Vote registered — tap again to undo"
-                            if foi_votado
-                            else "Toque no post-it para votar"
-                            if st.session_state.get("idioma", "pt") == "pt"
-                            else "Tap the post-it to vote"
-                        )
-                    )
-
                     if renderizar_postit_clicavel(
-                        texto_card_voto,
-                        f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
+                        equipe,
+                        texto,
+                        votos,
+                        f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}",
+                        votado=foi_votado
                     ):
 
                         if foi_votado:
@@ -3771,23 +3802,12 @@ if aba_atual == t("tab_barriers"):
                         1
                     )
 
-                    texto_card_voto = (
-                        f"{texto}\n\n"
-                        f"{t('votes')}: {votos}\n\n"
-                        + (
-                            "✓ Voto registrado — toque novamente para desfazer"
-                            if st.session_state.get("idioma", "pt") == "pt" and foi_votado
-                            else "✓ Vote registered — tap again to undo"
-                            if foi_votado
-                            else "Toque no post-it para votar"
-                            if st.session_state.get("idioma", "pt") == "pt"
-                            else "Tap the post-it to vote"
-                        )
-                    )
-
                     if renderizar_postit_clicavel(
-                        texto_card_voto,
-                        f"entrave_votado_{entrave_id}" if foi_votado else f"entrave_{entrave_id}"
+                        "",
+                        texto,
+                        votos,
+                        f"entrave_votado_{entrave_id}" if foi_votado else f"entrave_{entrave_id}",
+                        votado=foi_votado
                     ):
 
                         if foi_votado:
@@ -4484,24 +4504,12 @@ if aba_atual == t("tab_solutions"):
 </div>
 """
 
-                        texto_card_voto = (
-                            f"{categoria}\n\n"
-                            f"{texto_hipotese}\n\n"
-                            f"{t('votes')}: {votos_hipotese}\n\n"
-                            + (
-                                "✓ Voto registrado — toque novamente para desfazer"
-                                if st.session_state.get("idioma", "pt") == "pt" and foi_votada
-                                else "✓ Vote registered — tap again to undo"
-                                if foi_votada
-                                else "Toque no post-it para votar"
-                                if st.session_state.get("idioma", "pt") == "pt"
-                                else "Tap the post-it to vote"
-                            )
-                        )
-
                         if renderizar_postit_clicavel(
-                            texto_card_voto,
-                            f"hipotese_votado_{hipotese_id}" if foi_votada else f"hipotese_{hipotese_id}"
+                            categoria,
+                            texto_hipotese,
+                            votos_hipotese,
+                            f"hipotese_votado_{hipotese_id}" if foi_votada else f"hipotese_{hipotese_id}",
+                            votado=foi_votada
                         ):
 
                             if foi_votada:
