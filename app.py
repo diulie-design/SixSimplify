@@ -1169,6 +1169,9 @@ TEXTOS = {
         "barrier_placeholder": "Digite os entraves relacionados ao Foco no Foco (um entrave por vez)",
         "add_barrier_button": "Adicionar entrave",
         "save_team_before_barrier": "Salve o nome da equipe na aba Foco no Foco antes de adicionar entraves.",
+        "team_required_title": "Equipe não definida",
+        "team_required_message": "Para participar desta etapa, volte para a aba Foco no Foco, preencha o nome da equipe e clique em Salvar equipe antes de continuar.",
+        "go_to_focus_tab": "Ir para Foco no Foco",
         "barrier_required": "Digite o texto do entrave antes de adicionar.",
         "barrier_added": "Entrave adicionado!",
         "barriers_board": "Mural de entraves por equipe",
@@ -1312,6 +1315,9 @@ TEXTOS = {
         "barrier_placeholder": "Enter the main barrier identified by the team",
         "add_barrier_button": "Add barrier",
         "save_team_before_barrier": "Save the team name in the Focus on Focus tab before adding barriers.",
+        "team_required_title": "Team not defined",
+        "team_required_message": "To participate in this step, go back to the Focus on Focus tab, enter your team name, and click Save team before continuing.",
+        "go_to_focus_tab": "Go to Focus on Focus",
         "barrier_required": "Enter the barrier text before adding.",
         "barrier_added": "Barrier added!",
         "barriers_board": "Barrier board by team",
@@ -1358,6 +1364,19 @@ def t(chave):
 
 def contar_palavras(texto):
     return len(texto.strip().split())
+
+
+def mostrar_aviso_sem_equipe(chave_base="sem_equipe"):
+
+    st.error(t("team_required_title"))
+    st.info(t("team_required_message"))
+
+    if st.button(
+        t("go_to_focus_tab"),
+        key=f"ir_para_foco_{chave_base}"
+    ):
+        st.session_state.aba_pendente = t("tab_focus")
+        st.rerun()
 
 
 def mostrar_cronometro_compartilhado(sala_atual, aba_timer, valor_padrao=5):
@@ -3098,7 +3117,10 @@ if aba_atual == t("tab_barriers"):
         unsafe_allow_html=True
     )
 
-    equipe_entrave = st.session_state.nome_equipe_salvo
+    equipe_entrave = st.session_state.get("nome_equipe_salvo", "").strip()
+
+    if not equipe_entrave:
+        mostrar_aviso_sem_equipe("entraves")
 
     if "limpar_campo_entrave" not in st.session_state:
         st.session_state["limpar_campo_entrave"] = False
@@ -3116,7 +3138,7 @@ if aba_atual == t("tab_barriers"):
     if st.button(t("add_barrier_button"), key="botao_adicionar_entrave"):
 
         if not equipe_entrave.strip():
-            st.warning(t("save_team_before_barrier"))
+            st.warning(t("team_required_message"))
 
         elif not novo_entrave.strip():
             st.warning(t("barrier_required"))
@@ -3882,7 +3904,11 @@ if aba_atual == t("tab_solutions"):
                 key=f"submeter_solucao_{chave_categoria}"
             ):
 
-                if not nova_hipotese.strip():
+                if not st.session_state.get("nome_equipe_salvo", "").strip():
+
+                    st.warning(t("team_required_message"))
+
+                elif not nova_hipotese.strip():
 
                     st.warning(t("solution_required"))
 
