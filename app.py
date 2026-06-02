@@ -1184,6 +1184,10 @@ TEXTOS = {
         "no_barriers": "Nenhum entrave adicionado ainda nesta sala.",
         "categorize_top3": "Categorizar entraves do Top 3",
         "category_name": "Nome da categoria",
+        "category_select": "Categoria",
+        "category_other": "Outra",
+        "category_other_name": "Nome da outra categoria",
+        "category_options": ["Tecnologia", "Processo", "Cultura", "Outra"],
         "category_placeholder": "Exemplo: Tecnologia",
         "choose_barriers": "Escolha os entraves",
         "save_category": "Salvar categoria",
@@ -1330,6 +1334,10 @@ TEXTOS = {
         "no_barriers": "No barriers added in this room yet.",
         "categorize_top3": "Categorize Top 3 barriers",
         "category_name": "Category name",
+        "category_select": "Category",
+        "category_other": "Other",
+        "category_other_name": "Other category name",
+        "category_options": ["Technology", "Process", "Culture", "Other"],
         "category_placeholder": "Example: Technology",
         "choose_barriers": "Choose barriers",
         "save_category": "Save category",
@@ -3512,11 +3520,25 @@ if aba_atual == t("tab_barriers"):
             for posicao, item in rankings
         }
 
-        nova_categoria = st.text_input(
-            t("category_name"),
-            placeholder=t("category_placeholder"),
-            key="nova_categoria_entraves"
+        opcoes_categoria_padrao = t("category_options")
+
+        categoria_escolhida = st.selectbox(
+            t("category_select"),
+            options=opcoes_categoria_padrao,
+            key="categoria_padrao_entraves"
         )
+
+        categoria_final = categoria_escolhida
+
+        if categoria_escolhida == t("category_other"):
+
+            nova_categoria = st.text_input(
+                t("category_other_name"),
+                placeholder=t("category_placeholder"),
+                key="nova_categoria_entraves"
+            )
+
+            categoria_final = nova_categoria.strip()
 
         entraves_escolhidos = st.multiselect(
             t("choose_barriers"),
@@ -3527,7 +3549,7 @@ if aba_atual == t("tab_barriers"):
 
         if st.button(t("save_category")):
 
-            if not nova_categoria.strip():
+            if not categoria_final.strip():
                 st.warning(t("category_required"))
 
             elif not entraves_escolhidos:
@@ -3549,7 +3571,7 @@ if aba_atual == t("tab_barriers"):
                     VALUES (?, ?, ?)
                     """, (
                         sala_atual,
-                        nova_categoria.strip(),
+                        categoria_final.strip(),
                         entrave_id_top
                     ))
 
@@ -5020,4 +5042,3 @@ if st.session_state.get("rolar_para_topo", False):
     )
 
     st.session_state.rolar_para_topo = False
-
