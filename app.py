@@ -1368,12 +1368,42 @@ def contar_palavras(texto):
 
 def mostrar_aviso_sem_equipe(chave_base="sem_equipe"):
 
-    st.error(t("team_required_title"))
-    st.info(t("team_required_message"))
+    st.markdown(
+        f"""
+<div style="
+    background:#fdeaea;
+    border:2px solid #d32f2f;
+    border-left:8px solid #b91c1c;
+    padding:18px 20px;
+    border-radius:14px;
+    margin:12px 0 12px 0;
+">
+    <div style="
+        color:#b91c1c;
+        font-size:26px;
+        font-weight:950;
+        line-height:1.2;
+        margin-bottom:10px;
+    ">
+        ⚠️ {t("team_required_title").upper()}
+    </div>
+    <div style="
+        color:#b91c1c;
+        font-size:20px;
+        font-weight:900;
+        line-height:1.45;
+    ">
+        {t("team_required_message")}
+    </div>
+</div>
+""",
+        unsafe_allow_html=True
+    )
 
     if st.button(
         t("go_to_focus_tab"),
-        key=f"ir_para_foco_{chave_base}"
+        key=f"ir_para_foco_{chave_base}",
+        use_container_width=True
     ):
         st.session_state.aba_pendente = t("tab_focus")
         st.rerun()
