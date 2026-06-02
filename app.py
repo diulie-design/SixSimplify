@@ -972,6 +972,52 @@ div[data-baseweb="select"] span {
     font-weight: 900;
 }
 
+
+/* PLACEHOLDERS PADRONIZADOS EM CINZA */
+div[data-testid="stTextInput"] input::placeholder,
+textarea::placeholder,
+input::placeholder {
+    color: #8a94a6 !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: #8a94a6 !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #8a94a6;
+}
+
+/* POST-ITS CLICÁVEIS POR LINK */
+.postit-link {
+    display: block;
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.postit-clickable {
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.postit-clickable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(15,23,42,0.14) !important;
+}
+
+.vote-hint {
+    margin-top: 16px;
+    color: #002f5f;
+    font-size: 15px;
+    font-weight: 850;
+    opacity: 0.88;
+}
+
+.vote-hint-voted {
+    margin-top: 16px;
+    color: #166534;
+    font-size: 15px;
+    font-weight: 900;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -1246,6 +1292,11 @@ TEXTOS = {
         "no_barriers": "Nenhum entrave adicionado ainda nesta sala.",
         "categorize_top3": "Categorizar entraves do Top 3",
         "category_name": "Nome da categoria",
+        "category_select": "Categoria",
+        "category_other": "Outra",
+        "category_other_name": "Nome da outra categoria",
+        "category_other_placeholder": "Exemplo: Alimentação",
+        "category_options": ["Tecnologia", "Processo", "Cultura", "Outra"],
         "category_placeholder": "Exemplo: Tecnologia",
         "choose_barriers": "Escolha os entraves",
         "save_category": "Salvar categoria",
@@ -1392,6 +1443,11 @@ TEXTOS = {
         "no_barriers": "No barriers added in this room yet.",
         "categorize_top3": "Categorize Top 3 barriers",
         "category_name": "Category name",
+        "category_select": "Category",
+        "category_other": "Other",
+        "category_other_name": "Other category name",
+        "category_other_placeholder": "Example: Food",
+        "category_options": ["Technology", "Process", "Culture", "Other"],
         "category_placeholder": "Example: Technology",
         "choose_barriers": "Choose barriers",
         "save_category": "Save category",
@@ -2018,20 +2074,6 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
-def botao_postit_votacao(html_card, key):
-
-    st.markdown('<div class="vote-card-wrapper">', unsafe_allow_html=True)
-
-    clicou = st.button(
-        html_card,
-        key=key,
-        use_container_width=True
-    )
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    return clicou
-
 
 def dica_voto_html(votado=False):
 
@@ -2054,6 +2096,118 @@ def dica_voto_html(votado=False):
         else
         '<div class="vote-hint">Tap the post-it to vote</div>'
     )
+
+
+def link_voto_html(tipo, item_id, html_card):
+
+    sala = st.session_state.get("sala", "")
+
+    return f"""
+<a class="postit-link" href="?sala={esc(sala)}&acao_voto={tipo}&item_voto={item_id}">
+{html_card}
+</a>
+"""
+
+
+def processar_voto_por_query_params(sala_atual):
+
+    acao_voto = st.query_params.get("acao_voto", "")
+    item_voto = st.query_params.get("item_voto", "")
+
+    if not acao_voto or not item_voto:
+        return
+
+    try:
+        item_id = int(item_voto)
+    except Exception:
+        st.query_params.pop("acao_voto", None)
+        st.query_params.pop("item_voto", None)
+        return
+
+    if acao_voto == "postit":
+
+        if item_id in st.session_state.postits_votados:
+
+            cursor.execute("""
+            UPDATE postits
+            SET votos = CASE
+                WHEN votos > 0 THEN votos - 1
+                ELSE 0
+            END
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.postits_votados.remove(item_id)
+
+        else:
+
+            cursor.execute("""
+            UPDATE postits
+            SET votos = votos + 1
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.postits_votados.add(item_id)
+
+    elif acao_voto == "entrave":
+
+        if item_id in st.session_state.entraves_votados:
+
+            cursor.execute("""
+            UPDATE entraves
+            SET votos = CASE
+                WHEN votos > 0 THEN votos - 1
+                ELSE 0
+            END
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.entraves_votados.remove(item_id)
+
+        else:
+
+            cursor.execute("""
+            UPDATE entraves
+            SET votos = votos + 1
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.entraves_votados.add(item_id)
+
+    elif acao_voto == "hipotese":
+
+        if item_id in st.session_state.hipoteses_votadas:
+
+            cursor.execute("""
+            UPDATE hipoteses_solucao
+            SET votos = CASE
+                WHEN votos > 0 THEN votos - 1
+                ELSE 0
+            END
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.hipoteses_votadas.remove(item_id)
+
+        else:
+
+            cursor.execute("""
+            UPDATE hipoteses_solucao
+            SET votos = votos + 1
+            WHERE id = ? AND sala = ?
+            """, (item_id, sala_atual))
+
+            conn.commit()
+            st.session_state.hipoteses_votadas.add(item_id)
+
+    st.query_params.pop("acao_voto", None)
+    st.query_params.pop("item_voto", None)
+    st.rerun()
 
 def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior=True, mostrar_proximo=True, chave_base="nav"):
 
@@ -2974,37 +3128,17 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                if botao_postit_votacao(
-                    html_card_voto,
-                    key=f"postit_clicavel_{postit_id}"
-                ):
+                st.markdown(
 
-                    if foi_votado:
 
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = CASE
-                            WHEN votos > 0 THEN votos - 1
-                            ELSE 0
-                        END
-                        WHERE id = ? AND sala = ?
-                        """, (postit_id, sala_atual))
+                    link_voto_html("postit", postit_id, html_card_voto),
 
-                        conn.commit()
-                        st.session_state.postits_votados.remove(postit_id)
-                        st.rerun()
 
-                    else:
+                    unsafe_allow_html=True
 
-                        cursor.execute("""
-                        UPDATE postits
-                        SET votos = votos + 1
-                        WHERE id = ? AND sala = ?
-                        """, (postit_id, sala_atual))
 
-                        conn.commit()
-                        st.session_state.postits_votados.add(postit_id)
-                        st.rerun()
+                )
+
 
                 if st.button(
                     t("remove_postit"),
@@ -3062,37 +3196,17 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                    if botao_postit_votacao(
-                        html_card_voto,
-                        key=f"postit_clicavel_{postit_id}"
-                    ):
+                    st.markdown(
 
-                        if foi_votado:
 
-                            cursor.execute("""
-                            UPDATE postits
-                            SET votos = CASE
-                                WHEN votos > 0 THEN votos - 1
-                                ELSE 0
-                            END
-                            WHERE id = ? AND sala = ?
-                            """, (postit_id, sala_atual))
+                        link_voto_html("postit", postit_id, html_card_voto),
 
-                            conn.commit()
-                            st.session_state.postits_votados.remove(postit_id)
-                            st.rerun()
 
-                        else:
+                        unsafe_allow_html=True
 
-                            cursor.execute("""
-                            UPDATE postits
-                            SET votos = votos + 1
-                            WHERE id = ? AND sala = ?
-                            """, (postit_id, sala_atual))
 
-                            conn.commit()
-                            st.session_state.postits_votados.add(postit_id)
-                            st.rerun()
+                    )
+
 
                     if st.button(
                         t("remove_postit"),
@@ -3432,45 +3546,17 @@ if aba_atual == t("tab_barriers"):
                         1
                     )
 
-                    if botao_postit_votacao(
-                        html_postit,
-                        key=f"entrave_clicavel_{entrave_id}"
-                    ):
+                    st.markdown(
 
-                        if foi_votado:
 
-                            cursor.execute("""
-                            UPDATE entraves
-                            SET votos = CASE
-                                WHEN votos > 0 THEN votos - 1
-                                ELSE 0
-                            END
-                            WHERE id = ?
-                            AND sala = ?
-                            """, (
-                                entrave_id,
-                                sala_atual
-                            ))
+                        link_voto_html("entrave", entrave_id, html_postit),
 
-                            conn.commit()
-                            st.session_state.entraves_votados.remove(entrave_id)
-                            st.rerun()
 
-                        else:
+                        unsafe_allow_html=True
 
-                            cursor.execute("""
-                            UPDATE entraves
-                            SET votos = votos + 1
-                            WHERE id = ?
-                            AND sala = ?
-                            """, (
-                                entrave_id,
-                                sala_atual
-                            ))
 
-                            conn.commit()
-                            st.session_state.entraves_votados.add(entrave_id)
-                            st.rerun()
+                    )
+
 
                     if st.button(
                         t("remove_postit"),
@@ -3610,11 +3696,25 @@ if aba_atual == t("tab_barriers"):
             for posicao, item in rankings
         }
 
-        nova_categoria = st.text_input(
-            t("category_name"),
-            placeholder=t("category_placeholder"),
-            key="nova_categoria_entraves"
+        opcoes_categoria_padrao = t("category_options")
+
+        categoria_escolhida = st.selectbox(
+            t("category_select"),
+            options=opcoes_categoria_padrao,
+            key="categoria_padrao_entraves"
         )
+
+        categoria_final = categoria_escolhida
+
+        if categoria_escolhida == t("category_other"):
+
+            nova_categoria = st.text_input(
+                t("category_other_name"),
+                placeholder=t("category_other_placeholder"),
+                key="nova_categoria_entraves"
+            )
+
+            categoria_final = nova_categoria.strip()
 
         entraves_escolhidos = st.multiselect(
             t("choose_barriers"),
@@ -3625,7 +3725,7 @@ if aba_atual == t("tab_barriers"):
 
         if st.button(t("save_category")):
 
-            if not nova_categoria.strip():
+            if not categoria_final.strip():
                 st.warning(t("category_required"))
 
             elif not entraves_escolhidos:
@@ -3647,7 +3747,7 @@ if aba_atual == t("tab_barriers"):
                     VALUES (?, ?, ?)
                     """, (
                         sala_atual,
-                        nova_categoria.strip(),
+                        categoria_final.strip(),
                         entrave_id_top
                     ))
 
@@ -4116,45 +4216,17 @@ if aba_atual == t("tab_solutions"):
 </div>
 """
 
-                        if botao_postit_votacao(
-                            html_card_voto,
-                            key=f"hipotese_clicavel_{hipotese_id}"
-                        ):
+                        st.markdown(
 
-                            if foi_votada:
 
-                                cursor.execute("""
-                                UPDATE hipoteses_solucao
-                                SET votos = CASE
-                                    WHEN votos > 0 THEN votos - 1
-                                    ELSE 0
-                                END
-                                WHERE id = ?
-                                AND sala = ?
-                                """, (
-                                    hipotese_id,
-                                    sala_atual
-                                ))
+                            link_voto_html("hipotese", hipotese_id, html_card_voto),
 
-                                conn.commit()
-                                st.session_state.hipoteses_votadas.remove(hipotese_id)
-                                st.rerun()
 
-                            else:
+                            unsafe_allow_html=True
 
-                                cursor.execute("""
-                                UPDATE hipoteses_solucao
-                                SET votos = votos + 1
-                                WHERE id = ?
-                                AND sala = ?
-                                """, (
-                                    hipotese_id,
-                                    sala_atual
-                                ))
 
-                                conn.commit()
-                                st.session_state.hipoteses_votadas.add(hipotese_id)
-                                st.rerun()
+                        )
+
 
                         if st.button(
                             t("delete_solution"),
