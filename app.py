@@ -1109,6 +1109,77 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+
+st.markdown("""
+<style>
+
+/* =========================================================
+   BOTÕES-CARD NATIVOS PARA VOTAÇÃO
+   ========================================================= */
+
+/* Neutraliza overlay invisível anterior */
+[class*="st-key-vote_card_"] .stButton {
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+}
+
+/* Card base */
+[class*="st-key-votar_card_"] .stButton > button {
+    width: 100% !important;
+    min-height: 240px !important;
+    height: auto !important;
+    padding: 24px !important;
+    border-radius: 22px !important;
+    white-space: pre-line !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    display: flex !important;
+    color: #111827 !important;
+    font-size: 20px !important;
+    line-height: 1.35 !important;
+    font-weight: 850 !important;
+    box-shadow: 0 6px 16px rgba(15,23,42,0.08) !important;
+    cursor: pointer !important;
+}
+
+/* Texto dentro do botão */
+[class*="st-key-votar_card_"] .stButton > button p {
+    color: #111827 !important;
+    font-size: 20px !important;
+    line-height: 1.35 !important;
+    font-weight: 850 !important;
+    white-space: pre-line !important;
+    text-align: left !important;
+}
+
+/* Não votado */
+[class*="st-key-votar_card_postit_"] .stButton > button,
+[class*="st-key-votar_card_entrave_"] .stButton > button,
+[class*="st-key-votar_card_hipotese_"] .stButton > button {
+    background: #fff6b8 !important;
+    border: 2px solid #f0dc7a !important;
+}
+
+/* Votado */
+[class*="st-key-votar_card_postit_votado_"] .stButton > button,
+[class*="st-key-votar_card_entrave_votado_"] .stButton > button,
+[class*="st-key-votar_card_hipotese_votado_"] .stButton > button {
+    background: #d9fbe3 !important;
+    border: 3px solid #16a34a !important;
+}
+
+/* Hover */
+[class*="st-key-votar_card_"] .stButton > button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 24px rgba(15,23,42,0.14) !important;
+    color: #111827 !important;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 # =========================
 # BANCO
 # =========================
@@ -2110,19 +2181,30 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
+def limpar_html_para_botao(html_card):
+
+    texto = re.sub(r"<br\\s*/?>", "\\n", html_card)
+    texto = re.sub(r"</div>", "\\n", texto)
+    texto = re.sub(r"</h4>", "\\n", texto)
+    texto = re.sub(r"<[^>]+>", "", texto)
+    texto = html.unescape(texto)
+    texto = re.sub(r"\\n\\s*\\n+", "\\n", texto)
+    texto = re.sub(r"[ \\t]+", " ", texto)
+    return texto.strip()
+
+
 def renderizar_postit_clicavel(html_card, chave):
 
-    with st.container(key=f"vote_card_{chave}"):
+    texto_botao = limpar_html_para_botao(html_card)
 
-        st.markdown(
-            html_card,
-            unsafe_allow_html=True
-        )
+    with st.container(key=f"votar_card_{chave}"):
 
         return st.button(
-            " ",
-            key=f"botao_vote_card_{chave}"
+            texto_botao,
+            key=f"botao_votar_card_{chave}",
+            use_container_width=True
         )
+
 
 
 def dica_voto_html(votado=False):
@@ -3199,7 +3281,7 @@ if aba_atual == t("tab_focus"):
 
                 if renderizar_postit_clicavel(
                     html_card_voto,
-                    f"postit_{postit_id}"
+                    f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
                 ):
 
                     if foi_votado:
@@ -3288,7 +3370,7 @@ if aba_atual == t("tab_focus"):
 
                     if renderizar_postit_clicavel(
                         html_card_voto,
-                        f"postit_{postit_id}"
+                        f"postit_votado_{postit_id}" if foi_votado else f"postit_{postit_id}"
                     ):
 
                         if foi_votado:
@@ -3659,7 +3741,7 @@ if aba_atual == t("tab_barriers"):
 
                     if renderizar_postit_clicavel(
                         html_postit,
-                        f"entrave_{entrave_id}"
+                        f"entrave_votado_{entrave_id}" if foi_votado else f"entrave_{entrave_id}"
                     ):
 
                         if foi_votado:
@@ -4358,7 +4440,7 @@ if aba_atual == t("tab_solutions"):
 
                         if renderizar_postit_clicavel(
                             html_card_voto,
-                            f"hipotese_{hipotese_id}"
+                            f"hipotese_votado_{hipotese_id}" if foi_votada else f"hipotese_{hipotese_id}"
                         ):
 
                             if foi_votada:
