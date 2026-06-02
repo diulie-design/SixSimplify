@@ -1019,6 +1019,39 @@ div[data-baseweb="select"] span {
     font-weight: 900;
 }
 
+
+/* POST-IT CLICÁVEL NATIVO STREAMLIT — SEM REDIRECIONAR */
+[class*="st-key-vote_card_"] {
+    position: relative !important;
+}
+
+[class*="st-key-vote_card_"] .stButton {
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+[class*="st-key-vote_card_"] .stButton > button {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    opacity: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+}
+
+[class*="st-key-vote_card_"] .stButton > button:hover {
+    opacity: 0 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -2076,6 +2109,22 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 
 
+
+def renderizar_postit_clicavel(html_card, chave):
+
+    with st.container(key=f"vote_card_{chave}"):
+
+        st.markdown(
+            html_card,
+            unsafe_allow_html=True
+        )
+
+        return st.button(
+            " ",
+            key=f"botao_vote_card_{chave}"
+        )
+
+
 def dica_voto_html(votado=False):
 
     if votado:
@@ -2099,33 +2148,6 @@ def dica_voto_html(votado=False):
     )
 
 
-def link_voto_html(tipo, item_id, html_card):
-
-    sala = st.session_state.get("sala", "")
-    equipe = st.session_state.get("nome_equipe_salvo", "")
-    lider = st.session_state.get("lider_equipe_salvo", "")
-    idioma = st.session_state.get("idioma", "pt")
-
-    parametros = [
-        f"sala={quote(str(sala))}",
-        f"idioma={quote(str(idioma))}",
-        f"acao_voto={quote(str(tipo))}",
-        f"item_voto={quote(str(item_id))}"
-    ]
-
-    if equipe:
-        parametros.append(f"equipe={quote(str(equipe))}")
-
-    if lider:
-        parametros.append(f"lider={quote(str(lider))}")
-
-    url_voto = "?" + "&".join(parametros)
-
-    return f"""
-<a class="postit-link" href="{url_voto}">
-{html_card}
-</a>
-"""
 
 
 def processar_voto_por_query_params(sala_atual):
@@ -3175,16 +3197,37 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                st.markdown(
+                if renderizar_postit_clicavel(
+                    html_card_voto,
+                    f"postit_{postit_id}"
+                ):
 
+                    if foi_votado:
 
-                    link_voto_html("postit", postit_id, html_card_voto),
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = CASE
+                            WHEN votos > 0 THEN votos - 1
+                            ELSE 0
+                        END
+                        WHERE id = ? AND sala = ?
+                        """, (postit_id, sala_atual))
 
+                        conn.commit()
+                        st.session_state.postits_votados.remove(postit_id)
+                        st.rerun()
 
-                    unsafe_allow_html=True
+                    else:
 
+                        cursor.execute("""
+                        UPDATE postits
+                        SET votos = votos + 1
+                        WHERE id = ? AND sala = ?
+                        """, (postit_id, sala_atual))
 
-                )
+                        conn.commit()
+                        st.session_state.postits_votados.add(postit_id)
+                        st.rerun()
 
 
                 if st.button(
@@ -3243,16 +3286,37 @@ if aba_atual == t("tab_focus"):
 </div>
 """
 
-                    st.markdown(
+                    if renderizar_postit_clicavel(
+                        html_card_voto,
+                        f"postit_{postit_id}"
+                    ):
 
+                        if foi_votado:
 
-                        link_voto_html("postit", postit_id, html_card_voto),
+                            cursor.execute("""
+                            UPDATE postits
+                            SET votos = CASE
+                                WHEN votos > 0 THEN votos - 1
+                                ELSE 0
+                            END
+                            WHERE id = ? AND sala = ?
+                            """, (postit_id, sala_atual))
 
+                            conn.commit()
+                            st.session_state.postits_votados.remove(postit_id)
+                            st.rerun()
 
-                        unsafe_allow_html=True
+                        else:
 
+                            cursor.execute("""
+                            UPDATE postits
+                            SET votos = votos + 1
+                            WHERE id = ? AND sala = ?
+                            """, (postit_id, sala_atual))
 
-                    )
+                            conn.commit()
+                            st.session_state.postits_votados.add(postit_id)
+                            st.rerun()
 
 
                     if st.button(
@@ -3593,16 +3657,45 @@ if aba_atual == t("tab_barriers"):
                         1
                     )
 
-                    st.markdown(
+                    if renderizar_postit_clicavel(
+                        html_postit,
+                        f"entrave_{entrave_id}"
+                    ):
 
+                        if foi_votado:
 
-                        link_voto_html("entrave", entrave_id, html_postit),
+                            cursor.execute("""
+                            UPDATE entraves
+                            SET votos = CASE
+                                WHEN votos > 0 THEN votos - 1
+                                ELSE 0
+                            END
+                            WHERE id = ?
+                            AND sala = ?
+                            """, (
+                                entrave_id,
+                                sala_atual
+                            ))
 
+                            conn.commit()
+                            st.session_state.entraves_votados.remove(entrave_id)
+                            st.rerun()
 
-                        unsafe_allow_html=True
+                        else:
 
+                            cursor.execute("""
+                            UPDATE entraves
+                            SET votos = votos + 1
+                            WHERE id = ?
+                            AND sala = ?
+                            """, (
+                                entrave_id,
+                                sala_atual
+                            ))
 
-                    )
+                            conn.commit()
+                            st.session_state.entraves_votados.add(entrave_id)
+                            st.rerun()
 
 
                     if st.button(
@@ -4263,16 +4356,45 @@ if aba_atual == t("tab_solutions"):
 </div>
 """
 
-                        st.markdown(
+                        if renderizar_postit_clicavel(
+                            html_card_voto,
+                            f"hipotese_{hipotese_id}"
+                        ):
 
+                            if foi_votada:
 
-                            link_voto_html("hipotese", hipotese_id, html_card_voto),
+                                cursor.execute("""
+                                UPDATE hipoteses_solucao
+                                SET votos = CASE
+                                    WHEN votos > 0 THEN votos - 1
+                                    ELSE 0
+                                END
+                                WHERE id = ?
+                                AND sala = ?
+                                """, (
+                                    hipotese_id,
+                                    sala_atual
+                                ))
 
+                                conn.commit()
+                                st.session_state.hipoteses_votadas.remove(hipotese_id)
+                                st.rerun()
 
-                            unsafe_allow_html=True
+                            else:
 
+                                cursor.execute("""
+                                UPDATE hipoteses_solucao
+                                SET votos = votos + 1
+                                WHERE id = ?
+                                AND sala = ?
+                                """, (
+                                    hipotese_id,
+                                    sala_atual
+                                ))
 
-                        )
+                                conn.commit()
+                                st.session_state.hipoteses_votadas.add(hipotese_id)
+                                st.rerun()
 
 
                         if st.button(
