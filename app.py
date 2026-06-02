@@ -1177,6 +1177,13 @@ st.markdown("""
     color: #111827 !important;
 }
 
+
+/* AJUSTE DE LEGIBILIDADE DOS BOTÕES-CARD */
+[class*="st-key-votar_card_"] .stButton > button p {
+    letter-spacing: normal !important;
+    word-spacing: normal !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -2183,14 +2190,28 @@ A hipótese líder tem 20 votos. O corte de seleção é 70% de 20, ou seja, 14 
 
 def limpar_html_para_botao(html_card):
 
-    texto = re.sub(r"<br\\s*/?>", "\\n", html_card)
-    texto = re.sub(r"</div>", "\\n", texto)
-    texto = re.sub(r"</h4>", "\\n", texto)
-    texto = re.sub(r"<[^>]+>", "", texto)
+    texto = str(html_card)
+
+    # Converte fechamentos de blocos em quebras de linha sem mexer nas palavras.
+    texto = re.sub(r"(?i)<br\\s*/?>", "\\n", texto)
+    texto = re.sub(r"(?i)</div>", "\\n", texto)
+    texto = re.sub(r"(?i)</h4>", "\\n", texto)
+    texto = re.sub(r"(?i)</p>", "\\n", texto)
+
+    # Remove tags HTML preservando o conteúdo interno exatamente como está.
+    texto = re.sub(r"(?s)<[^>]*>", "", texto)
+
+    # Decodifica entidades HTML, como &amp;, &lt;, etc.
     texto = html.unescape(texto)
-    texto = re.sub(r"\\n\\s*\\n+", "\\n", texto)
-    texto = re.sub(r"[ \\t]+", " ", texto)
-    return texto.strip()
+
+    # Limpa apenas excesso de espaços e linhas vazias, sem separar ou remover letras.
+    linhas_limpas = []
+    for linha in texto.splitlines():
+        linha_limpa = re.sub(r"[ \\t]+", " ", linha).strip()
+        if linha_limpa:
+            linhas_limpas.append(linha_limpa)
+
+    return "\\n\\n".join(linhas_limpas)
 
 
 def renderizar_postit_clicavel(html_card, chave):
