@@ -3,6 +3,7 @@ import time
 import sqlite3
 import html
 import re
+from urllib.parse import quote
 from streamlit_autorefresh import st_autorefresh
 import streamlit.components.v1 as components
 
@@ -2101,9 +2102,27 @@ def dica_voto_html(votado=False):
 def link_voto_html(tipo, item_id, html_card):
 
     sala = st.session_state.get("sala", "")
+    equipe = st.session_state.get("nome_equipe_salvo", "")
+    lider = st.session_state.get("lider_equipe_salvo", "")
+    idioma = st.session_state.get("idioma", "pt")
+
+    parametros = [
+        f"sala={quote(str(sala))}",
+        f"idioma={quote(str(idioma))}",
+        f"acao_voto={quote(str(tipo))}",
+        f"item_voto={quote(str(item_id))}"
+    ]
+
+    if equipe:
+        parametros.append(f"equipe={quote(str(equipe))}")
+
+    if lider:
+        parametros.append(f"lider={quote(str(lider))}")
+
+    url_voto = "?" + "&".join(parametros)
 
     return f"""
-<a class="postit-link" href="?sala={esc(sala)}&acao_voto={tipo}&item_voto={item_id}">
+<a class="postit-link" href="{url_voto}">
 {html_card}
 </a>
 """
@@ -2207,6 +2226,19 @@ def processar_voto_por_query_params(sala_atual):
 
     st.query_params.pop("acao_voto", None)
     st.query_params.pop("item_voto", None)
+
+    if sala_atual:
+        st.query_params["sala"] = sala_atual
+
+    if st.session_state.get("idioma", ""):
+        st.query_params["idioma"] = st.session_state.get("idioma", "")
+
+    if st.session_state.get("nome_equipe_salvo", ""):
+        st.query_params["equipe"] = st.session_state.get("nome_equipe_salvo", "")
+
+    if st.session_state.get("lider_equipe_salvo", ""):
+        st.query_params["lider"] = st.session_state.get("lider_equipe_salvo", "")
+
     st.rerun()
 
 def mostrar_botoes_navegacao_abas(abas_ordem, indice_aba_atual, mostrar_anterior=True, mostrar_proximo=True, chave_base="nav"):
@@ -2469,6 +2501,21 @@ if "esconder_cabecalho_fixo" not in st.session_state:
 # =========================
 # ENTRADA POR SENHA / SALA
 # =========================
+
+# Quando o usuário clica em um post-it, o navegador pode recarregar a página.
+# Este bloco recupera a sala e a equipe pela URL para evitar voltar para a tela de entrada.
+if st.session_state.sala is None and st.query_params.get("sala", ""):
+    st.session_state.sala = st.query_params.get("sala", "")
+
+if st.query_params.get("idioma", "") in ["pt", "en"]:
+    st.session_state.idioma = st.query_params.get("idioma", "")
+
+if st.query_params.get("equipe", "") and not st.session_state.get("nome_equipe_salvo", ""):
+    st.session_state.nome_equipe_salvo = st.query_params.get("equipe", "")
+    st.session_state.editando_equipe = False
+
+if st.query_params.get("lider", "") and not st.session_state.get("lider_equipe_salvo", ""):
+    st.session_state.lider_equipe_salvo = st.query_params.get("lider", "")
 
 if st.session_state.sala is None:
 
