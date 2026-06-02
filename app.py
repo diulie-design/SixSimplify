@@ -1187,6 +1187,7 @@ TEXTOS = {
         "category_select": "Categoria",
         "category_other": "Outra",
         "category_other_name": "Nome da outra categoria",
+        "category_other_placeholder": "Exemplo: Alimentação",
         "category_options": ["Tecnologia", "Processo", "Cultura", "Outra"],
         "category_placeholder": "Exemplo: Tecnologia",
         "choose_barriers": "Escolha os entraves",
@@ -1337,6 +1338,7 @@ TEXTOS = {
         "category_select": "Category",
         "category_other": "Other",
         "category_other_name": "Other category name",
+        "category_other_placeholder": "Example: Food",
         "category_options": ["Technology", "Process", "Culture", "Other"],
         "category_placeholder": "Example: Technology",
         "choose_barriers": "Choose barriers",
@@ -3534,7 +3536,7 @@ if aba_atual == t("tab_barriers"):
 
             nova_categoria = st.text_input(
                 t("category_other_name"),
-                placeholder=t("category_placeholder"),
+                placeholder=t("category_other_placeholder"),
                 key="nova_categoria_entraves"
             )
 
