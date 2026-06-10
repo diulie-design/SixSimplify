@@ -1411,7 +1411,7 @@ TEXTOS = {
         "undo_vote": "Desfazer voto",
         "vote": "Votar",
         "vote_footer_pending": "TOQUE PARA VOTAR",
-        "vote_footer_voted": "VOTO REGISTRADO — TOQUE NOVAMENTE PARA DESFAZER",
+        "vote_footer_voted": "VOTO REGISTRADO",
         "no_postit": "Nenhum post-it disponível ainda nesta sala.",
         "result_step_title": "4. Veja o resultado",
         "result_step_help": "O post-it mais votado aparece abaixo. Se empatar, faça uma nova votação apenas com os empatados.",
@@ -1564,7 +1564,7 @@ TEXTOS = {
         "undo_vote": "Undo vote",
         "vote": "Vote",
         "vote_footer_pending": "TAP TO VOTE",
-        "vote_footer_voted": "VOTE REGISTERED — TAP AGAIN TO UNDO",
+        "vote_footer_voted": "VOTE REGISTERED",
         "no_postit": "No post-its available in this room yet.",
         "result_step_title": "4. See the result",
         "result_step_help": "The most voted post-it appears below. If there is a tie, run a new vote only with tied post-its.",
@@ -2243,14 +2243,14 @@ def renderizar_postit_clicavel(titulo_card, texto_card, votos_card, chave, votad
     partes_card = []
 
     if titulo_card:
-        partes_card.append(titulo_card)
+        partes_card.append(titulo_card.upper())
 
     if texto_card:
         partes_card.append(texto_card)
 
-    partes_card.append(f"{t('votes')}: {votos_card}")
-    partes_card.append("────────────────────────")
-    partes_card.append(texto_rodape)
+    partes_card.append(f"♡  {t('votes').upper()}: {votos_card}")
+    partes_card.append("━━━━━━━━━━━━━━━━━━━━")
+    partes_card.append(f"☝  {texto_rodape}        →")
 
     texto_botao = "\n\n".join(partes_card)
 
@@ -5437,6 +5437,106 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
+
+
+st.markdown("""
+<style>
+/* =========================================================
+   POST-ITS VOTÁVEIS — VISUAL PROFISSIONAL / EMBRAER LEVEL
+   ========================================================= */
+
+[class*="st-key-votar_card_"] .stButton > button {
+    position: relative !important;
+    width: 100% !important;
+    min-height: 285px !important;
+    height: 285px !important;
+    padding: 34px 34px 28px 42px !important;
+    border-radius: 34px !important;
+    border: 1.5px solid rgba(224, 182, 56, 0.38) !important;
+    border-left: 6px solid #e0b638 !important;
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.20) 28%, transparent 46%),
+        linear-gradient(135deg, #fffdf3 0%, #fff6cf 100%) !important;
+    color: #12263f !important;
+    box-shadow:
+        0 18px 38px rgba(15, 23, 42, 0.13),
+        inset 0 1px 0 rgba(255,255,255,0.85) !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    text-align: left !important;
+    white-space: pre-wrap !important;
+    overflow: hidden !important;
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease,
+        background 0.16s ease !important;
+}
+
+[class*="st-key-votar_card_"] .stButton > button p {
+    color: #12263f !important;
+    font-size: 20px !important;
+    line-height: 1.42 !important;
+    font-weight: 850 !important;
+    letter-spacing: 0.01em !important;
+    white-space: pre-wrap !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+[class*="st-key-votar_card_"] .stButton > button:hover {
+    transform: translateY(-3px) !important;
+    border-color: rgba(224, 182, 56, 0.62) !important;
+    box-shadow:
+        0 24px 48px rgba(15, 23, 42, 0.18),
+        inset 0 1px 0 rgba(255,255,255,0.92) !important;
+    color: #12263f !important;
+}
+
+[class*="st-key-votar_card_postit_votado_"] .stButton > button,
+[class*="st-key-votar_card_entrave_votado_"] .stButton > button,
+[class*="st-key-votar_card_hipotese_votado_"] .stButton > button {
+    background:
+        radial-gradient(circle at top right, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.20) 28%, transparent 46%),
+        linear-gradient(135deg, #f0fff6 0%, #d9fbe3 100%) !important;
+    border: 1.5px solid rgba(22, 163, 74, 0.40) !important;
+    border-left: 6px solid #16a34a !important;
+    color: #0f2f22 !important;
+}
+
+[class*="st-key-votar_card_postit_votado_"] .stButton > button p,
+[class*="st-key-votar_card_entrave_votado_"] .stButton > button p,
+[class*="st-key-votar_card_hipotese_votado_"] .stButton > button p {
+    color: #0f2f22 !important;
+}
+
+[class*="st-key-remover_postit_"] .stButton > button,
+[class*="st-key-excluir_entrave_"] .stButton > button,
+[class*="st-key-excluir_hipotese_"] .stButton > button {
+    min-height: 48px !important;
+    border-radius: 14px !important;
+    font-size: 15px !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 768px) {
+    [class*="st-key-votar_card_"] .stButton > button {
+        min-height: 255px !important;
+        height: auto !important;
+        padding: 26px 24px 24px 30px !important;
+        border-radius: 28px !important;
+    }
+
+    [class*="st-key-votar_card_"] .stButton > button p {
+        font-size: 18px !important;
+        line-height: 1.38 !important;
+    }
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # =========================
